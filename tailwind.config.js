@@ -1,25 +1,28 @@
-// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
+    "./src/app/**/*.{ts,tsx,js,jsx}",
+    "./src/pages/**/*.{ts,tsx,js,jsx}",
+    "./src/components/**/*.{ts,tsx,js,jsx}",
     "./app/**/*.{ts,tsx,js,jsx}",
-    "./src/**/*.{ts,tsx,js,jsx}",
     "./components/**/*.{ts,tsx,js,jsx}",
-    "./pages/**/*.{ts,tsx,js,jsx}",
   ],
-  darkMode: "class", // important: class-based dark mode
+  darkMode: "class", // class-based dark mode
   theme: {
     extend: {
       colors: {
-        // contoh custom color token, modify later
         primary: {
           50: "#f5faff",
-          500: "#2563eb",
+          100: "#e6f0ff",
+          500: "#2563EB",
           700: "#1e40af",
         },
       },
       spacing: {
         "9/16": "56.25%",
+      },
+      fontFamily: {
+        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
       },
     },
   },

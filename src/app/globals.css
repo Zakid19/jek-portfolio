@@ -1,44 +1,73 @@
 /* src/styles/globals.css */
 
-/* 1. Tailwind base */
+/* Tailwind layers */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 2. Custom CSS vars & base styles */
+/* CSS variables for light/dark theming */
 :root{
-  --bg: 255 255 255; /* as rgb components for opacity utilities: rgb(var(--bg) / <alpha-value>) */
-  --text: 17 24 39;
-  --muted: 100 116 139;
-  --primary: 37 99 235;
+  --bg-r: 255;
+  --bg-g: 255;
+  --bg-b: 255;
+
+  --text-r: 17;
+  --text-g: 24;
+  --text-b: 39;
+
+  --muted-r: 100;
+  --muted-g: 116;
+  --muted-b: 139;
+
+  --primary-r: 37;
+  --primary-g: 99;
+  --primary-b: 235;
 }
 
 .dark {
-  --bg: 15 23 42;
-  --text: 226 232 240;
-  --muted: 148 163 184;
-  --primary: 99 102 241;
+  --bg-r: 15;
+  --bg-g: 23;
+  --bg-b: 42;
+
+  --text-r: 226;
+  --text-g: 232;
+  --text-b: 240;
+
+  --muted-r: 148;
+  --muted-g: 163;
+  --muted-b: 184;
+
+  --primary-r: 99;
+  --primary-g: 102;
+  --primary-b: 241;
 }
 
-/* Use variables in utilities */
-body {
-  background-color: rgb(var(--bg));
-  color: rgb(var(--text));
+/* Apply variables */
+html, body {
+  background: rgb(var(--bg-r) var(--bg-g) var(--bg-b));
+  color: rgb(var(--text-r) var(--text-g) var(--text-b));
+  height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Focus styles (accessible) */
+/* Utility body classes for selection and base container */
+.selection\:bg-primary\:30::selection {
+  background-color: rgba(var(--primary-r), var(--primary-g), var(--primary-b), 0.3);
+  color: white;
+}
+
+/* Focus & accessibility */
 :focus {
   outline: none;
 }
 :focus-visible {
-  outline: 3px solid rgba(var(--primary) / 0.35);
+  outline: 3px solid rgba(var(--primary-r), var(--primary-g), var(--primary-b), 0.18);
   outline-offset: 3px;
   border-radius: 6px;
 }
 
-/* Utility helpers */
+/* Simple container helper (use with .container class) */
 .container {
   max-width: 1120px;
   margin-left: auto;
@@ -47,8 +76,18 @@ body {
   padding-right: 1rem;
 }
 
-/* small helper for preventing layout shift on img replacement */
+/* Images block to reduce layout shifting baseline */
 img {
   display: block;
   max-width: 100%;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
