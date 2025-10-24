@@ -27,14 +27,17 @@ export default function ThemeToggle() {
         document.documentElement.classList.remove("dark");
         localStorage.setItem("theme", "light");
       } else {
-        // system
         localStorage.removeItem("theme");
         const prefers = window.matchMedia("(prefers-color-scheme: dark)").matches;
         if (prefers) document.documentElement.classList.add("dark");
         else document.documentElement.classList.remove("dark");
       }
+      // notify transition helper to animate color change
+      try {
+        window.dispatchEvent(new Event("theme-change"));
+      } catch (e) {}
     } catch {
-      // no-op on SSR or if localStorage not available
+      // SSR/no-op
     }
   }, [theme]);
 
@@ -50,11 +53,7 @@ export default function ThemeToggle() {
       title="Toggle theme"
       className="inline-flex items-center justify-center p-2 rounded-md focus-visible:ring-2"
     >
-      {theme === "dark" ? (
-        <span aria-hidden>🌙</span>
-      ) : (
-        <span aria-hidden>☀️</span>
-      )}
+      {theme === "dark" ? <span aria-hidden>🌙</span> : <span aria-hidden>☀️</span>}
       <span className="sr-only">Toggle color theme</span>
     </button>
   );

@@ -5,56 +5,92 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS variables for light/dark theming */
-:root{
+/*
+  Theme variables
+  - Light theme uses default system-friendly colors
+  - Dark theme uses primary = #121212
+  - Secondary accents: purple (#9945FF) and green (#14F195)
+*/
+
+/* Light theme (default) */
+:root {
+  /* background (rgb components) */
   --bg-r: 255;
   --bg-g: 255;
   --bg-b: 255;
 
+  /* main text */
   --text-r: 17;
   --text-g: 24;
   --text-b: 39;
 
+  /* muted text */
   --muted-r: 100;
   --muted-g: 116;
   --muted-b: 139;
 
+  /* primary (used for subtle UI pieces in light mode) */
   --primary-r: 37;
   --primary-g: 99;
   --primary-b: 235;
+
+  /* brand accents (secondary colors) */
+  --accent-purple-r: 153;
+  --accent-purple-g: 69;
+  --accent-purple-b: 255;
+
+  --accent-green-r: 20;
+  --accent-green-g: 241;
+  --accent-green-b: 149;
 }
 
+/* Dark theme variables */
 .dark {
-  --bg-r: 15;
-  --bg-g: 23;
-  --bg-b: 42;
+  /* make dark background equal to primary #121212 */
+  --bg-r: 18;
+  --bg-g: 18;
+  --bg-b: 18;
 
-  --text-r: 226;
-  --text-g: 232;
-  --text-b: 240;
+  /* light text on dark bg */
+  --text-r: 230;
+  --text-g: 230;
+  --text-b: 230;
 
+  /* muted (softer on dark) */
   --muted-r: 148;
   --muted-g: 163;
   --muted-b: 184;
 
-  --primary-r: 99;
-  --primary-g: 102;
-  --primary-b: 241;
+  /* primary for dark mode (same as #121212) */
+  --primary-r: 18;
+  --primary-g: 18;
+  --primary-b: 18;
+
+  /* brand accents keep same RGB values (still visible on dark) */
+  --accent-purple-r: 153;
+  --accent-purple-g: 69;
+  --accent-purple-b: 255;
+
+  --accent-green-r: 20;
+  --accent-green-g: 241;
+  --accent-green-b: 149;
 }
 
-/* Apply variables */
+/* Apply variables to base elements */
 html, body {
   background: rgb(var(--bg-r) var(--bg-g) var(--bg-b));
   color: rgb(var(--text-r) var(--text-g) var(--text-b));
   height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
 }
 
-/* Utility body classes for selection and base container */
-.selection\:bg-primary\:30::selection {
-  background-color: rgba(var(--primary-r), var(--primary-g), var(--primary-b), 0.3);
-  color: white;
+/* selection style (use purple accent by default) */
+::selection {
+  background-color: rgba(var(--accent-purple-r), var(--accent-purple-g), var(--accent-purple-b), 0.22);
+  color: rgb(255 255 255);
 }
 
 /* Focus & accessibility */
@@ -62,12 +98,20 @@ html, body {
   outline: none;
 }
 :focus-visible {
-  outline: 3px solid rgba(var(--primary-r), var(--primary-g), var(--primary-b), 0.18);
+  /* use purple accent with subtle alpha for focus ring */
+  outline: 3px solid rgba(var(--accent-purple-r), var(--accent-purple-g), var(--accent-purple-b), 0.18);
   outline-offset: 3px;
   border-radius: 6px;
 }
 
-/* Simple container helper (use with .container class) */
+/* small focus helper for project-card like elements */
+.project-focus:focus-visible {
+  outline: 3px solid rgba(var(--accent-purple-r), var(--accent-purple-g), var(--accent-purple-b), 0.18);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* Simple container helper */
 .container {
   max-width: 1120px;
   margin-left: auto;
@@ -76,10 +120,11 @@ html, body {
   padding-right: 1rem;
 }
 
-/* Images block to reduce layout shifting baseline */
+/* Images baseline */
 img {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 
 /* Respect reduced motion */
@@ -91,3 +136,153 @@ img {
     scroll-behavior: auto !important;
   }
 }
+
+/* brand gradient helper */
+.brand-gradient {
+  background-image: linear-gradient(90deg,
+    rgba(var(--accent-purple-r), var(--accent-purple-g), var(--accent-purple-b), 1) 0%,
+    rgba(var(--accent-green-r), var(--accent-green-g), var(--accent-green-b), 1) 100%);
+}
+
+/* Button-like accent helpers (can be used as extra utilities) */
+.btn-accent {
+  background: linear-gradient(90deg,
+    rgba(var(--accent-purple-r), var(--accent-purple-g), var(--accent-purple-b), 1) 0%,
+    rgba(var(--accent-green-r), var(--accent-green-g), var(--accent-green-b), 1) 100%);
+  color: white;
+}
+
+/* subtle dark accent layer (for sections) */
+.section-accent {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0));
+}
+
+/* Theme-transition helper (use on html or body wrapper when toggling theme) */
+.theme-transition,
+.theme-transition body,
+.theme-transition * {
+  transition-property: background-color, color, border-color, box-shadow;
+  transition-duration: 280ms;
+  transition-timing-function: cubic-bezier(.2,.9,.3,1);
+}
+
+/* make sure reduced-motion users don't get transitions */
+@media (prefers-reduced-motion: reduce) {
+  .theme-transition,
+  .theme-transition body,
+  .theme-transition * {
+    transition: none !important;
+  }
+}
+
+/* animated gradient text (only when user allows motion) */
+.animated-gradient-text {
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientShift 6s linear infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* respect reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .animated-gradient-text {
+    animation: none;
+    background-size: 100% 100%;
+  }
+}
+
+/* Optional: ensure background utility classes inside tailwind layer behave nicely */
+@layer base {
+  html {
+    /* neutral default */
+  }
+
+  html.dark {
+    /* ensure base background in dark mode uses our variable */
+    background-color: rgb(var(--bg-r) var(--bg-g) var(--bg-b));
+  }
+}
+
+/* small utility to visually hide content but keep it accessible for screen readers */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* === Glow Utility === */
+.shadow-glow {
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.6), 0 0 28px rgba(165, 61, 255, 0.4);
+}
+
+.dark .shadow-glow {
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.45),
+              0 0 28px rgba(165, 61, 255, 0.35);
+}
+
+.glass-badge {
+  backdrop-filter: blur(10px) saturate(160%);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Cyberpunk noise overlay */
+body::after {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  opacity: 0.045;
+  background-image: url("/assets/noise.png");
+  mix-blend-mode: overlay;
+}
+
+/* Soft chromatic glow for dark mode */
+.dark .shadow-glow {
+  filter: drop-shadow(0 0 14px rgba(0, 255, 255, 0.5));
+}
+
+.dark .particle {
+  filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.8));
+}
+
+
+/* 🔹 Glow Badge */
+.dark .badge-glow {
+  @apply px-2 py-1 rounded-md text-xs font-medium;
+  background-color: rgba(6, 182, 212, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: rgb(165, 243, 252);
+  box-shadow: 0 0 5px rgba(6, 182, 212, 0.6);
+  transition: all 0.3s ease;
+}
+
+/* 🔹 View Button */
+.btn-view {
+  @apply mt-4 text-sm py-1 w-1/3 rounded-md border border-green-400/40 text-cyan-200;
+  transition: all 0.3s ease;
+}
+.btn-view:hover {
+  background-color: rgba(34, 197, 94, 0.1);
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+}
+
+/* Title subtle glow */
+.project-card h3 {
+  text-shadow: 0 0 10px rgba(34,197,94,0.3);
+}
+
+
