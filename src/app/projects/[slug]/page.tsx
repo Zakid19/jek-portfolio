@@ -6,21 +6,26 @@ import type { Project } from "@/types";
 import ProjectAsideClient from "@/components/project/ProjectAsideClient";
 import type { Metadata } from "next";
 
-export async function generateStaticParams() {
+// ✅ Generate static params (untuk static site generation)
+export const generateStaticParams = async () => {
   return projects.map((p) => ({ slug: p.id }));
-}
+};
 
+// ✅ Generate metadata untuk SEO dan social share
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const project = projects.find((p) => p.id === params.slug);
-  if (!project)
+  const { slug } = await params; // fix: params di Next 15 harus di-await
+  const project = projects.find((p) => p.id === slug);
+
+  if (!project) {
     return {
       title: "Project Not Found",
       description: "This project could not be found.",
     };
+  }
 
   return {
     title: `${project.title} — Case Study`,
@@ -50,14 +55,14 @@ export async function generateMetadata({
   };
 }
 
-export default function ProjectPage({
+// ✅ Komponen utama halaman project
+export default async function ProjectPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const project = projects.find((p) => p.id === params.slug) as
-    | Project
-    | undefined;
+  const { slug } = await params; // fix: harus di-await
+  const project = projects.find((p) => p.id === slug) as Project | undefined;
 
   if (!project) return notFound();
 

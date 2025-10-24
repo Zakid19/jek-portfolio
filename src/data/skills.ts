@@ -3,7 +3,6 @@ import {
   SiReact,
   SiTypescript,
   SiTailwindcss,
-  SiAccessibility,
   SiNodedotjs,
   SiExpress,
   SiLaravel,
@@ -30,7 +29,7 @@ export const SKILLS = [
       { name: "TypeScript", level: 4, icon: SiTypescript },
       { name: "Tailwind CSS", level: 5, icon: SiTailwindcss },
       { name: "Javascript", level: 4, icon: SiJavascript },
-      { name: "Accessibility", level: 4, icon: SiAccessibility }
+      // { name: "Accessibility", level: 4, icon: SiAccessibility }
     ]
   },
   {

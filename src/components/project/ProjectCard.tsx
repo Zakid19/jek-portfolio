@@ -5,7 +5,7 @@ import Image from "next/image";
 import React, { useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Project } from "@/types";
-import { ExternalLinkIcon, CodeBracketIcon } from "@/components/icons";
+// import { ExternalLinkIcon } from "@/components/icons";
 
 type Props = {
   project: Project;
@@ -116,7 +116,7 @@ export default React.memo(function ProjectCard({ project, onOpen }: Props) {
               className="p-2 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm transition-colors"
               aria-label={`Open demo for ${project.title}`}
             >
-              <ExternalLinkIcon className="w-4 h-4 text-white" />
+              {/* <ExternalLinkIcon className="w-4 h-4 text-white" /> */}
             </button>
           )}
           {project.repo && (
@@ -125,7 +125,7 @@ export default React.memo(function ProjectCard({ project, onOpen }: Props) {
               className="p-2 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm transition-colors"
               aria-label={`Open repository for ${project.title}`}
             >
-              <CodeBracketIcon className="w-4 h-4 text-white" />
+
             </button>
           )}
         </motion.div>

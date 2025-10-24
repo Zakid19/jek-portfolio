@@ -6,4 +6,5 @@ export type Project = {
   tech: string[];
   image?: string; // public path or external url
   href?: string; // demo or repo
+  longDescription?: string; //
 };
