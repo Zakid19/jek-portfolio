@@ -80,7 +80,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="py-32 relative max-w-6xl mx-auto px-6 spotlight-area cyber-grid snap-center"
+      className="py-10 relative max-w-6xl mx-auto px-6 spotlight-area cyber-grid snap-center"
       onMouseMove={handleMouseMove}
     >
       {/* Spotlight Follow Cursor */}
@@ -96,7 +96,7 @@ export default function About() {
       {/* Header */}
       <motion.div
         initial="hidden"
-        whileInView="visible"
+        whileInView="show"
         viewport={{ once: true }}
         variants={fadeUp}
         className="text-center mb-20"
