@@ -1,18 +1,22 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform , easeInOut, Variants } from "framer-motion";
 import { useRef, useState } from "react";
 import { CheckCircle2, CalendarDays } from "lucide-react";
 
 // === Animations ===
-const fadeUp = {
-  hidden: { opacity: 0, y: 35 },
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.75, ease: "easeOut" },
+    transition: {
+      duration: 0.6,
+      ease: easeInOut, // ✅ gunakan preset easing dari import, bukan string
+    },
   },
 };
+
 const container = { visible: { transition: { staggerChildren: 0.12 } } };
 const badgeHover = { scale: 1.15, y: -6, transition: { type: "spring", stiffness: 350 } };
 

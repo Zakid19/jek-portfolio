@@ -1,39 +1,51 @@
 // src/components/projects/ProjectsGrid.tsx
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import ProjectCard from "@/components/project/ProjectCard";
 import { projects as allProjects } from "@/data/projects";
 import type { Project } from "@/types";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  easeInOut,
+  Variants,
+} from "framer-motion";
 
-const DynamicModal = dynamic(() => import("@/components/project/ProjectModal"), { ssr: false });
+const DynamicModal = dynamic(
+  () => import("@/components/project/ProjectModal"),
+  { ssr: false }
+);
 
 export default function ProjectsGrid({
   initialProjects,
 }: {
-  initialProjects?: Project[]; // optional, not necessary
+  initialProjects?: Project[];
 }) {
   const [selected, setSelected] = useState<Project | null>(null);
   const reduce = useReducedMotion();
 
-  // Use provided projects or import directly
   const projects = initialProjects ?? allProjects;
 
-  const itemVariants = useMemo(
+  // ✅ fixed: ease pakai preset bawaan framer-motion (easeInOut)
+  const itemVariants: Variants = useMemo(
     () => ({
       hidden: { opacity: 0, y: 8 },
-      show: { opacity: 1, y: 0 },
-      exit: { opacity: 0, y: -8 },
+      show: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.4, ease: easeInOut },
+      },
+      exit: {
+        opacity: 0,
+        y: -8,
+        transition: { duration: 0.3, ease: easeInOut },
+      },
     }),
     []
   );
-
-  // optional: pagination state (if you want)
-  // const [page, setPage] = useState(1);
-  // const perPage = 12;
-  // const visible = projects.slice(0, page * perPage);
 
   return (
     <>
@@ -46,9 +58,9 @@ export default function ProjectsGrid({
             <motion.div
               key={p.id}
               layout
-              initial={reduce ? false : "hidden"}
+              initial={reduce ? undefined : "hidden"}
               animate="show"
-              exit={reduce ? false : "exit"}
+              exit={reduce ? undefined : "exit"}
               variants={itemVariants}
             >
               <ProjectCard project={p} onOpen={(proj) => setSelected(proj)} />
@@ -57,17 +69,10 @@ export default function ProjectsGrid({
         </AnimatePresence>
       </motion.div>
 
-      {/* optional pagination / load more (uncomment if needed)
-      <div className="mt-6 flex justify-center">
-        <button className="px-4 py-2 rounded border" onClick={() => setPage((s) => s + 1)}>Load more</button>
-      </div>
-      */}
-
-      {/* Modal */}
       <AnimatePresence>
-        {selected ? (
+        {selected && (
           <DynamicModal project={selected} onClose={() => setSelected(null)} />
-        ) : null}
+        )}
       </AnimatePresence>
     </>
   );

@@ -13,4 +13,6 @@ export type Project = {
   repo?: string;
    caseStudy?: string;
    demo?: string;
+   blurDataURL?: string;
+   featured?: string;
 };

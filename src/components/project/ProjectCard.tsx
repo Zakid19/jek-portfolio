@@ -1,9 +1,8 @@
-// src/components/projects/ProjectCard.tsx
 "use client";
 
 import Image from "next/image";
 import React, { useCallback } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, Variants } from "framer-motion";
 import type { Project } from "@/types";
 
 type Props = {
@@ -16,9 +15,14 @@ const MotionArticle = motion.article;
 export default React.memo(function ProjectCard({ project, onOpen }: Props) {
   const reduce = useReducedMotion();
 
-  // Combined variants (scroll in + hover)
-  const variants = reduce
-    ? {}
+  // ✅ Fix: Always provide a valid Variants object (Framer Motion requires it)
+  const variants: Variants = reduce
+    ? {
+        hidden: { opacity: 1, y: 0 },
+        show: { opacity: 1, y: 0 },
+        rest: { scale: 1 },
+        hover: { scale: 1 },
+      }
     : {
         hidden: { opacity: 0, y: 20 },
         show: {
@@ -79,7 +83,6 @@ export default React.memo(function ProjectCard({ project, onOpen }: Props) {
         before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-tr
         before:from-[rgba(69,153,255,0.12)]
         before:to-[rgba(20,241,149,0.12)]
-
         before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(153,69,255,0.18)]`}
     >
@@ -114,18 +117,14 @@ export default React.memo(function ProjectCard({ project, onOpen }: Props) {
               onClick={openDemo}
               className="p-2 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm transition-colors"
               aria-label={`Open demo for ${project.title}`}
-            >
-              {/* <ExternalLinkIcon className="w-4 h-4 text-white" /> */}
-            </button>
+            ></button>
           )}
           {project.repo && (
             <button
               onClick={openRepo}
               className="p-2 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm transition-colors"
               aria-label={`Open repository for ${project.title}`}
-            >
-
-            </button>
+            ></button>
           )}
         </motion.div>
       </div>
@@ -148,30 +147,32 @@ export default React.memo(function ProjectCard({ project, onOpen }: Props) {
           {project.short.length > 100 ? project.short.slice(0, 50) + " ..." : project.short}
         </p>
 
-
         <div className="flex items-center gap-2 flex-wrap">
-            {visibleTech.map((t) => (
-              <span
-                key={t}
-                className="px-2 py-1 rounded-md  bg-neutral-100 dark:bg-transparent border-neutral-200  text-muted-foreground shadow-sm hover:shadow-[0_0_10px_rgba(139,92,246,0.3)] text-xs bg-gradient-to-r from-cyan-400/10 to-blue-400/10
-                  border dark:border-cyan-300/20 dark:text-cyan-300   transition-shadow"
-              >
-                {t}
-              </span>
-            ))}
-            {remainingTechCount > 0 && (
-              <span className="px-2 py-1 rounded-md text-xs bg-white/5 border border-white/10 text-muted-foreground shadow-sm">
-                +{remainingTechCount}
-              </span>
-            )}
+          {visibleTech.map((t) => (
+            <span
+              key={t}
+              className="px-2 py-1 rounded-md bg-neutral-100 dark:bg-transparent border-neutral-200 text-muted-foreground shadow-sm hover:shadow-[0_0_10px_rgba(139,92,246,0.3)] text-xs bg-gradient-to-r from-cyan-400/10 to-blue-400/10 border dark:border-cyan-300/20 dark:text-cyan-300 transition-shadow"
+            >
+              {t}
+            </span>
+          ))}
+          {remainingTechCount > 0 && (
+            <span className="px-2 py-1 rounded-md text-xs bg-white/5 border border-white/10 text-muted-foreground shadow-sm">
+              +{remainingTechCount}
+            </span>
+          )}
         </div>
 
-        <div className="mt-3 flex items-center justify-start gap-3"> {/* Details button */}
-
-          <button onClick={(e) => { e.stopPropagation(); handleOpen(e); }}
-          className="group relative inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-gradient-to-r from-secondary-green to-secondary-blue text-white shadow-[0_0_12px_rgba(139,92,246,0.25)] hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] hover:opacity-95 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/40">
-          <span className="transition-transform group-hover:scale-105"> Details</span> </button>
-
+        <div className="mt-3 flex items-center justify-start gap-3">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpen(e);
+            }}
+            className="group relative inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-gradient-to-r from-secondary-green to-secondary-blue text-white shadow-[0_0_12px_rgba(139,92,246,0.25)] hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] hover:opacity-95 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/40"
+          >
+            <span className="transition-transform group-hover:scale-105">Details</span>
+          </button>
         </div>
       </div>
     </MotionArticle>
