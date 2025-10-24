@@ -2,15 +2,6 @@
 import React, { ReactNode } from "react";
 import MotionSection from "./MotionSection";
 
-interface SectionProps {
-  id?: string;
-  title?: string;
-  subtitle?: string;
-  children: ReactNode;
-  className?: string;
-  useMotion?: boolean; // option to turn off motion per-section
-}
-
 export default function Section({
   id,
   title,
@@ -18,26 +9,18 @@ export default function Section({
   children,
   className = "",
   useMotion = true,
-}: SectionProps) {
+
+}: {
+  id?: string;
+  title?: string;
+  subtitle?: string;
+  children: ReactNode;
+  className?: string;
+  useMotion?: boolean; // option to turn off motion per-section
+}) {
   const inner = (
     <div className={`container ${className}`}>
-      {/* Header Section */}
-      {(title || subtitle) && (
-        <div className="mb-10 text-center">
-          {title && (
-            <h2 className="text-2xl sm:text-3xl font-semibold mb-2 dark:text-white">
-              {title}
-            </h2>
-          )}
-          {subtitle && (
-            <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">
-              {subtitle}
-            </p>
-          )}
-        </div>
-      )}
-
-      {/* Content */}
+      {title && <h2 className="text-2xl sm:text-3xl font-semibold mb-4">{title}</h2>}
       <div>{children}</div>
     </div>
   );

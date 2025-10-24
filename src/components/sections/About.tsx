@@ -1,24 +1,37 @@
 "use client";
 
-import { motion, useScroll, useTransform , easeInOut, Variants } from "framer-motion";
+import { motion, useScroll, useTransform, easeOut, Transition  } from "framer-motion";
 import { useRef, useState } from "react";
 import { CheckCircle2, CalendarDays } from "lucide-react";
 
 // === Animations ===
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
+const fadeUp = {
+  hidden: { opacity: 0, y: 18 },
+  show: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.6,
-      ease: easeInOut, // ✅ gunakan preset easing dari import, bukan string
-    },
+    transition: { duration: 0.75, ease: easeOut }
   },
 };
 
+// const fadeUp = {
+//   hidden: { opacity: 0, y: 35 },
+//   visible: {
+//     opacity: 1,
+//     y: 0,
+//     transition: { duration: 0.75, ease: "easeOut" },
+//   },
+// };
+
 const container = { visible: { transition: { staggerChildren: 0.12 } } };
-const badgeHover = { scale: 1.15, y: -6, transition: { type: "spring", stiffness: 350 } };
+// const badgeHover = { scale: 1.15, y: -6, transition: { type: "spring", stiffness: 350 } };
+
+
+const badgeHover = {
+  scale: 1.05,
+  y: -2,
+  transition: { type: "spring" as Transition["type"], stiffness: 300 },
+};
 
 export default function About() {
   const expertise = [
@@ -142,7 +155,7 @@ export default function About() {
               className="flex flex-wrap gap-3"
               variants={container}
               initial="hidden"
-              whileInView="visible"
+              whileInView="show"
               viewport={{ once: true }}
             >
               {expertise.map((skill) => (
@@ -150,7 +163,7 @@ export default function About() {
                   key={skill}
                   variants={fadeUp}
                   whileHover={badgeHover}
-                  className="px-3 py-1.5 rounded-md text-xs bg-gradient-to-r from-cyan-400/10 to-blue-400/10
+                  className="px-3 py-1.5 rounded-md text-xs bg-gradient-to- from-cyan-400/10 to-blue-400/10
                   border dark:border-cyan-300/20 dark:text-cyan-300 shadow-[0_0_30px_-13px_rgba(0,255,255,0.5)]"
                 >
                   <CheckCircle2 className="w-4 h-4 inline mr-1" /> {skill}
@@ -192,7 +205,7 @@ export default function About() {
 
 // ==== 3D TILT ====
 function TiltCard({ children, className = "" }: any) {
-  const ref = useRef(null);
+    const ref = useRef<HTMLDivElement>(null);
   const [rotate, setRotate] = useState({ rotateX: 0, rotateY: 0 });
 
   return (

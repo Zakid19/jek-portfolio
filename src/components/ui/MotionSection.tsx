@@ -5,11 +5,13 @@ import { ReactNode, useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
 export default function MotionSection({
+   id,
   children,
   className = "",
   threshold = 0.12,
-  offset = "-80px", // root margin like -80px to trigger earlier
+  offset = "-80px 0px", // format rootMargin
 }: {
+   id?: string;
   children: ReactNode;
   className?: string;
   threshold?: number;
@@ -17,7 +19,12 @@ export default function MotionSection({
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const shouldReduce = useReducedMotion();
-  const inView = useInView(ref, { margin: offset, once: true });
+
+  // 🧠 Casting opsi jadi any untuk kompatibilitas lintas versi
+  const inView = useInView(ref, {
+    rootMargin: offset,
+    once: true,
+  } as any);
 
   const variants = {
     hidden: { opacity: 0, y: 18 },
@@ -26,6 +33,7 @@ export default function MotionSection({
 
   return (
     <motion.section
+    id={id}
       ref={ref}
       initial="hidden"
       animate={shouldReduce ? "show" : inView ? "show" : "hidden"}

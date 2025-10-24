@@ -1,11 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { cn } from "@/lib/\";
+import { cn } from "@/lib/utils";
 
 const tabs = ["All", "Frontend", "Backend", "Tools", "Soft Skills"];
 
-export default function SkillTabs({ active, setActive }) {
+type SkillTabsProps = {
+  active: string;
+  setActive: (tab: string) => void;
+};
+
+export default function SkillTabs({ active, setActive }: SkillTabsProps) {
   return (
     <div className="flex gap-3 overflow-x-auto pb-2">
       {tabs.map((tab) => {

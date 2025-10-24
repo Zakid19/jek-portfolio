@@ -13,8 +13,7 @@ const NAV_ITEMS = [
   { label: "Projects", href: "/#projects" },
   { label: "Skills", href: "/#skills" },
   { label: "Contact", href: "/#contact" },
-  { label: "Work Experience", href: "/#work" },
-  // { label: "Work Experience", href: "/#work", external: true },
+  { label: " Experience", href: "/#work", external: false },
 ];
 
 export default function Navbar() {

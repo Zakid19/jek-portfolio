@@ -3,17 +3,28 @@
 import { useState } from "react";
 import Section from "@/components/ui/Section";
 import { SKILLS } from "@/data/skills";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants, easeInOut } from "framer-motion";
 
 const containerVariant = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-const cardVariant = {
+const cardVariant: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-  exit: { opacity: 0, y: -20, transition: { duration: 0.25 } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: easeInOut, // pakai easing helper bawaan
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+    transition: { duration: 0.4 },
+  },
 };
 
 export default function Skills() {

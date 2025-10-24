@@ -9,6 +9,7 @@ import {
   useTransform,
   useAnimation,
   useInView,
+  easeOut,
 } from "framer-motion";
 import Button from "@/components/ui/Button";
 
@@ -31,10 +32,17 @@ export default function Hero() {
     hidden: {},
     show: { transition: { staggerChildren: reduce ? 0 : 0.08, delayChildren: 0.05 } },
   };
+
+  // ✅ fixed ease array
   const fadeUp = {
-    hidden: { opacity: 0, y: 18 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: "easeOut" } },
-  };
+  hidden: { opacity: 0, y: 18 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: easeOut }
+  },
+};
+
 
   useEffect(() => {
     if (reduce) {
@@ -42,14 +50,20 @@ export default function Hero() {
       controls.set("show");
       return;
     }
-    let t: number | undefined;
+
+    // ✅ cross-platform type (Node & browser)
+    let t: ReturnType<typeof setTimeout>;
+
     if (inView) {
       controls.set("hidden");
-      t = window.setTimeout(() => void controls.start("show"), 90);
+      t = setTimeout(() => {
+        void controls.start("show");
+      }, 90);
     } else {
       controls.start("hidden");
     }
-    return () => t && clearTimeout(t);
+
+    return () => clearTimeout(t);
   }, [inView, controls, reduce]);
 
   const onPointerMove = useCallback(
@@ -78,9 +92,6 @@ export default function Hero() {
       ref={ref}
       className="relative pt-24 md:pt-32 lg:pt-40 pb-20 md:pb-28 overflow-hidden transition-colors duration-300"
     >
-      {/* Glow Background */}
-      {/* <div className="absolute -top-48 left-1/2 -translate-x-1/2 w-[520px] h-[520px] rounded-full bg-gradient-to-r from-secondary-green/25 to-secondary-blue/25 blur-[140px] opacity-70 dark:opacity-50 pointer-events-none" /> */}
-
       <div className="container relative z-10">
         <motion.div
           variants={containerVariants}
@@ -97,7 +108,7 @@ export default function Hero() {
               className="font-extrabold leading-tight text-[clamp(2rem,4vw,3.5rem)] text-balance"
             >
               Hi, I&apos;m{" "}
-              <span className="bg-gradient-to-r from-secondary-green to-secondary-blue  bg-clip-text text-transparent animate-gradient">
+              <span className="bg-gradient-to-r from-secondary-green to-secondary-blue bg-clip-text text-transparent animate-gradient">
                 Zaki Deza
               </span>{" "}
               — Fullstack Web Developer.
@@ -180,7 +191,9 @@ export default function Hero() {
               }}
               animate={reduce ? {} : { y: floatY }}
               transition={
-                reduce ? {} : { duration: 4.5, repeat: Infinity, ease: "easeInOut" }
+                reduce
+                  ? {}
+                  : { duration: 4.5, repeat: Infinity, ease: [0.42, 0, 0.58, 1] } // ✅ easeInOut array
               }
               className="relative w-[clamp(12rem,20vw,18rem)] h-[clamp(12rem,20vw,18rem)] rounded-2xl overflow-hidden shadow-[0_0_30px_-8px_rgba(0,255,255,0.3)] bg-gradient-to-br from-secondary-green/10 to-secondary-blue/10"
             >
