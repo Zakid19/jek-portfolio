@@ -5,7 +5,6 @@ import Image from "next/image";
 import React, { useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Project } from "@/types";
-// import { ExternalLinkIcon } from "@/components/icons";
 
 type Props = {
   project: Project;
