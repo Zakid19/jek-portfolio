@@ -11,7 +11,7 @@ import BackToTop from "@/components/ui/BackToTop";
  * Metadata for App Router (can be extended per route later)
  */
 export const metadata = {
-  title: "Zakida — Portfolio",
+  title: "Zakida Portfolio",
   description: "Personal portfolio of Your Name — frontend developer.",
 };
 

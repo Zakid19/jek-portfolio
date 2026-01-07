@@ -22,29 +22,47 @@ export const projects: Project[] = [
   },
   {
     id: "p3",
-    title: "Crypto Landing Page",
+    title: "Parodee Crypto Project",
     short:
       "Landing page modern untuk proyek cryptocurrency dengan desain responsif, CTA interaktif, dan animasi ringan berbasis React & Tailwind.",
-    tech: ["React", "Tailwind CSS"],
+    tech: ["React", "Tailwind CSS", "Typescript"],
     image: "/assets/images/project-3.png",
-    href: "#",
+    href: "https://parodee.fun/",
   },
   {
     id: "p4",
-    title: "Company Profile Website",
+    title: "PT Anak Bungsu Indo Energi",
     short:
       "Website profil perusahaan dengan CMS sederhana berbasis Laravel dan React.js untuk pengelolaan konten serta admin panel interaktif.",
     tech: ["Laravel", "MySQL", "React.js"],
-    image: "/assets/images/project-4.png",
-    href: "#",
+    image: "/assets/images/project-4.jpeg",
+    href: "http://www.abienergi.com/",
   },
   {
     id: "p5",
-    title: "Website Lorehype Agency",
+    title: "Lorehype Agency",
     short:
       "Website profil interaktif untuk agensi Lorehype menggunakan React + Tailwind + Firebase. Fitur autentikasi dan manajemen konten terintegrasi.",
     tech: ["React", "Tailwind CSS", "Firebase"],
     image: "/assets/images/project-5.png",
+    href: "https://lorehype.com/",
+  },
+  {
+    id: "p6",
+    title: "Kalisloka",
+    short:
+      "Landing page modern untuk perusahaan export kalisloka",
+    tech: ["React", "Tailwind CSS"],
+    image: "/assets/images/project-6.png",
+    href: "https://www.kalisloka.com/",
+  },
+  {
+    id: "p7",
+    title: "Crypto Landing Page",
+    short:
+      "Landing page modern untuk proyek cryptocurrency dengan desain responsif, CTA interaktif, dan animasi ringan berbasis React & Tailwind.",
+    tech: ["React", "Tailwind CSS"],
+    image: "/assets/images/project-7.png",
     href: "#",
   },
 ];
