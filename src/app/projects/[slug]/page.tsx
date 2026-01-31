@@ -105,8 +105,7 @@ export default async function ProjectPage({
           <section className="space-y-4">
             <h2 className="text-xl font-semibold dark:text-white">Overview</h2>
             <p className="text-sm md:text-base text-muted-foreground/90 leading-relaxed">
-              {project.longDescription ??
-                "This is a detailed case study about how this project was built — covering the problem, solution, and technologies used to make it happen. It highlights the design approach, architecture, and the lessons learned during development."}
+              {project.longDescription ?? ""}
             </p>
           </section>
 
