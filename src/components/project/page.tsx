@@ -5,10 +5,10 @@ import ProjectsGridClient from "@/components/project/ProjectsGrid";
 import { projects } from "@/data/projects";
 
 export const metadata = {
-  title: "Projects — Your Name",
+  title: "Projects — Zaki Deza",
   description: "All projects and case studies — built with Next.js, TypeScript and Tailwind.",
   openGraph: {
-    title: "Projects — Your Name",
+    title: "Projects — Zaki Deza",
     description: "A collection of projects and case studies.",
     images: ["/og-image.png"],
   },

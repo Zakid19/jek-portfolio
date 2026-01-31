@@ -12,7 +12,7 @@ import BackToTop from "@/components/ui/BackToTop";
  */
 export const metadata = {
   title: "Zakida Portfolio",
-  description: "Personal portfolio of Your Name — frontend developer.",
+  description: "Personal portfolio of Zaki Deza — frontend developer.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -41,7 +41,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         {/* font quick-loading (swap ensures text is visible while font loads) */}
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
           rel="stylesheet"

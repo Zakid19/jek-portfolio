@@ -9,16 +9,16 @@ export const projects: Project[] = [
       "Sistem manajemen rumah sakit berbasis Laravel dengan modul pasien, rawat inap, manajemen kamar, dan laporan. Menggunakan role-based access (admin/dokter/perawat) dan dashboard monitoring interaktif.",
     tech: ["Laravel", "Blade", "Tailwind CSS", "MySQL"],
     image: "/assets/images/project-1.png",
-    href: "#",
+    href: "https://github.com/Zakid19/Sm-Hospital",
   },
   {
     id: "p2",
     title: "NFT Generator System",
     short:
-      "Platform generator NFT otomatis berbasis Next.js + Express.js. Fitur unggulan: upload layer, generate acak, serta export image & metadata untuk koleksi NFT.",
-    tech: ["Next.js", "Express.js"],
+      "NFT Generator adalah aplikasi fullstack untuk menghasilkan koleksi NFT secara otomatis, lengkap dengan image compositing, metadata JSON, dan preview web interface. Project ini dirancang untuk mensimulasikan workflow NFT production end-to-end seperti yang digunakan pada NFT collection di dunia nyata.",
+    tech: ["Next.js", "Express.js", "Node.js"],
     image: "/assets/images/project-2.png",
-    href: "#",
+    href: "https://github.com/Zakid19/generator-system-NFT",
   },
   {
     id: "p3",
@@ -50,8 +50,7 @@ export const projects: Project[] = [
   {
     id: "p6",
     title: "Kalisloka",
-    short:
-      "Landing page modern untuk perusahaan export kalisloka",
+    short: "Landing page modern untuk perusahaan export kalisloka",
     tech: ["React", "Tailwind CSS"],
     image: "/assets/images/project-6.png",
     href: "https://www.kalisloka.com/",
