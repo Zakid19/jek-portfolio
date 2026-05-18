@@ -1,232 +1,201 @@
 "use client";
 
-import { motion, useScroll, useTransform, easeOut, Transition  } from "framer-motion";
-import { useRef, useState } from "react";
-import { CheckCircle2, CalendarDays } from "lucide-react";
+import Image from "next/image";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { CheckCircle2, CalendarDays, Briefcase } from "lucide-react";
+import Section from "@/components/ui/Section";
+import { AVATAR_BLUR } from "@/data/projects";
 
-// === Animations ===
-const fadeUp = {
-  hidden: { opacity: 0, y: 18 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.75, ease: easeOut }
+const EXPERTISE = [
+  "React & Next.js",
+  "TypeScript",
+  "Laravel & Express",
+  "REST & API Design",
+  "UI/UX & Animation",
+  "AI-Augmented Workflows",
+];
+
+const EXPERIENCE = [
+  {
+    role: "Frontend / Web Developer",
+    company: "Freelance",
+    period: "2022 — Present",
+    details:
+      "Designing and shipping modern interfaces and crypto-themed experiences for international clients.",
   },
-};
-
-// const fadeUp = {
-//   hidden: { opacity: 0, y: 35 },
-//   visible: {
-//     opacity: 1,
-//     y: 0,
-//     transition: { duration: 0.75, ease: "easeOut" },
-//   },
-// };
-
-const container = { visible: { transition: { staggerChildren: 0.12 } } };
-// const badgeHover = { scale: 1.15, y: -6, transition: { type: "spring", stiffness: 350 } };
-
-
-const badgeHover = {
-  scale: 1.05,
-  y: -2,
-  transition: { type: "spring" as Transition["type"], stiffness: 300 },
-};
+  {
+    role: "Fullstack Developer",
+    company: "Lorehype Agency",
+    period: "2024 — 2025",
+    details:
+      "Owned end-to-end fullstack delivery for agency projects spanning React, Tailwind, and Firebase.",
+  },
+  {
+    role: "Fullstack Developer",
+    company: "Abie Group",
+    period: "2023 — 2024",
+    details:
+      "Built corporate websites and internal tools with Laravel + React, integrating CMS workflows.",
+  },
+];
 
 export default function About() {
-  const expertise = [
-    "React & Next.js",
-    "TypeScript",
-    "Smart Contracts",
-    "UI/UX & Animations",
-    "REST & Web3 APIs",
-  ];
+  const reduce = useReducedMotion();
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
 
-  const experience = [
-    {
-      role: "Frontend / Web Developer",
-      company: "Freelance",
-      period: "2022 — Present",
-      details: "Building modern interfaces & crypto experiences",
-    },
-    {
-      role: "Full Stack Developer",
-      company: "Abie Group",
-      period: "2023 — 2024",
-      details: "End-to-end fullstack project development",
-    },
-    {
-      role: "Full Stack Developer",
-      company: "Lorehype Agency",
-      period: "2024 — 2025",
-      details: "End-to-end fullstack project development",
-    },
-  ];
-
-  const timelineRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: timelineRef,
     offset: ["start 0.8", "end 0.2"],
   });
   const progressHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
+  const progressOpacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
-  const cursorRef = useRef<any>(null);
-  const handleMouseMove = (e: any) => {
-    if (!cursorRef.current) return;
-    cursorRef.current.style.transform = `translate(${e.clientX - 100}px, ${e.clientY - 100}px)`;
-  };
+  // Spotlight follow-cursor — desktop pointer only
+  useEffect(() => {
+    if (reduce) return;
+    if (typeof window === "undefined") return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    const node = sectionRef.current;
+    if (!node) return;
+    const pointer = node.querySelector<HTMLDivElement>(".spotlight-pointer");
+    if (!pointer) return;
+
+    let raf = 0;
+    const onMove = (e: MouseEvent) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        pointer.style.transform = `translate3d(${e.clientX - 160}px, ${e.clientY - 160}px, 0)`;
+      });
+    };
+    node.addEventListener("mousemove", onMove, { passive: true });
+    return () => {
+      node.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(raf);
+    };
+  }, [reduce]);
 
   return (
-    <section
+    <Section
       id="about"
-      className="py-10 relative max-w-6xl mx-auto px-6 spotlight-area cyber-grid snap-center"
-      onMouseMove={handleMouseMove}
+      eyebrow="About"
+      title="Engineer, builder, lifelong learner."
+      subtitle="Self-taught fullstack developer with a product-first mindset — focused on clean code, fast iteration, and AI-accelerated workflows."
     >
-      {/* Spotlight Follow Cursor */}
-      <div ref={cursorRef} className="spotlight-pointer" />
+      <div ref={sectionRef} className="relative spotlight-area">
+        <div className="spotlight-pointer" aria-hidden />
 
-      {/* Glass Divider */}
-      <motion.div
-        style={{ opacity }}
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[85%] h-[2px]
-        bg-gradient-to-r from-transparent via-cyan-500/80 to-transparent blur-sm"
-      />
-
-      {/* Header */}
-      <motion.div
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        variants={fadeUp}
-        className="text-center mb-20"
-      >
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-4 dark:text-white text-neutral-900">
-          About Me
-        </h2>
-        {/* <p className="max-w-2xl mx-auto mt-3  ">
-          Passionate developer crafting high-performance futuristic experiences
-        </p> */}
-      </motion.div>
-
-      {/* Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20">
-
-        {/* LEFT */}
-        <div className="space-y-14">
-
-          {/* Profile */}
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            className="rounded-2xl p-8 border border-neutral-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.05)]
-            dark:bg-primary dark:border-white/10 dark:backdrop-blur-md
-            hover:shadow-md transition  duration-300"
-          >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+          {/* Left column */}
+          <div className="space-y-8">
+            {/* Profile card */}
             <motion.div
-              className="w-24 h-24 mx-auto mb-5 rounded-full overflow-hidden ring-2 ring-cyan-400/30 shadow-[0_0_25px_rgba(0,255,255,0.3)]"
+              initial={reduce ? false : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6 }}
+              className="relative rounded-2xl p-8 glass neon-edge overflow-hidden"
             >
-              <img src="/assets/images/avatar.png" alt="Avatar" className="object-cover" />
+              <div className="flex items-start gap-5">
+                <div className="relative w-20 h-20 rounded-full overflow-hidden ring-2 ring-neon-cyan/30 shadow-glow-soft flex-shrink-0">
+                  <Image
+                    src="/assets/images/avatar.png"
+                    alt="Zaki Deza"
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                    placeholder="blur"
+                    blurDataURL={AVATAR_BLUR}
+                  />
+                </div>
+                <div>
+                  <div className="font-mono text-xs uppercase tracking-widest text-neon-cyan">
+                    /whoami
+                  </div>
+                  <h3 className="mt-1 text-xl font-semibold text-fg">Zaki Deza</h3>
+                  <p className="text-sm text-fg-muted">Fullstack Web Developer · Remote</p>
+                </div>
+              </div>
+
+              <p className="mt-6 text-sm sm:text-[15px] leading-relaxed text-fg-soft">
+                I&apos;m a self-taught fullstack developer experienced in building scalable,
+                user-friendly web applications with{" "}
+                <span className="text-fg font-medium">React</span>,{" "}
+                <span className="text-fg font-medium">Next.js</span>,{" "}
+                <span className="text-fg font-medium">Laravel</span>, and{" "}
+                <span className="text-fg font-medium">Express</span>. I care about clean code,
+                fast execution, and leveraging AI-assisted workflows to ship better products
+                in less time.
+              </p>
             </motion.div>
 
-            {/* <p className="inline-block px-3 py-1 text-xs uppercase rounded-md font-semibold tracking-wide
-            bg-neutral-100 dark:bg-cyan-400/10 text-neutral-700 dark:text-cyan-300 border
-            dark:border-cyan-400/30">
-              Web3 Developer
-            </p> */}
-
-            <p className="mt-4 text-neutral-600 dark:text-white/75 text-sm text-justify leading-relaxed">
-              I'm a self-taught Fullstack Web Developer experienced in building scalable and user-friendly web applications using React.js, Next.js, Laravel, and Express.js.
-              Passionate about clean code, fast execution, and leveraging AI-assisted development (ChatGPT Prompt Engineering) to accelerate coding, debugging, and documentation.
-            </p>
-          </motion.div>
-
-          {/* Expertise */}
-          <motion.div
-            variants={fadeUp}
-            viewport={{ once: true }}
-            className="p-6 border border-neutral-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.05)]
-            dark:bg-primary rounded-2xl dark:border-white/10"
-          >
-            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 text-lg">
-              Core Expertise
-            </h3>
-
-            <motion.ul
-              className="flex flex-wrap gap-3"
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
+            {/* Expertise */}
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="rounded-2xl p-7 glass neon-edge"
             >
-              {expertise.map((skill) => (
-                <motion.li
-                  key={skill}
-                  variants={fadeUp}
-                  whileHover={badgeHover}
-                  className="px-3 py-1.5 rounded-md text-xs bg-gradient-to- from-cyan-400/10 to-blue-400/10
-                  border dark:border-cyan-300/20 dark:text-cyan-300 shadow-[0_0_30px_-13px_rgba(0,255,255,0.5)]"
+              <h3 className="font-mono text-xs uppercase tracking-widest text-neon-cyan mb-4">
+                Core Expertise
+              </h3>
+              <ul className="flex flex-wrap gap-2.5">
+                {EXPERTISE.map((skill) => (
+                  <li
+                    key={skill}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm border border-neon-cyan/20 bg-neon-cyan/[0.04] text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 hover:shadow-glow-soft transition-all duration-300"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-neon-cyan" />
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+
+          {/* Right column — Timeline */}
+          <div id="work" ref={timelineRef} className="relative pl-10">
+            <motion.div
+              style={{ height: progressHeight, opacity: progressOpacity }}
+              className="absolute left-0 top-0 w-[2px] bg-gradient-to-b from-neon-green via-neon-cyan to-neon-purple rounded-full shadow-[0_0_20px_rgb(34_211_238_/_0.6)]"
+              aria-hidden
+            />
+            <div className="absolute left-0 top-0 w-[2px] h-full bg-white/[0.06] rounded-full" aria-hidden />
+
+            <div className="flex items-center gap-2 mb-8">
+              <Briefcase className="w-5 h-5 text-neon-cyan" />
+              <h3 className="font-semibold text-xl text-fg">Professional Journey</h3>
+            </div>
+
+            <div className="space-y-6">
+              {EXPERIENCE.map((exp, i) => (
+                <motion.article
+                  key={exp.company + exp.period}
+                  initial={reduce ? false : { opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="relative rounded-xl p-6 glass neon-edge hover:shadow-glow-soft transition-shadow duration-500"
                 >
-                  <CheckCircle2 className="w-4 h-4 inline mr-1" /> {skill}
-                </motion.li>
+                  <div className="absolute -left-[11px] top-7 w-4 h-4 rounded-full bg-gradient-to-br from-neon-green to-neon-cyan shadow-[0_0_15px_rgb(34_211_238_/_0.7)]" />
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <h4 className="font-semibold text-fg text-base">{exp.role}</h4>
+                    <span className="font-mono text-xs text-neon-cyan inline-flex items-center gap-1.5">
+                      <CalendarDays className="w-3.5 h-3.5" />
+                      {exp.period}
+                    </span>
+                  </div>
+                  <div className="text-sm text-neon-purple mt-1">{exp.company}</div>
+                  <p className="mt-3 text-sm text-fg-muted leading-relaxed">{exp.details}</p>
+                </motion.article>
               ))}
-            </motion.ul>
-          </motion.div>
-        </div>
-
-        {/* RIGHT — Timeline */}
-        <div id="work" ref={timelineRef} className="relative pl-10">
-
-          <motion.div
-            style={{ height: progressHeight, opacity }}
-            className="absolute left-0 top-0 w-[3px] bg-gradient-to-b from-secondary-green to-secondary-blue rounded-full shadow-[0_0_20px_rgba(0,255,255,0.4)]"
-          />
-
-          <h3 className="font-bold text-xl dark:text-white mb-5">Professional Journey</h3>
-
-          {experience.map((exp, i) => (
-            <TiltCard
-              key={i}
-              className="relative mb-8 p-5 bg-white dark:bg-primary rounded-xl shadow-sm border dark:border-white/10"
-            >
-              <div className="absolute -left-[10px] -top-2 w-4 h-4 bg-gradient-to-br from-secondary-green to-secondary-blue rounded-full shadow-[0_0_15px_rgba(0,255,255,0.4)]" />
-              <div className="text-cyan-500 dark:text-white font-semibold">{exp.role}</div>
-              <div className="flex items-center gap-2 mt-1 text-sm dark:text-cyan-300/80">
-                <CalendarDays className="w-4 h-4" /> {exp.period}
-              </div>
-              <p className="text-sm mt-2 dark:text-white/70">{exp.details}</p>
-              <p className="text-xs mt-1 dark:text-purple-200/70">{exp.company}</p>
-            </TiltCard>
-          ))}
+            </div>
+          </div>
         </div>
       </div>
-    </section>
-  );
-}
-
-// ==== 3D TILT ====
-function TiltCard({ children, className = "" }: any) {
-    const ref = useRef<HTMLDivElement>(null);
-  const [rotate, setRotate] = useState({ rotateX: 0, rotateY: 0 });
-
-  return (
-    <motion.div
-      ref={ref}
-      style={{
-        rotateX: rotate.rotateX,
-        rotateY: rotate.rotateY,
-        transformStyle: "preserve-3d",
-      }}
-      onMouseMove={(e) => {
-        const rect: any = ref.current?.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        setRotate({ rotateX: y / -20, rotateY: x / 20 });
-      }}
-      onMouseLeave={() => setRotate({ rotateX: 0, rotateY: 0 })}
-      transition={{ type: "spring", stiffness: 120, damping: 12 }}
-      className={`${className} transition-transform duration-300 origin-center`}
-    >
-      {children}
-    </motion.div>
+    </Section>
   );
 }

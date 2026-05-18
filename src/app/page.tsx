@@ -1,25 +1,29 @@
-import Hero from '../components/sections/Hero'
-import About from "../components/sections/About";
-import Projects from "../components/sections/Projects";
-import Skills from "../components/sections/Skills";
-import Contact from "../components/sections/Contact";
+import dynamic from "next/dynamic";
+import Hero from "@/components/sections/Hero";
+import LazyView from "@/components/ui/LazyView";
+
+// Code-split below-hero sections — keeps initial JS payload tight.
+const About = dynamic(() => import("@/components/sections/About"));
+const Projects = dynamic(() => import("@/components/sections/Projects"));
+const Skills = dynamic(() => import("@/components/sections/Skills"));
+const Contact = dynamic(() => import("@/components/sections/Contact"));
 
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <section id="about" className="py-16">
+      <LazyView minHeight={680}>
         <About />
-      </section>
-      <section id="projects" className="py-16">
+      </LazyView>
+      <LazyView minHeight={760}>
         <Projects />
-      </section>
-      <section id="skills" className="py-16">
+      </LazyView>
+      <LazyView minHeight={620}>
         <Skills />
-      </section>
-      <section id="contact" className="py-16">
+      </LazyView>
+      <LazyView minHeight={680}>
         <Contact />
-      </section>
+      </LazyView>
     </>
   );
 }

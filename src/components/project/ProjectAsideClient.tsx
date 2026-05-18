@@ -3,122 +3,109 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import { projects } from "@/data/projects";
 import type { Project } from "@/types";
 
 export default function ProjectAsideClient({ project }: { project: Project }) {
-  const otherProjects = projects.filter((p) => p.id !== project.id).slice(0, 3);
+  const others = projects.filter((p) => p.id !== project.id).slice(0, 3);
+  const externalUrl = project.demo || (project.href !== "#" ? project.href : undefined);
 
   return (
-    <aside className="p-6 rounded-2xl border border-neutral-200 dark:border-white/10 bg-gradient-to-b from-white/[0.05] to-transparent dark:from-[#0e0e10]/60 backdrop-blur-md">
-      <div className="sticky top-24 space-y-8">
-        {/* --- Basic Project Info --- */}
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold dark:text-white/90">{project.title}</h3>
-          <p className="text-sm dark:text-white/60 leading-relaxed">{project.short}</p>
-
-          <dl className="grid grid-cols-2 gap-y-3 text-sm pt-3 border-t border-white/10">
-            <div>
-              <dt className="text-xs text-muted-foreground">Role</dt>
-              <dd className="font-medium text-neutral-800/90 dark:text-white/90">{project.role ?? "Frontend"}</dd>
-            </div>
-
-            <div>
-              <dt className="text-xs text-muted-foreground">Status</dt>
-              <dd className="font-medium  text-neutral-800/90 dark:text-white/90">{project.status ?? "Completed"}</dd>
-            </div>
-
-            <div>
-              <dt className="text-xs text-muted-foreground">Type</dt>
-              <dd className="font-medium text-neutral-800/90 dark:text-white/90">{project.type ?? "Web App"}</dd>
-            </div>
-          </dl>
+    <aside className="lg:sticky lg:top-28 space-y-6">
+      {/* Quick facts */}
+      <div className="rounded-2xl p-6 glass neon-edge">
+        <div className="font-mono text-xs uppercase tracking-widest text-neon-cyan mb-4">
+          Project Info
         </div>
+        <dl className="space-y-3 text-sm">
+          <Row label="Role" value={project.role ?? "Developer"} />
+          <Row label="Status" value={project.status ?? "Completed"} />
+          <Row label="Type" value={project.type ?? "Web App"} />
+          {project.year && <Row label="Year" value={project.year} />}
+        </dl>
 
-        {/* --- Resources --- */}
-        <div className="pt-4 border-t border-neutral-200 dark:border-white/10">
-          <h5 className="text-xs text-muted-foreground mb-3">Resources</h5>
-          <ul className="space-y-2 text-sm">
-            {project.repo && (
-              <li>
-                <a
-                  href={project.repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 underline dark:text-white hover:text-primary transition-colors"
-                >
-                  View Source
-                </a>
-              </li>
-            )}
-            {project.caseStudy && (
-              <li>
-                <a
-                  href={project.caseStudy}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 underline hover:text-primary transition-colors"
-                >
-                  Case Study
-                </a>
-              </li>
-            )}
-          </ul>
-        </div>
-
-        {/* --- Visit Project Button --- */}
-        {project.href && (
-          <div className="flex flex-col gap-3">
+        <div className="mt-6 space-y-2.5">
+          {externalUrl && (
             <a
-              href={project.href}
+              href={externalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-medium bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md hover:scale-[1.02] hover:opacity-90 transition-all"
+              className="inline-flex items-center justify-center gap-2 w-full h-11 px-4 rounded-lg text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
             >
-              Visit Project
+              <ExternalLink className="w-4 h-4" /> Visit Project
             </a>
-          </div>
-        )}
-
-        {/* --- Other Projects --- */}
-        {otherProjects.length > 0 && (
-          <div className="pt-6 border-t border-white/10">
-            <h5 className="text-xs text-muted-foreground mb-3 tracking-wide uppercase">
-              Other Projects
-            </h5>
-
-            <div className="space-y-4">
-              {otherProjects.map((p) => (
-                <Link
-                  key={p.id}
-                  href={`/projects/${p.id}`}
-                  className="group flex items-center gap-3 rounded-xl overflow-hidden border-neutral-200 dark:border-white/10 hover:border-primary/50 transition-all bg-white/[0.03] hover:bg-white/[0.06]"
-                >
-                  <div className="relative w-16 h-16 flex-shrink-0">
-                    {p.image ? (
-                      <Image
-                        src={p.image}
-                        alt={p.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-700" />
-                    )}
-                  </div>
-
-                  <div className="flex-1 py-2 pr-2">
-                    <h4 className="text-sm font-semibold text-neutral-800 dark:text-white group-hover:text-primary transition-colors">
-                      {p.title}
-                    </h4>
-                    <p className="text-xs text-white/60 truncate">{p.type ?? "Project"}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+          )}
+          {project.repo && (
+            <a
+              href={project.repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full h-11 px-4 rounded-lg text-sm font-medium border border-white/15 text-fg hover:border-neon-cyan/50 hover:text-neon-cyan transition-all"
+            >
+              <Github className="w-4 h-4" /> View Source
+            </a>
+          )}
+          {project.caseStudy && (
+            <a
+              href={project.caseStudy}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-neon-cyan hover:underline"
+            >
+              Case study <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
+          )}
+        </div>
       </div>
+
+      {/* Other projects */}
+      {others.length > 0 && (
+        <div className="rounded-2xl p-6 glass neon-edge">
+          <div className="font-mono text-xs uppercase tracking-widest text-neon-cyan mb-4">
+            Other Projects
+          </div>
+          <div className="space-y-3">
+            {others.map((p) => (
+              <Link
+                key={p.id}
+                href={`/projects/${p.id}`}
+                className="group flex items-center gap-3 rounded-xl overflow-hidden border border-white/[0.06] hover:border-neon-cyan/40 transition-colors"
+              >
+                <div className="relative w-16 h-16 flex-shrink-0 bg-bg-soft">
+                  {p.image && (
+                    <Image
+                      src={p.image}
+                      alt={p.title}
+                      fill
+                      sizes="64px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      placeholder={p.blurDataURL ? "blur" : undefined}
+                      blurDataURL={p.blurDataURL}
+                    />
+                  )}
+                </div>
+                <div className="flex-1 pr-3 py-2 min-w-0">
+                  <h4 className="text-sm font-semibold text-fg truncate group-hover:text-neon-cyan transition-colors">
+                    {p.title}
+                  </h4>
+                  <p className="text-xs text-fg-muted truncate">{p.type ?? "Project"}</p>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-fg-muted group-hover:text-neon-cyan mr-4 transition-colors flex-shrink-0" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </aside>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3">
+      <dt className="text-xs uppercase tracking-wider font-mono text-fg-muted">{label}</dt>
+      <dd className="text-sm font-medium text-fg text-right">{value}</dd>
+    </div>
   );
 }

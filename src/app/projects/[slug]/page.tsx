@@ -1,23 +1,24 @@
 // src/app/projects/[slug]/page.tsx
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+
 import { projects } from "@/data/projects";
 import type { Project } from "@/types";
 import ProjectAsideClient from "@/components/project/ProjectAsideClient";
-import type { Metadata } from "next";
+import { formatTech } from "@/lib/utils";
 
-// ✅ Generate static params (untuk static site generation)
-export const generateStaticParams = async () => {
-  return projects.map((p) => ({ slug: p.id }));
-};
+export const generateStaticParams = async () =>
+  projects.map((p) => ({ slug: p.id }));
 
-// ✅ Generate metadata untuk SEO dan social share
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params; // fix: params di Next 15 harus di-await
+  const { slug } = await params;
   const project = projects.find((p) => p.id === slug);
 
   if (!project) {
@@ -27,111 +28,202 @@ export async function generateMetadata({
     };
   }
 
+  const description = `${project.short} Built with ${formatTech(project.tech)}.`;
+
   return {
-    title: `${project.title} — Case Study`,
-    description: project.short,
+    title: project.title,
+    description,
     openGraph: {
       title: project.title,
-      description: project.short,
-      url: `https://yourwebsite.com/projects/${project.id}`,
+      description,
       type: "article",
+      url: `/projects/${project.id}`,
       images: project.image
-        ? [
-            {
-              url: project.image,
-              width: 1200,
-              height: 630,
-              alt: project.title,
-            },
-          ]
-        : ["/og-image.png"],
+        ? [{ url: project.image, width: 1200, height: 630, alt: project.title }]
+        : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title: project.title,
-      description: project.short,
-      images: [project.image ?? "/og-image.png"],
+      description,
+      images: project.image ? [project.image] : undefined,
     },
+    alternates: { canonical: `/projects/${project.id}` },
   };
 }
 
-// ✅ Komponen utama halaman project
 export default async function ProjectPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params; // fix: harus di-await
-  const project = projects.find((p) => p.id === slug) as Project | undefined;
+  const { slug } = await params;
+  const idx = projects.findIndex((p) => p.id === slug);
+  if (idx === -1) return notFound();
 
-  if (!project) return notFound();
+  const project = projects[idx] as Project;
+  const prev = projects[idx - 1];
+  const next = projects[idx + 1];
+
+  const externalUrl =
+    project.demo || (project.href && project.href !== "#" ? project.href : undefined);
 
   return (
-    <main className="relative container py-20">
-      {/* Gradient background aura */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[rgba(20,241,149,0.06)] via-transparent to-[rgba(69,153,255,0.06)] blur-3xl opacity-70" />
+    <main className="relative">
+      <div className="aurora" aria-hidden />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Left side — main content */}
-        <div className="lg:col-span-2 space-y-10">
-          {/* Hero Image */}
-          <div className="relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
-            {project.image ? (
-              <Image
-                src={project.image}
-                alt={project.title}
-                fill
-                className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:scale-[1.03]"
-                priority
-              />
-            ) : (
-              <div className="w-full h-full bg-slate-300 dark:bg-slate-800 flex items-center justify-center text-sm text-muted-foreground">
-                No image
-              </div>
+      <article className="container pt-32 pb-20">
+        {/* Back link */}
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-1.5 text-sm text-fg-muted hover:text-neon-cyan transition-colors mb-8 group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          All projects
+        </Link>
+
+        {/* Header */}
+        <header className="max-w-3xl">
+          <div className="flex flex-wrap items-center gap-2 mb-5">
+            {project.featured && <span className="badge-glow">Featured</span>}
+            {project.type && (
+              <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono uppercase tracking-widest text-fg-muted border border-white/10">
+                {project.type}
+              </span>
+            )}
+            {project.year && (
+              <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono text-fg-muted border border-white/10">
+                {project.year}
+              </span>
             )}
           </div>
 
-          {/* Title & short description */}
-          <header>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight dark:text-white">
-              {project.title}
-            </h1>
-            <p className="mt-3 text-base text-muted-foreground leading-relaxed">
-              {project.short}
-            </p>
-          </header>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-fg">
+            {project.title}
+          </h1>
+          <p className="mt-5 text-lg text-fg-muted leading-relaxed">{project.short}</p>
+        </header>
 
-          {/* Overview section */}
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold dark:text-white">Overview</h2>
-            <p className="text-sm md:text-base text-muted-foreground/90 leading-relaxed">
-              {project.longDescription ?? ""}
-            </p>
-          </section>
-
-          {/* Tech Stack */}
-          {project.tech?.length ? (
-            <section>
-              <h2 className="text-xl font-semibold mb-3 dark:text-white">
-                Tech Stack
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {project.tech.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1 text-xs md:text-sm rounded-md bg-white/10 border border-white/10 text-muted-foreground dark:text-white/80 backdrop-blur-sm hover:bg-white/15 transition-all"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </section>
-          ) : null}
+        {/* Hero image */}
+        <div className="relative w-full aspect-[16/9] sm:aspect-[2/1] mt-10 rounded-2xl overflow-hidden neon-edge shadow-glow">
+          {project.image ? (
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              sizes="(max-width: 1024px) 100vw, 1100px"
+              className="object-cover"
+              priority
+              placeholder={project.blurDataURL ? "blur" : undefined}
+              blurDataURL={project.blurDataURL}
+            />
+          ) : (
+            <div className="w-full h-full bg-bg-soft flex items-center justify-center text-fg-muted text-sm">
+              No image
+            </div>
+          )}
         </div>
 
-        {/* Right side — aside info */}
-        <ProjectAsideClient project={project} />
-      </div>
+        {/* Body */}
+        <div className="mt-14 grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14">
+          <div className="lg:col-span-2 space-y-12">
+            {project.longDescription && (
+              <section>
+                <h2 className="text-2xl font-bold text-fg mb-4">Overview</h2>
+                <p className="text-base text-fg-soft leading-relaxed">
+                  {project.longDescription}
+                </p>
+              </section>
+            )}
+
+            {project.highlights?.length ? (
+              <section>
+                <h2 className="text-2xl font-bold text-fg mb-4">Highlights</h2>
+                <ul className="space-y-3">
+                  {project.highlights.map((h) => (
+                    <li
+                      key={h}
+                      className="flex items-start gap-3 p-4 rounded-xl glass neon-edge"
+                    >
+                      <CheckCircle2 className="w-5 h-5 text-neon-cyan flex-shrink-0 mt-0.5" />
+                      <span className="text-sm sm:text-base text-fg-soft">{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {project.tech?.length ? (
+              <section>
+                <h2 className="text-2xl font-bold text-fg mb-4">Tech Stack</h2>
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="px-3 py-1.5 rounded-lg text-sm border border-neon-cyan/20 bg-neon-cyan/[0.04] text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {externalUrl && (
+              <section>
+                <a
+                  href={externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 h-12 px-6 rounded-lg text-white font-medium bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+                >
+                  Visit live project
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </section>
+            )}
+          </div>
+
+          <ProjectAsideClient project={project} />
+        </div>
+
+        {/* Prev / next */}
+        {(prev || next) && (
+          <nav
+            className="mt-20 pt-10 border-t border-white/[0.06] grid grid-cols-1 sm:grid-cols-2 gap-4"
+            aria-label="Project navigation"
+          >
+            {prev ? (
+              <Link
+                href={`/projects/${prev.id}`}
+                className="group p-5 rounded-xl glass neon-edge hover:shadow-glow-soft transition-shadow"
+              >
+                <div className="text-xs font-mono uppercase tracking-widest text-fg-muted flex items-center gap-1.5">
+                  <ArrowLeft className="w-3.5 h-3.5" /> Previous
+                </div>
+                <div className="mt-2 font-semibold text-fg group-hover:text-neon-cyan transition-colors">
+                  {prev.title}
+                </div>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next ? (
+              <Link
+                href={`/projects/${next.id}`}
+                className="group p-5 rounded-xl glass neon-edge hover:shadow-glow-soft transition-shadow sm:text-right"
+              >
+                <div className="text-xs font-mono uppercase tracking-widest text-fg-muted flex items-center sm:justify-end gap-1.5">
+                  Next <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+                <div className="mt-2 font-semibold text-fg group-hover:text-neon-cyan transition-colors">
+                  {next.title}
+                </div>
+              </Link>
+            ) : null}
+          </nav>
+        )}
+      </article>
     </main>
   );
 }

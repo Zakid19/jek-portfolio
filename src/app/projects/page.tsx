@@ -1,31 +1,28 @@
 // src/app/projects/page.tsx
 import React from "react";
+import type { Metadata } from "next";
 import Section from "@/components/ui/Section";
 import ProjectsGridClient from "@/components/project/ProjectsGrid";
-import { projects } from "@/data/projects";
 
-export const metadata = {
-  title: "Projects — Zaki Deza",
+export const metadata: Metadata = {
+  title: "Projects",
   description:
-    "All projects and case studies — built with Next.js, TypeScript and Tailwind.",
+    "Selected projects and case studies — built with Next.js, React, Laravel, and TypeScript.",
   openGraph: {
-    title: "Projects — Zaki Deza",
+    title: "Projects · Zaki Deza",
     description: "A collection of projects and case studies.",
-    images: ["/og-image.png"],
   },
 };
 
 export default function ProjectsPage() {
-  // Server component: can pass data as props or let client import data again.
-  // We'll render a Section wrapper and mount client component inside.
   return (
-    <main>
+    <main className="relative pt-20">
+      <div className="aurora" aria-hidden />
       <Section
+        eyebrow="Portfolio"
         title="All Projects"
-        subtitle="Browse all case studies and experiments."
+        subtitle="Browse the full archive of case studies and experiments — search by name, filter by stack."
       >
-        {/* ProjectsGridClient handles rendering + modal */}
-        {/* If you prefer server-props, pass projects as prop: <ProjectsGridClient initialProjects={projects} /> */}
         <ProjectsGridClient />
       </Section>
     </main>

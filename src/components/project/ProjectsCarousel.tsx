@@ -4,34 +4,38 @@
 import React, { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { projects } from "@/data/projects";
 import ProjectCard from "@/components/project/ProjectCard";
 import type { Project } from "@/types";
-import { useReducedMotion } from "framer-motion";
 
 const DynamicModal = dynamic(() => import("@/components/project/ProjectModal"), { ssr: false });
+
+const GAP_PX = 24;
 
 export default function ProjectsCarousel() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
     align: "start",
     skipSnaps: false,
+    containScroll: "trimSnaps",
   });
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+  const [snaps, setSnaps] = useState<number[]>([]);
+  const [selectedSnap, setSelectedSnap] = useState(0);
   const [selected, setSelected] = useState<Project | null>(null);
-  const reduce = useReducedMotion();
-
-  const GAP_PX = 24; // Tailwind gap-6 = 1.5rem = 24px
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
-    setCanScrollPrev(emblaApi.canScrollPrev());
-    setCanScrollNext(emblaApi.canScrollNext());
+    setCanPrev(emblaApi.canScrollPrev());
+    setCanNext(emblaApi.canScrollNext());
+    setSelectedSnap(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
   useEffect(() => {
     if (!emblaApi) return;
+    setSnaps(emblaApi.scrollSnapList());
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
     onSelect();
@@ -48,101 +52,82 @@ export default function ProjectsCarousel() {
     };
   }, [emblaApi, onSelect]);
 
-  const handleOpen = useCallback((p: Project) => {
-    setSelected(p);
-  }, []);
-
   return (
     <div className="relative">
-      {/* Embla viewport */}
-      <div className="embla overflow-hidden" ref={emblaRef}>
-        <div className="embla__container flex gap-6">
+      <div className="embla overflow-hidden -mx-2 px-2" ref={emblaRef}>
+        <div className="embla__container flex gap-6 py-2">
           {projects.map((p) => (
             <div
               key={p.id}
               className="embla__slide flex-shrink-0"
               role="group"
               aria-roledescription="slide"
-              aria-label={`${p.title} — slide`}
+              aria-label={p.title}
             >
-              <ProjectCard project={p} onOpen={handleOpen} />
+              <ProjectCard project={p} onOpen={setSelected} />
             </div>
           ))}
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="hidden absolute right-2 top-1/2 -translate-y-1/2 md:flex gap-2 z-10">
-        <button
-          onClick={() => emblaApi?.scrollPrev()}
-          disabled={!canScrollPrev}
-          aria-label="Previous projects"
-          className="p-2 rounded-md border bg-white/85 dark:bg-slate-900/85 disabled:opacity-40 focus-visible:ring-2"
-        >
-          ‹
-        </button>
+      {/* Controls row */}
+      <div className="mt-8 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          {snaps.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => emblaApi?.scrollTo(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === selectedSnap
+                  ? "w-8 bg-gradient-to-r from-neon-green to-neon-cyan shadow-[0_0_10px_rgb(34_211_238_/_0.6)]"
+                  : "w-2 bg-white/15 hover:bg-white/30"
+              }`}
+            />
+          ))}
+        </div>
 
-        <button
-          onClick={() => emblaApi?.scrollNext()}
-          disabled={!canScrollNext}
-          aria-label="Next projects"
-          className="p-2 rounded-md border bg-white/85 dark:bg-slate-900/85 disabled:opacity-40 focus-visible:ring-2"
-        >
-          ›
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => emblaApi?.scrollPrev()}
+            disabled={!canPrev}
+            aria-label="Previous"
+            className="w-10 h-10 rounded-full border border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center text-fg hover:border-neon-cyan/50 hover:text-neon-cyan disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => emblaApi?.scrollNext()}
+            disabled={!canNext}
+            aria-label="Next"
+            className="w-10 h-10 rounded-full border border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center text-fg hover:border-neon-cyan/50 hover:text-neon-cyan disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+          <a
+            href="/projects"
+            className="ml-2 inline-flex items-center gap-1.5 h-10 px-4 rounded-full text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+          >
+            View all
+            <ArrowUpRight className="w-4 h-4" />
+          </a>
+        </div>
       </div>
 
-      {/* Small CTA below carousel */}
-      <div className="mt-4 flex justify-center ">
-        <a href="/projects" className="text-sm py-1.5 px-3 rounded-lg bg-gradient-to-r from-secondary-green to-secondary-blue text-white hover:shadow-[0_0_30px_-5px_rgba(0,255,255,0.5)]">
-          View All
-        </a>
-      </div>
+      {selected && <DynamicModal project={selected} onClose={() => setSelected(null)} />}
 
-      {/* Dynamic modal */}
-      {selected ? <DynamicModal project={selected} onClose={() => setSelected(null)} /> : null}
-
-      {/* CSS: calculate min-width per breakpoint so N slides fit fully */}
       <style jsx>{`
-        .embla__container {
-          display: flex;
-          box-sizing: border-box;
-        }
         .embla__slide {
-          scroll-snap-align: start;
-          box-sizing: border-box;
-          /* ensure slides don't shrink and we control width via flex-basis */
-          flex: 0 0 80%;
-          padding: 0; /* avoid extra spacing from slides themselves */
+          flex: 0 0 85%;
         }
-
-        /* >=640px (sm) => 2 columns */
         @media (min-width: 640px) {
           .embla__slide {
-            /* (100% - gap) / 2 */
             flex: 0 0 calc((100% - ${GAP_PX}px) / 2);
           }
         }
-
-        /* >=1024px (lg) => 3 columns fully visible */
         @media (min-width: 1024px) {
           .embla__slide {
-            /* (100% - gap*2) / 3 */
             flex: 0 0 calc((100% - ${GAP_PX * 2}px) / 3);
-          }
-        }
-
-        /* Make sure the viewport (embla) doesn't add extra padding that affects calc */
-        .embla {
-          box-sizing: border-box;
-        }
-
-        /* Reduce motion fallback */
-        @media (prefers-reduced-motion: reduce) {
-          .embla,
-          .embla__container,
-          .embla__slide {
-            scroll-behavior: auto;
           }
         }
       `}</style>

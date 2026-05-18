@@ -4,101 +4,219 @@ import type { Project } from "@/types";
 export const projects: Project[] = [
   {
     id: "p1",
-    title: "Management System Hospital",
+    title: "Hospital Management System",
     short:
-      "Sistem manajemen rumah sakit berbasis Laravel dengan modul pasien, rawat inap, manajemen kamar, dan laporan. Menggunakan role-based access (admin/dokter/perawat) dan dashboard monitoring interaktif.",
+      "Role-based hospital management platform handling patients, inpatient care, room assignment, and reporting — with a live monitoring dashboard.",
+    longDescription:
+      "An end-to-end hospital operations suite built with Laravel and Blade. Includes role-based access for admins, doctors, and nurses, modular patient & room workflows, and a real-time dashboard that surfaces ward occupancy and KPIs.",
     tech: ["Laravel", "Blade", "Tailwind CSS", "MySQL"],
     image: "/assets/images/project-1.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAQAgCdASoQAAgAA4BaJbACdLoAApv8w+hAAOvmC1+aa/Jpczu+LPHK0FXDAxr9b0L7dT8kMbMrgtn+LR/8y78HAAA=",
     href: "https://github.com/Zakid19/Sm-Hospital",
+    repo: "https://github.com/Zakid19/Sm-Hospital",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2024",
+    highlights: [
+      "Role-based access (admin / doctor / nurse)",
+      "Real-time ward & occupancy dashboard",
+      "Modular patient and room workflows",
+    ],
+    featured: true,
   },
   {
     id: "p2",
     title: "NFT Generator System",
     short:
-      "NFT Generator adalah aplikasi fullstack untuk menghasilkan koleksi NFT secara otomatis, lengkap dengan image compositing, metadata JSON, dan preview web interface. Project ini dirancang untuk mensimulasikan workflow NFT production end-to-end seperti yang digunakan pada NFT collection di dunia nyata.",
+      "Fullstack NFT collection generator with automated image compositing, JSON metadata, and a live preview UI.",
+    longDescription:
+      "Simulates a production NFT workflow end-to-end: trait-based image compositing, deterministic metadata generation, and a polished Next.js preview for curating outputs before mint.",
     tech: ["Next.js", "Express.js", "Node.js"],
     image: "/assets/images/project-2.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAABwAQCdASoQAAgAA4BaJaVnyAGIAAD+8HQIGGlCydJXQkeullAAAA==",
     href: "https://github.com/Zakid19/generator-system-NFT",
+    repo: "https://github.com/Zakid19/generator-system-NFT",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2024",
+    highlights: [
+      "Trait-based automated image compositing",
+      "Deterministic JSON metadata output",
+      "Web preview interface for the entire collection",
+    ],
+    featured: true,
   },
   {
     id: "p3",
-    title: "Parodee Crypto Project",
+    title: "Parodee — Crypto Landing",
     short:
-      "Landing page modern untuk proyek cryptocurrency dengan desain responsif, CTA interaktif, dan animasi ringan berbasis React & Tailwind.",
-    tech: ["React", "Tailwind CSS", "Typescript"],
+      "Modern landing page for a cryptocurrency project — responsive layout, interactive CTAs, and lightweight motion.",
+    tech: ["React", "Tailwind CSS", "TypeScript"],
     image: "/assets/images/project-3.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoQAAoAA4BaJQBOj+ADAEOz+scwAAD+7StUosQXT2W+TKt5Ex+ySbyaskwNGLAuP388fg1a/miBUWwO1MOxuUslhuVTsUlYgcl1kEFBNvGQrOCxyB2tbQGKAAA=",
     href: "https://parodee.fun/",
+    demo: "https://parodee.fun/",
+    role: "Frontend Developer",
+    status: "Live",
+    type: "Landing Page",
+    year: "2024",
   },
   {
     id: "p4",
     title: "PT Anak Bungsu Indo Energi",
     short:
-      "Website profil perusahaan dengan CMS sederhana berbasis Laravel dan React.js untuk pengelolaan konten serta admin panel interaktif.",
-    tech: ["Laravel", "MySQL", "React.js"],
+      "Corporate profile site with a lightweight Laravel CMS and a React-driven admin panel for content management.",
+    tech: ["Laravel", "React", "MySQL", "Tailwind CSS"],
     image: "/assets/images/project-4.jpeg",
+    blurDataURL:
+      "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoQAAkAA4BaJaACdH8AFnfkrc6FAADNk6pO2BzLiRqr64k+8Q1ty5SbGKH6PfHUYZOJ1LlmOonFxc8pgDogFfaTyqsBnr/HRdJo/fruRGE7wCprAAA=",
     href: "http://www.abienergi.com/",
+    demo: "http://www.abienergi.com/",
+    role: "Fullstack Developer",
+    status: "Live",
+    type: "CMS",
+    year: "2023",
   },
   {
     id: "p5",
     title: "Lorehype Agency",
     short:
-      "Website profil interaktif untuk agensi Lorehype menggunakan React + Tailwind + Firebase. Fitur autentikasi dan manajemen konten terintegrasi.",
+      "Interactive agency profile with Firebase authentication and an integrated content management layer.",
     tech: ["React", "Tailwind CSS", "Firebase"],
     image: "/assets/images/project-5.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoQAAkAA4BaJZwAAsdBbIJ0AAD+4eyXO4CvbVaw1Hylki3P1SAnHq+3i1ZhmtN0QADxoEwg8IwZN2SNmMf2DQB51GI22SA0HBDCgAAA",
     href: "https://lorehype.com/",
+    demo: "https://lorehype.com/",
+    role: "Fullstack Developer",
+    status: "Live",
+    type: "Web App",
+    year: "2024",
+    featured: true,
   },
   {
     id: "p6",
-    title: "Kalisloka",
-    short: "Landing page modern untuk perusahaan export kalisloka",
+    title: "Kalisloka — Export Landing",
+    short:
+      "Modern landing page for an export company — focused on storytelling, product showcases, and clean conversions.",
     tech: ["React", "Tailwind CSS"],
     image: "/assets/images/project-6.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAACwAQCdASoQAAcAA4BaJZQAAu0eDYEoAP7tCdjXhuFqRrM301XGrHt0z+YJQzfMxQD6WYAA",
     href: "https://www.kalisloka.com/",
+    demo: "https://www.kalisloka.com/",
+    role: "Frontend Developer",
+    status: "Live",
+    type: "Landing Page",
+    year: "2024",
   },
   {
     id: "p7",
-    title: "Sistem Absensi Fingerprint Simulator",
+    title: "Fingerprint Attendance Simulator",
     short:
-      "Aplikasi absensi sekolah berbasis Laravel 11 yang terintegrasi dengan device fingerprint standalone tanpa SDK. Sistem menangkap fingerprint ID dari device, memetakkannya ke data siswa melalui mekanisme registrasi terkontrol, dan mencatat absensi secara realtime dengan perhitungan jam masuk dan keterlambatan yang dinamis. Dilengkapi manajemen siswa, guru, dan kelas, validasi anti double-scan, laporan absensi, serta arsitektur modular yang stabil dan hemat biaya untuk device entry-level.",
-    tech: ["React", "Tailwind CSS"],
+      "Laravel 11 school attendance system that talks to standalone fingerprint devices (no SDK) and logs entries in real time.",
+    longDescription:
+      "Captures fingerprint IDs straight from entry-level standalone devices, maps them to student records via a controlled registration flow, and records attendance in real time with dynamic late-time calculation. Ships with student/teacher/class management, anti double-scan validation, attendance reports, and a modular architecture designed for cost-effective hardware.",
+    tech: ["Laravel", "Tailwind CSS", "MySQL"],
     image: "/assets/images/project-7.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAACQAQCdASoQAAcAA4BaJZwAApKugoAA/oo5j51KfmdTYO3L/dxAr/t/Z3D34tHdCZxiH9QsBrHAAA==",
     href: "#",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2025",
+    highlights: [
+      "SDK-less integration with standalone fingerprint devices",
+      "Real-time attendance with dynamic late-time logic",
+      "Anti double-scan validation & reporting",
+    ],
   },
-
   {
     id: "p8",
-    title: "Sistem Cerdas Booking Bengkel Chatbot",
+    title: "Smart Workshop Booking & Chatbot",
     short:
-      "Smart Booking & Queue Management System adalah aplikasi web berbasis Laravel 11 untuk mengelola booking servis, antrian, dan operasional bengkel secara efisien. Sistem ini mendukung booking online, monitoring antrian real-time, serta estimasi waktu tunggu berbasis rule-based decision support yang dihitung dari durasi layanan, jumlah antrian, dan ketersediaan mekanik. Dilengkapi chatbot berbasis perintah (command-based) tanpa machine learning, aplikasi ini membantu pengguna mengecek status booking, antrian, dan jadwal servis dengan cepat. Dirancang modular dengan arsitektur MVC + Service Layer, sistem ini ringan, mudah dikembangkan, dan siap digunakan untuk kebutuhan komersial maupun Tugas Akhir.",
-    tech: ["React", "Tailwind CSS"],
+      "Laravel 11 booking and queue platform for auto workshops — real-time queue monitoring with a rule-based chatbot.",
+    longDescription:
+      "Manages online booking, real-time queue monitoring, and wait-time estimation using rule-based decision support that factors in service duration, queue length, and mechanic availability. A command-based chatbot (no ML required) lets customers check booking, queue, and schedule instantly. Built on an MVC + Service Layer architecture so it stays lightweight and easy to extend.",
+    tech: ["Laravel", "Tailwind CSS", "MySQL"],
     image: "/assets/images/project-8.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAAAQAgCdASoQAAcAA4BaJZACdAEf/qnmyfAAAP5tJLobcWbFP037kG1bGDxLqKtPXw/7EAAA",
     href: "#",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2025",
+    highlights: [
+      "Rule-based wait-time estimation",
+      "Command-based chatbot (no ML dependency)",
+      "MVC + Service Layer architecture",
+    ],
+    featured: true,
   },
   {
     id: "p9",
-    title: "Sistem Booking Barbershop",
+    title: "Barbershop Booking System",
     short:
-      "Sistem ini adalah aplikasi booking barbershop berbasis web yang dirancang untuk membantu barbershop kecil–menengah mengelola booking secara rapi, otomatis, dan bebas bentrok jadwal, tanpa ketergantungan pada chat manual (WhatsApp/DM). Aplikasi dibangun dengan pendekatan real-world MVP, fokus pada operasional nyata, shared-hosting friendly, dan mudah dipakai oleh admin non-teknis maupun customer awam.",
-    tech: ["React", "Tailwind CSS"],
+      "Web-based booking platform for small-to-mid barbershops — zero-conflict scheduling, MVP-first, shared-hosting friendly.",
+    longDescription:
+      "Designed to replace messy WhatsApp/DM bookings with a clean, automated flow. Built around real operational needs: tight scheduling, admin- and customer-friendly UI, and shared-hosting friendly deployment.",
+    tech: ["Laravel", "Tailwind CSS", "MySQL"],
     image: "/assets/images/project-9.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACwAQCdASoQAAcAA4BaJZQCdAEO9p5AAP3GSnNVUE9mIr5iuIN4fXfkGi9FsgASxefklQtL5ThXMTmAAAA=",
     href: "#",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2025",
   },
   {
     id: "p10",
     title: "Crypto Landing Page",
     short:
-      "Landing page modern untuk proyek cryptocurrency dengan desain responsif, CTA interaktif, dan animasi ringan berbasis React & Tailwind.",
+      "Modern crypto landing page with responsive layout, interactive CTAs, and lightweight motion.",
     tech: ["React", "Tailwind CSS"],
     image: "/assets/images/project-10.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADQAQCdASoQAAcAA4BaJaACdAEO+xazAAD+o398gej5a+yOe58dG3X4u7EcZPDsQ5gK81NpEOtyYAAA",
     href: "#",
+    role: "Frontend Developer",
+    status: "Completed",
+    type: "Landing Page",
+    year: "2024",
   },
   {
     id: "p11",
-    title: "Smart Stock Prediction UMKM",
+    title: "Smart Stock Prediction for SMBs",
     short:
-      "Aplikasi web berbasis Laravel 11 yang berfungsi sebagai Decision Support System (DSS) untuk membantu UMKM mengelola stok barang secara efektif. Sistem ini menyediakan manajemen produk dan penjualan, analisis penjualan historis, serta prediksi kebutuhan stok menggunakan metode Moving Average. Dilengkapi chatbot berbasis rule-based, validasi stok real-time, laporan dan visualisasi data, serta role-based access (Admin & Staff), sistem ini dirancang ringan, explainable, dan tanpa machine learning sehingga mudah dipahami dan siap digunakan pada skala bisnis kecil hingga menengah.",
-    tech: ["React", "Tailwind CSS"],
+      "Laravel 11 Decision Support System helping SMBs forecast inventory needs with Moving Average — explainable, no black-box ML.",
+    longDescription:
+      "A Decision Support System (DSS) for small businesses that combines product & sales management, historical sales analytics, and inventory forecasting using Moving Average. Includes a rule-based chatbot, real-time stock validation, reports & data visualisation, and role-based access (Admin / Staff). Designed to be lightweight, explainable, and ML-free so it's easy to adopt.",
+    tech: ["Laravel", "Tailwind CSS", "MySQL"],
     image: "/assets/images/project-11.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRjYAAABXRUJQVlA4ICoAAACwAQCdASoQAAcAA4BaJZwAAudM1z3wAPw+RZ65Z2DV5kuV5kNg07VlIAA=",
     href: "#",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2025",
+    highlights: [
+      "Moving-Average inventory forecasting",
+      "Rule-based chatbot + real-time stock validation",
+      "Role-based access (Admin / Staff)",
+    ],
+    featured: true,
   },
 ];
+
+/** Used by the Hero component to render a smooth LQIP while the avatar loads. */
+export const AVATAR_BLUR =
+  "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoQABAAA4BaJagCdAEfbhGqNgAA/vaqviv7cxW4ghYdLwzbeob344JRoyGH+Ix58l6zDMV0wyaVrRimAAA=";

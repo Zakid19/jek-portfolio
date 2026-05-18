@@ -8,8 +8,9 @@ export default function Projects() {
   return (
     <Section
       id="projects"
-      title="Selected Projects"
-      subtitle="A showcase of my latest works — each one crafted with purpose and clean design."
+      eyebrow="Selected Work"
+      title="Projects shipped with intent."
+      subtitle="A showcase of recent builds — from production SaaS to landing pages — each crafted with purpose, clean architecture, and a touch of polish."
     >
       <ProjectsCarousel />
     </Section>

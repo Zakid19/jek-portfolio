@@ -1,163 +1,327 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import {
+  CheckCircle2,
+  Copy,
+  Github,
+  Linkedin,
+  Loader2,
+  Mail,
+  MapPin,
+  Send,
+  XCircle,
+} from "lucide-react";
 import Section from "@/components/ui/Section";
-import { Mail, Send, Github, Linkedin } from "lucide-react";
-import { useState } from "react";
+
+const FORMSPREE_URL = "https://formspree.io/f/mqayvvjq";
+const EMAIL = "zakideza19@gmail.com";
+
+type Status = "idle" | "sending" | "sent" | "error";
 
 export default function Contact() {
+  const reduce = useReducedMotion();
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<Status>("idle");
+  const [copied, setCopied] = useState(false);
 
-  const handleChange = (e: any) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const FORMSPREE_URL = "https://formspree.io/f/mqayvvjq"; // 🔥 Ganti sama endpoint lo
-
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStatus("sending");
+    // Honeypot — bots fill hidden field
+    const hp = (e.currentTarget.elements.namedItem("company") as HTMLInputElement | null)?.value;
+    if (hp) return;
 
+    setStatus("sending");
     try {
       const res = await fetch(FORMSPREE_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(formData),
       });
-
-      if (res.ok) {
-        setStatus("sent");
-        setFormData({ name: "", email: "", message: "" });
-        setTimeout(() => setStatus("idle"), 4000);
-      } else throw new Error("Failed to send message");
-    } catch (err) {
-      console.error(err);
+      if (!res.ok) throw new Error("Send failed");
+      setStatus("sent");
+      setFormData({ name: "", email: "", message: "" });
+      setTimeout(() => setStatus("idle"), 4500);
+    } catch {
       setStatus("error");
-      setTimeout(() => setStatus("idle"), 4000);
+      setTimeout(() => setStatus("idle"), 4500);
+    }
+  };
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* noop */
     }
   };
 
   return (
-    <Section id="contact" title="Get in Touch">
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="max-w-6xl mx-auto mt-10 grid grid-cols-1 md:grid-cols-2 gap-12"
-      >
-        {/* LEFT: Contact Form */}
+    <Section
+      id="contact"
+      eyebrow="Get in touch"
+      title="Let's build something."
+      subtitle="Open for new opportunities and collaborations. Drop a message or reach out via email — I usually reply within a day."
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
+        {/* Form */}
         <motion.form
           onSubmit={handleSubmit}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="p-8 rounded-2xl backdrop-blur-lg bg-white/10 dark:bg-primary/40 border border-neutral-200 dark:border-white/10 shadow-xl space-y-6"
+          initial={reduce ? false : { opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6 }}
+          className="lg:col-span-3 p-7 sm:p-9 rounded-2xl glass neon-edge space-y-5"
+          noValidate
         >
-          <h3 className="text-2xl font-bold mb-4 text-neutral-800 dark:text-white">Send me a message</h3>
+          <h3 className="text-xl font-semibold text-fg">Send me a message</h3>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <input
-              type="text"
-              name="name"
-              placeholder="Your Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full p-3 rounded-md bg-transparent border border-neutral-200 dark:border-white/10 text-neutral-800 dark:text-white dark:placeholder-white/40 focus:border-cyan-400 outline-none transition-all duration-200"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Your Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full p-3 rounded-md bg-transparent border border-neutral-200 dark:border-white/10 text-neutral-800 dark:text-white dark:placeholder-white/40 focus:border-cyan-400 outline-none transition-all duration-200"
-            />
-          </div>
-
-          <textarea
-            name="message"
-            rows={5}
-            placeholder="Your Message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-            className="w-full p-3 rounded-md bg-transparent border border-neutral-200 dark:border-white/10 dark:text-white dark:placeholder-white/40 focus:border-cyan-400 outline-none transition-all duration-200"
+          {/* Honeypot */}
+          <input
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            className="sr-only"
+            aria-hidden
           />
 
-          <motion.button
+          <div className="grid sm:grid-cols-2 gap-5">
+            <Field id="name" label="Name" required>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                placeholder="Jane Doe"
+                className="input"
+              />
+            </Field>
+
+            <Field id="email" label="Email" required>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                placeholder="jane@company.com"
+                className="input"
+              />
+            </Field>
+          </div>
+
+          <Field id="message" label="Message" required>
+            <textarea
+              id="message"
+              name="message"
+              rows={5}
+              value={formData.message}
+              onChange={handleChange}
+              required
+              placeholder="Tell me about your project, timeline, and what you're trying to build…"
+              className="input resize-y min-h-[140px]"
+            />
+          </Field>
+
+          <button
             type="submit"
             disabled={status === "sending"}
-            whileTap={{ scale: 0.97 }}
-            className={`w-full py-3 rounded-md font-semibold text-white transition-all duration-300 ${
+            className={`w-full inline-flex items-center justify-center gap-2 h-12 rounded-lg font-medium text-white transition-all duration-500 ${
               status === "sent"
-                ? "bg-green-600"
+                ? "bg-emerald-500/90 shadow-glow-green"
                 : status === "error"
-                ? "bg-red-600"
-                : "bg-gradient-to-br from-secondary-green to-secondary-blue hover:shadow-[0_0_30px_-10px_rgba(0,255,255,0.5)]"
+                ? "bg-rose-500/90"
+                : "bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow"
             }`}
           >
-            {status === "sending"
-              ? "Sending..."
-              : status === "sent"
-              ? "Message Sent!"
-              : status === "error"
-              ? "Failed! Try Again"
-              : "Send Message"}
-            {status === "idle" && <Send className="inline-block ml-2 w-4 h-4" />}
-          </motion.button>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={status}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.18 }}
+                className="inline-flex items-center gap-2"
+              >
+                {status === "sending" && <Loader2 className="w-4 h-4 animate-spin" />}
+                {status === "sent" && <CheckCircle2 className="w-4 h-4" />}
+                {status === "error" && <XCircle className="w-4 h-4" />}
+                {status === "idle" && <Send className="w-4 h-4" />}
+                {status === "sending"
+                  ? "Sending…"
+                  : status === "sent"
+                  ? "Message sent — talk soon!"
+                  : status === "error"
+                  ? "Something went wrong"
+                  : "Send message"}
+              </motion.span>
+            </AnimatePresence>
+          </button>
         </motion.form>
 
-        {/* RIGHT: Contact Info + Social Links */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col justify-center text-center md:text-left space-y-8"
+        {/* Side panel */}
+        <motion.aside
+          initial={reduce ? false : { opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="lg:col-span-2 space-y-5"
         >
-          <div>
-            <h3 className="text-3xl font-bold text-neutral-800 dark:text-white mb-4">Let’s Connect</h3>
-            <p className="text-base text-muted-foreground/90 leading-relaxed">
-              I’m currently open for new opportunities and collaborations.
-              Hit me up — let’s bring your ideas to life
-            </p>
+          {/* Email card */}
+          <div className="p-7 rounded-2xl glass neon-edge">
+            <div className="font-mono text-xs uppercase tracking-widest text-neon-cyan mb-3">
+              Email
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <a
+                href={`mailto:${EMAIL}`}
+                className="text-base font-medium text-fg hover:text-neon-cyan transition-colors break-all link-underline"
+              >
+                {EMAIL}
+              </a>
+              <button
+                onClick={copyEmail}
+                aria-label="Copy email"
+                className="flex-shrink-0 w-10 h-10 rounded-lg border border-white/15 bg-bg-elev/60 flex items-center justify-center text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-all"
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={copied ? "ok" : "copy"}
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.7 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    {copied ? (
+                      <CheckCircle2 className="w-4 h-4 text-neon-green" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </motion.span>
+                </AnimatePresence>
+              </button>
+            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row md:flex-col gap-4 mt-6">
-            <a
-              href="mailto:zakideza19@gmail.com"
-              className="flex items-center justify-center md:justify-start gap-2 px-5 py-3 rounded-lg font-medium text-white
-              bg-gradient-to-br from-secondary-green to-secondary-blue hover:scale-[1.05] transition-all duration-200 shadow-[0_0_20px_-5px_rgba(0,255,255,0.4)]"
-            >
-              <Mail className="w-4 h-4" /> zakideza19@gmail.com
-            </a>
-
-            <a
-              href="https://www.linkedin.com/in/zaki-deza-31666719a/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center md:justify-start gap-2 px-5 py-3 rounded-lg border border-neutral-200 dark:border-white/10 text-neutral-800 dark:text-white/90
-              hover:bg-white/10 transition-all duration-200"
-            >
-              <Linkedin className="w-4 h-4" /> LinkedIn
-            </a>
-
-            <a
-              href="https://github.com/Zakid19"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center md:justify-start gap-2 px-5 py-3 rounded-lg border border-neutral-200 dark:border-white/10 text-neutral-800 dark:text-white/90
-              hover:bg-white/10 transition-all duration-200"
-            >
-              <Github className="w-4 h-4" /> GitHub
-            </a>
+          {/* Location */}
+          <div className="p-5 rounded-2xl glass neon-edge flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-bg-elev border border-white/10 flex items-center justify-center">
+              <MapPin className="w-4 h-4 text-neon-cyan" />
+            </div>
+            <div>
+              <div className="font-mono text-[0.7rem] uppercase tracking-widest text-fg-muted">
+                Location
+              </div>
+              <div className="text-sm text-fg">Remote · Indonesia (UTC+7)</div>
+            </div>
           </div>
-        </motion.div>
-      </motion.div>
+
+          {/* Socials */}
+          <div className="p-5 rounded-2xl glass neon-edge">
+            <div className="font-mono text-[0.7rem] uppercase tracking-widest text-fg-muted mb-3">
+              Elsewhere
+            </div>
+            <div className="grid grid-cols-2 gap-2.5">
+              <SocialLink
+                href="https://github.com/Zakid19"
+                icon={<Github className="w-4 h-4" />}
+                label="GitHub"
+              />
+              <SocialLink
+                href="https://linkedin.com/in/zaki-deza-31666719a"
+                icon={<Linkedin className="w-4 h-4" />}
+                label="LinkedIn"
+              />
+              <SocialLink
+                href={`mailto:${EMAIL}`}
+                icon={<Mail className="w-4 h-4" />}
+                label="Email"
+                external={false}
+              />
+            </div>
+          </div>
+        </motion.aside>
+      </div>
+
+      <style jsx>{`
+        :global(.input) {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border-radius: 0.5rem;
+          background: rgb(255 255 255 / 0.02);
+          border: 1px solid rgb(255 255 255 / 0.08);
+          color: rgb(var(--fg));
+          font-size: 0.9rem;
+          transition: border-color 200ms, box-shadow 200ms, background-color 200ms;
+          outline: none;
+        }
+        :global(.input::placeholder) {
+          color: rgb(var(--muted));
+        }
+        :global(.input:focus) {
+          border-color: rgb(var(--neon-cyan) / 0.6);
+          background: rgb(255 255 255 / 0.04);
+          box-shadow: 0 0 0 3px rgb(var(--neon-cyan) / 0.12);
+        }
+      `}</style>
     </Section>
+  );
+}
+
+function Field({
+  id,
+  label,
+  required,
+  children,
+}: {
+  id: string;
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <label htmlFor={id} className="block">
+      <span className="block text-xs font-mono uppercase tracking-widest text-fg-muted mb-1.5">
+        {label}
+        {required && <span className="text-neon-cyan ml-1">*</span>}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+function SocialLink({
+  href,
+  icon,
+  label,
+  external = true,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  external?: boolean;
+}) {
+  return (
+    <a
+      href={href}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className="inline-flex items-center gap-2 px-3 h-10 rounded-lg border border-white/10 text-sm text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-all"
+    >
+      {icon}
+      <span>{label}</span>
+    </a>
   );
 }

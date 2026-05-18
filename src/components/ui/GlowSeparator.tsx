@@ -1,5 +1,11 @@
-export default function GlowSeparator() {
+export default function GlowSeparator({ className = "" }: { className?: string }) {
   return (
-    <div className="w-full h-[2px] my-8 bg-gradient-to-r from-cyan-400/40 via-purple-500/70 to-cyan-400/40 animate-pulse" />
+    <div
+      className={`relative w-full h-px my-10 ${className}`}
+      aria-hidden
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-neon-cyan/60 to-transparent" />
+      <div className="absolute inset-x-1/4 -top-px h-[2px] bg-gradient-to-r from-transparent via-neon-purple/80 to-transparent blur-sm" />
+    </div>
   );
 }
