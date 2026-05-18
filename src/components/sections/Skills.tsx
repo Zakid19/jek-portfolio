@@ -31,7 +31,7 @@ export default function Skills() {
                 "relative px-4 sm:px-5 h-10 rounded-full text-sm font-medium tracking-wide transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 whitespace-nowrap flex-shrink-0",
                 isActive
                   ? "text-white"
-                  : "text-fg-soft border border-white/10 hover:text-fg hover:border-neon-cyan/40"
+                  : "text-fg-soft border border-border dark:border-white/10 hover:text-fg hover:border-neon-cyan/40"
               )}
             >
               {isActive && (
@@ -71,7 +71,7 @@ export default function Skills() {
               >
                 <div className="flex items-center gap-3 mb-4">
                   {Icon ? (
-                    <div className="relative w-10 h-10 rounded-lg bg-bg-elev border border-white/10 flex items-center justify-center group-hover:border-neon-cyan/40 transition-colors">
+                    <div className="relative w-10 h-10 rounded-lg bg-bg-elev border border-border dark:border-white/10 flex items-center justify-center group-hover:border-neon-cyan/40 transition-colors">
                       <Icon className="w-5 h-5 text-neon-cyan" />
                     </div>
                   ) : (
@@ -88,7 +88,7 @@ export default function Skills() {
                 </div>
 
                 {/* Animated bar */}
-                <div className="relative h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                <div className="relative h-1.5 rounded-full bg-fg/10 dark:bg-white/[0.06] overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: `${pct}%` }}

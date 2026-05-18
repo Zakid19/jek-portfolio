@@ -163,7 +163,7 @@ export default function About() {
               className="absolute left-0 top-0 w-[2px] bg-gradient-to-b from-neon-green via-neon-cyan to-neon-purple rounded-full shadow-[0_0_20px_rgb(34_211_238_/_0.6)]"
               aria-hidden
             />
-            <div className="absolute left-0 top-0 w-[2px] h-full bg-white/[0.06] rounded-full" aria-hidden />
+            <div className="absolute left-0 top-0 w-[2px] h-full bg-fg/10 dark:bg-white/[0.06] rounded-full" aria-hidden />
 
             <div className="flex items-center gap-2 mb-8">
               <Briefcase className="w-5 h-5 text-neon-cyan" />

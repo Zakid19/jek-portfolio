@@ -85,7 +85,7 @@ export default React.memo(function ProjectCard({ project, onOpen }: Props) {
 
         {/* Year */}
         {project.year && (
-          <div className="absolute top-3 right-3 px-2 py-1 rounded-md text-[0.7rem] font-mono bg-bg/70 backdrop-blur-md border border-white/10 text-fg-soft">
+          <div className="absolute top-3 right-3 px-2 py-1 rounded-md text-[0.7rem] font-mono bg-bg/70 backdrop-blur-md border border-border dark:border-white/10 text-fg-soft">
             {project.year}
           </div>
         )}
@@ -96,7 +96,7 @@ export default React.memo(function ProjectCard({ project, onOpen }: Props) {
             <button
               onClick={openExternal(project.repo)}
               aria-label={`Open repository for ${project.title}`}
-              className="w-9 h-9 rounded-lg bg-bg/80 backdrop-blur-md border border-white/15 flex items-center justify-center text-fg hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
+              className="w-9 h-9 rounded-lg bg-bg/80 backdrop-blur-md border border-border dark:border-white/15 flex items-center justify-center text-fg hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
             >
               <Github className="w-4 h-4" />
             </button>
@@ -105,7 +105,7 @@ export default React.memo(function ProjectCard({ project, onOpen }: Props) {
             <button
               onClick={openExternal(project.demo ?? project.href)}
               aria-label={`Open live demo for ${project.title}`}
-              className="w-9 h-9 rounded-lg bg-bg/80 backdrop-blur-md border border-white/15 flex items-center justify-center text-fg hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
+              className="w-9 h-9 rounded-lg bg-bg/80 backdrop-blur-md border border-border dark:border-white/15 flex items-center justify-center text-fg hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
             >
               <ExternalLink className="w-4 h-4" />
             </button>
@@ -140,13 +140,13 @@ export default React.memo(function ProjectCard({ project, onOpen }: Props) {
             </span>
           ))}
           {remaining > 0 && (
-            <span className="px-2 py-0.5 rounded-md text-[0.7rem] border border-white/10 text-fg-muted">
+            <span className="px-2 py-0.5 rounded-md text-[0.7rem] border border-border dark:border-white/10 text-fg-muted">
               +{remaining}
             </span>
           )}
         </div>
 
-        <div className="mt-2 pt-3 border-t border-white/[0.06] flex items-center justify-between">
+        <div className="mt-2 pt-3 border-t border-border dark:border-white/[0.06] flex items-center justify-between">
           <span className="text-xs text-fg-muted">{project.role ?? "Developer"}</span>
           <span className="inline-flex items-center gap-1 text-sm font-medium text-neon-cyan group-hover:gap-2 transition-all">
             View details

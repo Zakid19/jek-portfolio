@@ -139,7 +139,7 @@ export default function Navbar() {
       className={cn(
         "fixed top-0 inset-x-0 z-50 transition-all duration-300",
         scrolled
-          ? "backdrop-blur-md bg-bg/80 border-b border-white/[0.06] shadow-sm"
+          ? "backdrop-blur-md bg-bg/80 border-b border-border dark:border-white/[0.06] shadow-sm"
           : "bg-transparent"
       )}
       style={{
@@ -153,7 +153,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-3 group" aria-label="Zaki Deza — home">
           <div className="relative w-9 h-9 rounded-xl bg-brand-gradient bg-[length:200%_100%] flex items-center justify-center text-white font-bold font-mono shadow-glow-soft group-hover:bg-[position:100%_0] transition-all duration-500">
             <span className="relative z-10">Z</span>
-            <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/20" />
+            <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-fg/15 dark:ring-white/20" />
           </div>
           <span className="font-semibold text-lg tracking-tight text-fg">
             Zaki<span className="text-neon-cyan">.</span>Deza
@@ -213,7 +213,7 @@ export default function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen((s) => !s)}
-            className="relative z-50 w-10 h-10 rounded-full border border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center hover:border-neon-cyan/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 transition-colors"
+            className="relative z-50 w-10 h-10 rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center hover:border-neon-cyan/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 transition-colors"
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
@@ -275,8 +275,8 @@ export default function Navbar() {
                   className={cn(
                     "px-4 py-3 rounded-lg text-base font-medium transition-colors",
                     active
-                      ? "text-white bg-gradient-to-r from-neon-cyan/15 to-neon-purple/15 border border-neon-cyan/30"
-                      : "text-fg-soft hover:text-fg hover:bg-white/5"
+                      ? "text-fg dark:text-white bg-gradient-to-r from-neon-cyan/15 to-neon-purple/15 border border-neon-cyan/30"
+                      : "text-fg-soft hover:text-fg hover:bg-fg/5 dark:hover:bg-white/5"
                   )}
                 >
                   {item.label}

@@ -18,7 +18,7 @@ const SOCIAL = [
 
 export default function Footer() {
   return (
-    <footer className="relative mt-24 border-t border-white/[0.06] bg-bg-soft/40">
+    <footer className="relative mt-24 border-t border-border dark:border-white/[0.06] bg-bg-soft/40">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-neon-cyan/40 to-transparent" />
       <div className="container py-14">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
@@ -47,7 +47,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="inline-flex w-10 h-10 items-center justify-center rounded-full border border-white/10 bg-bg-elev/60 backdrop-blur-md text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 hover:shadow-glow-soft transition-all duration-300"
+                  className="inline-flex w-10 h-10 items-center justify-center rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 hover:shadow-glow-soft transition-all duration-300"
                 >
                   <Icon className="w-4 h-4" />
                 </a>
@@ -93,7 +93,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-fg-muted">
+        <div className="mt-12 pt-6 border-t border-border dark:border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-fg-muted">
           <span>© {new Date().getFullYear()} Zaki Deza. All rights reserved.</span>
           <span className="font-mono">
             Built with Next.js · Tailwind · Framer Motion

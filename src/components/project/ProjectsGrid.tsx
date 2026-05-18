@@ -54,7 +54,7 @@ export default function ProjectsGrid({
             placeholder="Search projects…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full h-11 pl-10 pr-3 rounded-lg bg-bg-elev/60 backdrop-blur-md border border-white/10 text-sm text-fg placeholder:text-fg-muted focus-visible:outline-none focus-visible:border-neon-cyan/60 focus-visible:shadow-glow-soft transition-all"
+            className="w-full h-11 pl-10 pr-3 rounded-lg bg-bg-elev/60 backdrop-blur-md border border-border dark:border-white/10 text-sm text-fg placeholder:text-fg-muted focus-visible:outline-none focus-visible:border-neon-cyan/60 focus-visible:shadow-glow-soft transition-all"
             aria-label="Search projects"
           />
         </div>
@@ -68,7 +68,7 @@ export default function ProjectsGrid({
                 "px-3.5 h-9 rounded-full text-xs font-medium tracking-wide whitespace-nowrap transition-all duration-300",
                 filter === t
                   ? "text-white bg-brand-gradient bg-[length:200%_100%] shadow-glow-soft"
-                  : "text-fg-soft border border-white/10 hover:text-fg hover:border-neon-cyan/40"
+                  : "text-fg-soft border border-border dark:border-white/10 hover:text-fg hover:border-neon-cyan/40"
               )}
             >
               {t}

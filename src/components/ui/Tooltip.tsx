@@ -33,7 +33,7 @@ export default function Tooltip({ text, children, side = "top" }: TooltipProps) 
             transition={{ duration: 0.15 }}
             className={`absolute left-1/2 -translate-x-1/2 z-30 ${
               isTop ? "bottom-[125%]" : "top-[125%]"
-            } text-xs text-white bg-bg-elev/95 backdrop-blur-md px-2.5 py-1 rounded-md whitespace-nowrap border border-neon-cyan/30 shadow-glow-soft`}
+            } text-xs text-fg dark:text-white bg-bg-elev/95 backdrop-blur-md px-2.5 py-1 rounded-md whitespace-nowrap border border-neon-cyan/30 shadow-glow-soft`}
           >
             {text}
           </motion.span>

@@ -195,7 +195,7 @@ export default function Contact() {
               <button
                 onClick={copyEmail}
                 aria-label="Copy email"
-                className="flex-shrink-0 w-10 h-10 rounded-lg border border-white/15 bg-bg-elev/60 flex items-center justify-center text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-all"
+                className="flex-shrink-0 w-10 h-10 rounded-lg border border-border dark:border-white/15 bg-bg-elev/60 flex items-center justify-center text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-all"
               >
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.span
@@ -218,7 +218,7 @@ export default function Contact() {
 
           {/* Location */}
           <div className="p-5 rounded-2xl glass neon-edge flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-bg-elev border border-white/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-bg-elev border border-border dark:border-white/10 flex items-center justify-center">
               <MapPin className="w-4 h-4 text-neon-cyan" />
             </div>
             <div>
@@ -261,20 +261,26 @@ export default function Contact() {
           width: 100%;
           padding: 0.75rem 1rem;
           border-radius: 0.5rem;
-          background: rgb(255 255 255 / 0.02);
-          border: 1px solid rgb(255 255 255 / 0.08);
+          background: rgb(var(--bg-elev));
+          border: 1px solid rgb(var(--border));
           color: rgb(var(--fg));
           font-size: 0.9rem;
           transition: border-color 200ms, box-shadow 200ms, background-color 200ms;
           outline: none;
+        }
+        :global(.dark .input) {
+          background: rgb(255 255 255 / 0.02);
+          border-color: rgb(255 255 255 / 0.08);
         }
         :global(.input::placeholder) {
           color: rgb(var(--muted));
         }
         :global(.input:focus) {
           border-color: rgb(var(--neon-cyan) / 0.6);
-          background: rgb(255 255 255 / 0.04);
           box-shadow: 0 0 0 3px rgb(var(--neon-cyan) / 0.12);
+        }
+        :global(.dark .input:focus) {
+          background: rgb(255 255 255 / 0.04);
         }
       `}</style>
     </Section>
@@ -318,7 +324,7 @@ function SocialLink({
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="inline-flex items-center gap-2 px-3 h-10 rounded-lg border border-white/10 text-sm text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-all"
+      className="inline-flex items-center gap-2 px-3 h-10 rounded-lg border border-border dark:border-white/10 text-sm text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-all"
     >
       {icon}
       <span>{label}</span>

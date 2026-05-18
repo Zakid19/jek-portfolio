@@ -13,24 +13,27 @@
  * 1. Design tokens
  * ---------------------------------------------------------------- */
 :root {
+  /* Light mode — tokens tuned for legibility on a near-white surface.
+   * Neon accents are deepened here so text, borders and badges stay
+   * crisp; the original bright neons live in `.dark` below. */
   --bg: 250 250 252;
   --bg-soft: 244 244 248;
   --bg-elev: 255 255 255;
-  --border: 226 232 240;
-  --border-soft: 241 245 249;
+  --border: 203 213 225;
+  --border-soft: 226 232 240;
 
   --fg: 15 23 42;
-  --fg-soft: 71 85 105;
-  --muted: 100 116 139;
+  --fg-soft: 51 65 85;
+  --muted: 71 85 105;
 
-  --neon-cyan: 34 211 238;
-  --neon-green: 20 241 149;
-  --neon-purple: 153 69 255;
-  --neon-pink: 244 114 182;
-  --neon-blue: 0 117 255;
+  --neon-cyan: 14 116 144;
+  --neon-green: 5 150 105;
+  --neon-purple: 124 58 237;
+  --neon-pink: 219 39 119;
+  --neon-blue: 0 98 204;
 
-  --primary: 6 182 212;
-  --ring: 153 69 255;
+  --primary: 14 116 144;
+  --ring: 124 58 237;
 
   --grid-color: 15 23 42;
   --grid-opacity: 0.045;
@@ -47,6 +50,13 @@
   --fg: 236 240 246;
   --fg-soft: 203 213 225;
   --muted: 148 163 184;
+
+  /* Bright neons — original values; dark mode is left untouched */
+  --neon-cyan: 34 211 238;
+  --neon-green: 20 241 149;
+  --neon-purple: 153 69 255;
+  --neon-pink: 244 114 182;
+  --neon-blue: 0 117 255;
 
   --primary: 34 211 238;
   --ring: 153 69 255;

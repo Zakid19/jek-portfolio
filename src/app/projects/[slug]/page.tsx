@@ -87,12 +87,12 @@ export default async function ProjectPage({
           <div className="flex flex-wrap items-center gap-2 mb-5">
             {project.featured && <span className="badge-glow">Featured</span>}
             {project.type && (
-              <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono uppercase tracking-widest text-fg-muted border border-white/10">
+              <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono uppercase tracking-widest text-fg-muted border border-border dark:border-white/10">
                 {project.type}
               </span>
             )}
             {project.year && (
-              <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono text-fg-muted border border-white/10">
+              <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono text-fg-muted border border-border dark:border-white/10">
                 {project.year}
               </span>
             )}
@@ -190,7 +190,7 @@ export default async function ProjectPage({
         {/* Prev / next */}
         {(prev || next) && (
           <nav
-            className="mt-20 pt-10 border-t border-white/[0.06] grid grid-cols-1 sm:grid-cols-2 gap-4"
+            className="mt-20 pt-10 border-t border-border dark:border-white/[0.06] grid grid-cols-1 sm:grid-cols-2 gap-4"
             aria-label="Project navigation"
           >
             {prev ? (

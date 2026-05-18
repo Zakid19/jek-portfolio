@@ -88,7 +88,7 @@ export default function ProjectModal({ project, onClose }: Props) {
           <button
             onClick={onClose}
             aria-label="Close modal"
-            className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-bg/80 backdrop-blur-md border border-white/15 flex items-center justify-center text-fg hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
+            className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-bg/80 backdrop-blur-md border border-border dark:border-white/15 flex items-center justify-center text-fg hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -120,12 +120,12 @@ export default function ProjectModal({ project, onClose }: Props) {
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 {project.featured && <span className="badge-glow">Featured</span>}
                 {project.type && (
-                  <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono uppercase tracking-widest text-fg-muted border border-white/10">
+                  <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono uppercase tracking-widest text-fg-muted border border-border dark:border-white/10">
                     {project.type}
                   </span>
                 )}
                 {project.year && (
-                  <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono text-fg-muted border border-white/10">
+                  <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono text-fg-muted border border-border dark:border-white/10">
                     {project.year}
                   </span>
                 )}
@@ -164,7 +164,7 @@ export default function ProjectModal({ project, onClose }: Props) {
                 ))}
               </div>
 
-              <div className="mt-7 pt-5 border-t border-white/[0.06] flex flex-wrap items-center gap-3">
+              <div className="mt-7 pt-5 border-t border-border dark:border-white/[0.06] flex flex-wrap items-center gap-3">
                 {externalUrl && (
                   <a
                     href={externalUrl}
@@ -181,7 +181,7 @@ export default function ProjectModal({ project, onClose }: Props) {
                     href={project.repo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 h-11 px-5 rounded-lg text-sm font-medium border border-white/15 text-fg hover:border-neon-cyan/50 hover:text-neon-cyan transition-all"
+                    className="inline-flex items-center gap-2 h-11 px-5 rounded-lg text-sm font-medium border border-border dark:border-white/15 text-fg hover:border-neon-cyan/50 hover:text-neon-cyan transition-all"
                   >
                     <Github className="w-4 h-4" />
                     Source

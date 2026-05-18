@@ -41,7 +41,7 @@ export default function ProjectAsideClient({ project }: { project: Project }) {
               href={project.repo}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 w-full h-11 px-4 rounded-lg text-sm font-medium border border-white/15 text-fg hover:border-neon-cyan/50 hover:text-neon-cyan transition-all"
+              className="inline-flex items-center justify-center gap-2 w-full h-11 px-4 rounded-lg text-sm font-medium border border-border dark:border-white/15 text-fg hover:border-neon-cyan/50 hover:text-neon-cyan transition-all"
             >
               <Github className="w-4 h-4" /> View Source
             </a>
@@ -70,7 +70,7 @@ export default function ProjectAsideClient({ project }: { project: Project }) {
               <Link
                 key={p.id}
                 href={`/projects/${p.id}`}
-                className="group flex items-center gap-3 rounded-xl overflow-hidden border border-white/[0.06] hover:border-neon-cyan/40 transition-colors"
+                className="group flex items-center gap-3 rounded-xl overflow-hidden border border-border dark:border-white/[0.06] hover:border-neon-cyan/40 transition-colors"
               >
                 <div className="relative w-16 h-16 flex-shrink-0 bg-bg-soft">
                   {p.image && (

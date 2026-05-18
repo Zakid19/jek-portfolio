@@ -81,7 +81,7 @@ export default function ProjectsCarousel() {
               className={`h-2 rounded-full transition-all duration-300 ${
                 i === selectedSnap
                   ? "w-8 bg-gradient-to-r from-neon-green to-neon-cyan shadow-[0_0_10px_rgb(34_211_238_/_0.6)]"
-                  : "w-2 bg-white/15 hover:bg-white/30"
+                  : "w-2 bg-fg/20 hover:bg-fg/40 dark:bg-white/15 dark:hover:bg-white/30"
               }`}
             />
           ))}
@@ -92,7 +92,7 @@ export default function ProjectsCarousel() {
             onClick={() => emblaApi?.scrollPrev()}
             disabled={!canPrev}
             aria-label="Previous"
-            className="w-10 h-10 rounded-full border border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center text-fg hover:border-neon-cyan/50 hover:text-neon-cyan disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="w-10 h-10 rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center text-fg hover:border-neon-cyan/50 hover:text-neon-cyan disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -100,7 +100,7 @@ export default function ProjectsCarousel() {
             onClick={() => emblaApi?.scrollNext()}
             disabled={!canNext}
             aria-label="Next"
-            className="w-10 h-10 rounded-full border border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center text-fg hover:border-neon-cyan/50 hover:text-neon-cyan disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="w-10 h-10 rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center text-fg hover:border-neon-cyan/50 hover:text-neon-cyan disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

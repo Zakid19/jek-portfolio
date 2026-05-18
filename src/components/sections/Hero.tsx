@@ -146,7 +146,7 @@ export default function Hero() {
               </a>
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-lg border border-white/15 bg-bg-elev/60 backdrop-blur-md text-fg hover:border-neon-cyan/60 hover:text-neon-cyan transition-all duration-300"
+                className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-lg border border-border dark:border-white/15 bg-bg-elev/60 backdrop-blur-md text-fg hover:border-neon-cyan/60 hover:text-neon-cyan transition-all duration-300"
               >
                 Contact Me
               </a>
@@ -259,7 +259,7 @@ export default function Hero() {
           className="hidden lg:flex absolute left-1/2 -translate-x-1/2 bottom-6 flex-col items-center gap-2 text-xs uppercase tracking-widest font-mono text-fg-muted hover:text-neon-cyan transition-colors"
         >
           Scroll
-          <span className="relative w-px h-10 bg-white/20 overflow-hidden">
+          <span className="relative w-px h-10 bg-fg/15 dark:bg-white/20 overflow-hidden">
             <span className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-neon-cyan to-transparent animate-[slideDown_1.8s_ease-in-out_infinite]" />
           </span>
         </motion.a>

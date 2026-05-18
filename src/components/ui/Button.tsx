@@ -28,8 +28,8 @@ const variants: Record<ButtonVariant, string> = {
   accent:
     "text-white bg-gradient-to-br from-neon-green to-neon-cyan shadow-glow-green hover:shadow-glow",
   outline:
-    "text-fg border border-white/15 bg-bg-elev/60 backdrop-blur-md hover:border-neon-cyan/60 hover:text-neon-cyan",
-  ghost: "text-fg-soft hover:text-fg hover:bg-white/5",
+    "text-fg border border-border dark:border-white/15 bg-bg-elev/60 backdrop-blur-md hover:border-neon-cyan/60 hover:text-neon-cyan",
+  ghost: "text-fg-soft hover:text-fg hover:bg-fg/5 dark:hover:bg-white/5",
 };
 
 export default function Button({
