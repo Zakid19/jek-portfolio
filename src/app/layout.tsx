@@ -29,7 +29,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://zakideza.dev";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Zaki Deza — Fullstack Web Developer",
+    default: "Zaki Deza - Fullstack Web Developer",
     template: "%s · Zaki Deza",
   },
   description:
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Zaki Deza — Fullstack Web Developer",
+    title: "Zaki Deza - Fullstack Web Developer",
     description:
       "Building scalable, AI-augmented web experiences with React, Next.js, Laravel, and Express.",
     images: ["/assets/images/avatar.png"],
@@ -114,7 +114,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <html lang="en" className={`${inter.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${mono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: setInitialTheme }} />
         <script

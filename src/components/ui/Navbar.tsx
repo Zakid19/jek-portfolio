@@ -85,8 +85,8 @@ export default function Navbar() {
       if (!root) return;
       const focusables = Array.from(
         root.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        )
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
       );
       if (focusables.length === 0) return;
       const first = focusables[0];
@@ -117,7 +117,7 @@ export default function Navbar() {
           if (entry.isIntersecting) setActiveSection(entry.target.id);
         });
       },
-      { threshold: 0.4 }
+      { threshold: 0.4 },
     );
     ids.forEach((id) => {
       const el = document.getElementById(id);
@@ -132,104 +132,118 @@ export default function Navbar() {
   };
 
   return (
-    <motion.header
-      initial={reduce ? false : { y: -16, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className={cn(
-        "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-        scrolled
-          ? "backdrop-blur-md bg-bg/80 border-b border-border dark:border-white/[0.06] shadow-sm"
-          : "bg-transparent"
-      )}
-      style={{
-        transform: hidden ? "translateY(-110%)" : undefined,
-        transition: reduce ? "none" : "transform 280ms cubic-bezier(.2,.9,.3,1), background-color 280ms",
-      }}
-      aria-label="Primary navigation"
-    >
-      <div className="container flex items-center justify-between gap-3 py-3">
-        {/* Brand */}
-        <Link href="/" className="flex items-center gap-3 group" aria-label="Zaki Deza — home">
-          <div className="relative w-9 h-9 rounded-xl bg-brand-gradient bg-[length:200%_100%] flex items-center justify-center text-white font-bold font-mono shadow-glow-soft group-hover:bg-[position:100%_0] transition-all duration-500">
-            <span className="relative z-10">Z</span>
-            <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-fg/15 dark:ring-white/20" />
-          </div>
-          <span className="font-semibold text-lg tracking-tight text-fg">
-            Zaki<span className="text-neon-cyan">.</span>Deza
-          </span>
-        </Link>
-
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1" aria-label="Main">
-          {NAV_ITEMS.map((item) => {
-            const active = isActive(item.id);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "relative px-3.5 py-2 rounded-md text-sm transition-colors",
-                  active
-                    ? "text-fg"
-                    : "text-fg-soft hover:text-fg"
-                )}
-                aria-current={active ? "page" : undefined}
-              >
-                {item.label}
-                {active && (
-                  <motion.span
-                    layoutId="nav-underline"
-                    className="absolute left-1/2 -translate-x-1/2 bottom-1 h-[2px] w-1/2 rounded-full bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple shadow-[0_0_12px_rgb(34_211_238_/_0.6)]"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Desktop right */}
-        <div className="hidden md:flex items-center gap-2">
+    <>
+      <motion.header
+        initial={reduce ? false : { y: -16, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className={cn(
+          "fixed top-0 inset-x-0 z-50 transition-all duration-300",
+          scrolled
+            ? "backdrop-blur-md bg-bg/80 border-b border-border dark:border-white/[0.06] shadow-sm"
+            : "bg-transparent",
+        )}
+        style={{
+          transform: hidden ? "translateY(-110%)" : undefined,
+          transition: reduce
+            ? "none"
+            : "transform 280ms cubic-bezier(.2,.9,.3,1), background-color 280ms",
+        }}
+        aria-label="Primary navigation"
+      >
+        <div className="container flex items-center justify-between gap-3 py-3">
+          {/* Brand */}
           <Link
-            href="/resume.pdf"
-            target="_blank"
-            rel="noopener"
-            className="hidden lg:inline-flex items-center gap-2 px-4 h-10 rounded-lg text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+            href="/"
+            className="flex items-center gap-3 group"
+            aria-label="Zaki Deza — home"
           >
-            <FileText className="w-4 h-4" />
-            Resume
+            <div className="relative w-9 h-9 rounded-xl bg-brand-gradient bg-[length:200%_100%] flex items-center justify-center text-white font-bold font-mono shadow-glow-soft group-hover:bg-[position:100%_0] transition-all duration-500">
+              <span className="relative z-10">Z</span>
+              <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-fg/15 dark:ring-white/20" />
+            </div>
+            <span className="font-semibold text-lg tracking-tight text-fg">
+              Zaki<span className="text-neon-cyan">.</span>Deza
+            </span>
           </Link>
-          <ThemeToggle />
-        </div>
 
-        {/* Mobile right */}
-        <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
-          <button
-            ref={toggleRef}
-            type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            onClick={() => setOpen((s) => !s)}
-            className="relative z-50 w-10 h-10 rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center hover:border-neon-cyan/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 transition-colors"
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={open ? "close" : "menu"}
-                initial={reduce ? false : { opacity: 0, rotate: -90 }}
-                animate={{ opacity: 1, rotate: 0 }}
-                exit={reduce ? undefined : { opacity: 0, rotate: 90 }}
-                transition={{ duration: 0.2 }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
-                {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </motion.span>
-            </AnimatePresence>
-          </button>
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-1" aria-label="Main">
+            {NAV_ITEMS.map((item) => {
+              const active = isActive(item.id);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "relative px-3.5 py-2 rounded-md text-sm transition-colors",
+                    active ? "text-fg" : "text-fg-soft hover:text-fg",
+                  )}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {item.label}
+                  {active && (
+                    <motion.span
+                      layoutId="nav-underline"
+                      className="absolute left-1/2 -translate-x-1/2 bottom-1 h-[2px] w-1/2 rounded-full bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple shadow-[0_0_12px_rgb(34_211_238_/_0.6)]"
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Desktop right */}
+          <div className="hidden md:flex items-center gap-2">
+            <Link
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener"
+              className="hidden lg:inline-flex items-center gap-2 px-4 h-10 rounded-lg text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+            >
+              <FileText className="w-4 h-4" />
+              Resume
+            </Link>
+            <ThemeToggle />
+          </div>
+
+          {/* Mobile right */}
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <button
+              ref={toggleRef}
+              type="button"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              onClick={() => setOpen((s) => !s)}
+              className="relative z-50 w-10 h-10 rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center hover:border-neon-cyan/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 transition-colors"
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={open ? "close" : "menu"}
+                  initial={reduce ? false : { opacity: 0, rotate: -90 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={reduce ? undefined : { opacity: 0, rotate: 90 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  {open ? (
+                    <X className="w-5 h-5" />
+                  ) : (
+                    <Menu className="w-5 h-5" />
+                  )}
+                </motion.span>
+              </AnimatePresence>
+            </button>
+          </div>
         </div>
-      </div>
+      </motion.header>
 
       {/* Mobile panel */}
       <div
@@ -237,7 +251,7 @@ export default function Navbar() {
         aria-hidden={!open}
         className={cn(
           "md:hidden fixed inset-0 z-40 pointer-events-none",
-          open && "pointer-events-auto"
+          open && "pointer-events-auto",
         )}
       >
         <motion.div
@@ -276,7 +290,7 @@ export default function Navbar() {
                     "px-4 py-3 rounded-lg text-base font-medium transition-colors",
                     active
                       ? "text-fg dark:text-white bg-gradient-to-r from-neon-cyan/15 to-neon-purple/15 border border-neon-cyan/30"
-                      : "text-fg-soft hover:text-fg hover:bg-fg/5 dark:hover:bg-white/5"
+                      : "text-fg-soft hover:text-fg hover:bg-fg/5 dark:hover:bg-white/5",
                   )}
                 >
                   {item.label}
@@ -297,6 +311,6 @@ export default function Navbar() {
           </Link>
         </motion.aside>
       </div>
-    </motion.header>
+    </>
   );
 }

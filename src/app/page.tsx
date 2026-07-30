@@ -12,6 +12,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <Hero />
       <LazyView minHeight={680}>
         <About />
       </LazyView>
