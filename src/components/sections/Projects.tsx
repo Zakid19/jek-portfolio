@@ -10,7 +10,7 @@ export default function Projects() {
       id="projects"
       eyebrow="Selected Work"
       title="Projects shipped with intent."
-      subtitle="A showcase of recent builds — from production SaaS to landing pages — each crafted with purpose, clean architecture, and a touch of polish."
+      subtitle="A showcase of recent builds from production SaaS to landing pages each crafted with purpose, clean architecture, and a touch of polish."
     >
       <ProjectsCarousel />
     </Section>

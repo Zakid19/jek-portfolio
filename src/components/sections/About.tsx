@@ -82,7 +82,7 @@ export default function About() {
       id="about"
       eyebrow="About"
       title="Engineer, builder, lifelong learner."
-      subtitle="Self-taught fullstack developer with a product-first mindset — focused on clean code, fast iteration, and AI-accelerated workflows."
+      subtitle="Self-taught fullstack developer with a product-first mindset focused on clean code, fast iteration, and AI-accelerated workflows."
     >
       <div ref={sectionRef} className="relative spotlight-area">
         <div className="spotlight-pointer" aria-hidden />

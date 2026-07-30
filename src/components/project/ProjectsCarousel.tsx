@@ -9,7 +9,10 @@ import { projects } from "@/data/projects";
 import ProjectCard from "@/components/project/ProjectCard";
 import type { Project } from "@/types";
 
-const DynamicModal = dynamic(() => import("@/components/project/ProjectModal"), { ssr: false });
+const DynamicModal = dynamic(
+  () => import("@/components/project/ProjectModal"),
+  { ssr: false },
+);
 
 const GAP_PX = 24;
 
@@ -70,6 +73,18 @@ export default function ProjectsCarousel() {
         </div>
       </div>
 
+      <div className="mt-8 flex items-center justify-end gap-4">
+        <div className="flex items-center gap-2">
+          <a
+            href="/projects"
+            className="ml-2 inline-flex items-center gap-1.5 h-10 px-4 rounded-full text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+          >
+            View all
+            <ArrowUpRight className="w-4 h-4" />
+          </a>
+        </div>
+      </div>
+
       {/* Controls row */}
       <div className="mt-8 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
@@ -106,7 +121,7 @@ export default function ProjectsCarousel() {
           </button>
           <a
             href="/projects"
-            className="ml-2 inline-flex items-center gap-1.5 h-10 px-4 rounded-full text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+            className="ml-2 hidden md:inline-flex items-center gap-1.5 h-10 px-4 rounded-full text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
           >
             View all
             <ArrowUpRight className="w-4 h-4" />
@@ -114,7 +129,9 @@ export default function ProjectsCarousel() {
         </div>
       </div>
 
-      {selected && <DynamicModal project={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <DynamicModal project={selected} onClose={() => setSelected(null)} />
+      )}
 
       <style jsx>{`
         .embla__slide {

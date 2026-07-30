@@ -70,7 +70,7 @@ export default function Contact() {
       id="contact"
       eyebrow="Get in touch"
       title="Let's build something."
-      subtitle="Open for new opportunities and collaborations. Drop a message or reach out via email — I usually reply within a day."
+      subtitle="Open for new opportunities and collaborations. Drop a message or reach out via email I usually reply within a day."
     >
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
         {/* Form */}
