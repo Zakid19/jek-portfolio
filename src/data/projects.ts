@@ -90,6 +90,117 @@ export const projects: Project[] = [
 
   {
     id: "p3",
+    title: "DKM Financial Management System",
+    short:
+      "Mosque financial management system for recording transactions, managing fund categories, approving financial activities, and publishing transparent financial reports.",
+    longDescription:
+      "A web-based financial management system designed to help mosque administrators manage income, expenses, fund categories, donations, financial reports, and transaction approval workflows. The system includes role-based access for administrators, treasurers, and DKM verifiers, along with public financial summaries that congregation members can access without signing in. The project was developed individually over approximately one month, with Claude Code used as a development tool.",
+    tech: [
+      "Laravel 11",
+      "Vue.js 3",
+      "Pinia",
+      "MySQL",
+      "REST API",
+      "Laravel Sanctum",
+      "Spatie Permission",
+      "DomPDF",
+      "Laravel Excel",
+      "Chart.js",
+    ],
+    image: "/assets/images/project-12.png",
+    href: "#",
+    role: "Individual Developer",
+    status: "Completed",
+    type: "Web App",
+    featured: true,
+    highlights: [
+      "Interactive financial dashboard with balance summaries and charts",
+      "Income and expense recording with supporting transaction evidence",
+      "Multi-level transaction approval workflow",
+      "Fund category management and inter-category transfers",
+      "Activity audit logs and traceable transaction history",
+      "Financial reports with PDF, Excel, and CSV export",
+      "Donor records and donation campaign management",
+      "Public financial reports for congregation members",
+      "Role-based access control and permissions",
+    ],
+    caseStudyContent: {
+      overview: {
+        background:
+          "The system was designed to help mosque administrators organize financial operations and improve transparency in managing community funds. It also provides public financial summaries so congregation members can review the mosque's financial position without accessing internal administrative data.",
+        targetUsers: [
+          "Administrators",
+          "Treasurers",
+          "DKM Chairpersons and Verifiers",
+          "Congregation Members",
+        ],
+      },
+      solution: {
+        description:
+          "A web-based financial management application with role-based access, transaction approval workflows, categorized fund management, financial reporting, and public-facing reports.",
+        features: [
+          {
+            title: "Financial Dashboard",
+            description:
+              "Displays balance summaries, income and expense totals, financial charts, recent activities, and transaction approval statuses.",
+          },
+          {
+            title: "Income and Expense Management",
+            description:
+              "Supports transaction recording with payment methods, fund categories, uploaded transaction evidence, and financial validation.",
+          },
+          {
+            title: "Transaction Approval Workflow",
+            description:
+              "Provides a multi-stage approval process with Draft, Pending, Approved, Rejected, and Revised states before transactions affect fund balances.",
+          },
+          {
+            title: "Fund Category Management",
+            description:
+              "Separates funds such as General Funds, Zakat, Infaq, Sadaqah, Waqf, Qurban, and other categories to support organized financial administration.",
+          },
+          {
+            title: "Inter-Category Fund Transfers",
+            description:
+              "Allows funds to be transferred between categories through approval and validation steps to help maintain financial data integrity.",
+          },
+          {
+            title: "Activity Audit Log",
+            description:
+              "Records important user activities so changes to financial transactions can be traced and reviewed.",
+          },
+          {
+            title: "Financial Reporting",
+            description:
+              "Provides daily, monthly, and annual reports, cash book summaries, balance sheets, and reports grouped by fund category, with PDF, Excel, and CSV export options.",
+          },
+          {
+            title: "Donor Management",
+            description:
+              "Manages donor records and donation histories, supports donor searches, and generates donation receipts.",
+          },
+          {
+            title: "Donation Campaigns",
+            description:
+              "Manages fundraising campaigns, target amounts, progress tracking, and public campaign pages.",
+          },
+          {
+            title: "Public Financial Reports",
+            description:
+              "Publishes summaries of income, expenses, balances, and campaign progress for congregation members without exposing sensitive administrator or donor information.",
+          },
+          {
+            title: "Role and Permission Management",
+            description:
+              "Controls access for administrators, treasurers, DKM verifiers, and public viewers according to their responsibilities.",
+          },
+        ],
+      },
+    },
+  },
+
+  {
+    id: "p12",
     title: "Parodee — Crypto Landing",
     short:
       "Modern landing page for a cryptocurrency project with a responsive layout, interactive calls to action, and lightweight motion.",
@@ -103,71 +214,123 @@ export const projects: Project[] = [
     status: "Live",
     type: "Landing Page",
     year: "2024",
-    featured: true,
   },
 
   {
     id: "p4",
     title: "PT Anak Bungsu Indo Energi",
     short:
-      "Corporate profile website with a Laravel CMS and React-based admin panel for content management.",
-    tech: ["Laravel", "React", "MySQL", "Tailwind CSS"],
+      "Corporate profile website with a lightweight CMS and React.js admin panel for dynamic company content management.",
+    longDescription:
+      "A corporate profile website developed with Laravel, MySQL, and a separate React.js administration panel. The system allows company administrators to manage About, Services, Portfolio, and Contact content dynamically through CRUD operations. The project was completed individually in approximately two weeks.",
+    tech: ["Laravel", "MySQL", "React.js"],
     image: "/assets/images/project-4.jpeg",
     blurDataURL:
       "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoQAAkAA4BaJaACdH8AFnfkrc6FAADNk6pO2BzLiRqr64k+8Q1ty5SbGKH6PfHUYZOJ1LlmOonFxc8pgDogFfaTyqsBnr/HRdJo/fruRGE7wCprAAA=",
     href: "http://www.abienergi.com/",
     demo: "http://www.abienergi.com/",
-    role: "Fullstack Developer",
+    role: "Individual Developer",
     status: "Live",
     type: "CMS",
     year: "2023",
+    highlights: [
+      "Dynamic content management for About, Services, Portfolio, and Contact pages",
+      "React.js-based administration panel",
+      "CRUD operations for company information",
+      "Structured relational database",
+    ],
+    caseStudyContent: {
+      overview: {
+        background:
+          "The project was developed to provide a corporate website where company information and public-facing content could be maintained without directly editing the website source code.",
+        targetUsers: ["Company Administrators", "Website Visitors"],
+      },
+      solution: {
+        description:
+          "A Laravel-powered corporate website connected to a MySQL database, with a separate React.js admin panel for managing company content.",
+        features: [
+          {
+            title: "Dynamic Content Management",
+            description:
+              "Allows administrators to manage the About, Services, Portfolio, and Contact sections through the CMS.",
+          },
+          {
+            title: "React.js Admin Panel",
+            description:
+              "Provides a dedicated administration interface for managing website content and company information.",
+          },
+          {
+            title: "Company Data Management",
+            description:
+              "Supports create, read, update, and delete operations for company data.",
+          },
+          {
+            title: "Structured Database",
+            description:
+              "Uses an organized relational database structure to support consistent data storage and management.",
+          },
+        ],
+      },
+    },
   },
 
   {
     id: "p5",
     title: "Lorehype Agency",
     short:
-      "Interactive agency website with Firebase authentication and an integrated content management system.",
-    tech: ["React", "Tailwind CSS", "Firebase"],
+      "Interactive and responsive agency website with Firebase authentication and dynamic content management.",
+    longDescription:
+      "An agency profile website built with React.js and Tailwind CSS, featuring a Firebase-powered content management system. The application provides authenticated administrator access, dynamic content updates, and a responsive interface for agency teams, clients, and website visitors. The project was developed individually in approximately one week.",
+    tech: [
+      "React.js",
+      "Tailwind CSS",
+      "Firebase Auth",
+      "Firebase Realtime Database",
+    ],
     image: "/assets/images/project-5.png",
     blurDataURL:
       "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoQAAkAA4BaJZwAAsdBbIJ0AAD+4eyXO4CvbVaw1Hylki3P1SAnHq+3i1ZhmtN0QADxoEwg8IwZN2SNmMf2DQB51GI22SA0HBDCgAAA",
     href: "https://lorehype.com/",
     demo: "https://lorehype.com/",
-    role: "Fullstack Developer",
+    role: "Individual Developer",
     status: "Live",
     type: "Web App",
     year: "2024",
-
+    highlights: [
+      "Administrator authentication with Firebase Authentication",
+      "Dynamic content management with create, update, and delete operations",
+      "Firebase Realtime Database integration",
+      "Responsive interface for desktop and mobile devices",
+    ],
     caseStudyContent: {
       overview: {
         background:
-          "An interactive agency profile website developed to present agency information and provide visitors and clients with access to its digital presence.",
+          "The project was developed as an interactive agency profile website to present agency information and provide a manageable digital presence for the agency team, clients, and website visitors.",
         targetUsers: ["Agency Team", "Clients", "Website Visitors"],
       },
       solution: {
         description:
-          "A responsive agency website integrated with Firebase authentication and a dynamic content management system.",
+          "A responsive agency website built with React.js and Tailwind CSS, integrated with Firebase Authentication for administrator access and Firebase Realtime Database for dynamic content management.",
         features: [
           {
             title: "Admin Authentication",
             description:
-              "Uses Firebase Authentication to secure administrator access to content management functionality.",
+              "Uses Firebase Authentication to secure administrator access to the content management functionality.",
           },
           {
             title: "Dynamic Content Management",
             description:
-              "Allows administrators to add, update, and delete website content dynamically.",
+              "Allows authorized administrators to add, update, and delete website content dynamically.",
           },
           {
             title: "Responsive Interface",
             description:
-              "Provides a modern interface designed to adapt to different device screen sizes.",
+              "Provides a modern interface designed to adapt to different screen sizes and support visitors across desktop and mobile devices.",
           },
           {
             title: "Firebase Realtime Database",
             description:
-              "Connects website content to Firebase so changes can be reflected dynamically on the website.",
+              "Stores website content in Firebase Realtime Database so content changes can be reflected dynamically on the website.",
           },
         ],
       },
@@ -368,6 +531,7 @@ export const projects: Project[] = [
     ],
     featured: true,
   },
+
 ];
 
 /** Used by the Hero component to render a smooth LQIP while the avatar loads. */

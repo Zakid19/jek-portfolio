@@ -19,6 +19,34 @@ type Props = {
   initialProjects?: Project[];
 };
 
+// Normalize technology names to prevent duplicate filter categories.
+const normalizeTechnology = (technology: string): string => {
+  const value = technology.trim().toLowerCase().replace(/\s+/g, " ");
+
+  const aliases: Record<string, string> = {
+    react: "React",
+    "react.js": "React",
+
+    laravel: "Laravel",
+    "laravel 11": "Laravel",
+
+    vue: "Vue.js",
+    "vue.js": "Vue.js",
+    "vue 3": "Vue.js",
+    "vue.js 3": "Vue.js",
+
+    node: "Node.js",
+    "node.js": "Node.js",
+
+    firebase: "Firebase",
+    "firebase auth": "Firebase",
+    "firebase authentication": "Firebase",
+    "firebase realtime database": "Firebase",
+  };
+
+  return aliases[value] ?? technology.trim();
+};
+
 export default function ProjectsGrid({ initialProjects }: Props) {
   const [selected, setSelected] = useState<Project | null>(null);
   const [query, setQuery] = useState("");
@@ -33,11 +61,16 @@ export default function ProjectsGrid({ initialProjects }: Props) {
 
     projects.forEach((project) => {
       project.tech?.forEach((technology) => {
-        if (technology) technologies.add(technology);
+        if (technology?.trim()) {
+          technologies.add(normalizeTechnology(technology));
+        }
       });
     });
 
-    return ["All", ...Array.from(technologies).sort()];
+    return [
+      "All",
+      ...Array.from(technologies).sort((a, b) => a.localeCompare(b)),
+    ];
   }, [projects]);
 
   // SEARCH AND FILTER
@@ -48,7 +81,10 @@ export default function ProjectsGrid({ initialProjects }: Props) {
       const projectTechnologies = project.tech ?? [];
 
       const matchesFilter =
-        filter === "All" || projectTechnologies.includes(filter);
+        filter === "All" ||
+        projectTechnologies.some(
+          (technology) => normalizeTechnology(technology) === filter,
+        );
 
       const searchableContent = [
         project.title,
