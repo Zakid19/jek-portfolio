@@ -1,26 +1,49 @@
-// src/components/ui/ThemeTransition.tsx
 "use client";
 
 import { useEffect } from "react";
 
 export default function ThemeTransition() {
   useEffect(() => {
+    const html = document.documentElement;
+
+    let timeoutId: number | undefined;
+
+    const clearTransitionTimer = () => {
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+        timeoutId = undefined;
+      }
+    };
+
     const handler = () => {
-      const html = document.documentElement;
-      // Respect reduced-motion
-      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (prefersReduced) return;
+      const prefersReduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      clearTransitionTimer();
+
+      if (prefersReduced) {
+        html.classList.remove("theme-transition");
+        return;
+      }
+
       html.classList.add("theme-transition");
-      window.setTimeout(() => html.classList.remove("theme-transition"), 350);
+
+      timeoutId = window.setTimeout(() => {
+        html.classList.remove("theme-transition");
+        timeoutId = undefined;
+      }, 350);
     };
 
     window.addEventListener("theme-change", handler);
-    // Also react to storage (if user toggles in other tab)
     window.addEventListener("storage", handler);
 
     return () => {
       window.removeEventListener("theme-change", handler);
       window.removeEventListener("storage", handler);
+
+      clearTransitionTimer();
+      html.classList.remove("theme-transition");
     };
   }, []);
 

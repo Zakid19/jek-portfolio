@@ -1,20 +1,60 @@
-// src/components/ui/Button.tsx
 import React from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 type ButtonVariant = "primary" | "outline" | "ghost" | "accent";
 type ButtonSize = "sm" | "md" | "lg";
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+type SharedProps = {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  /** Render as <a> when an href is provided. */
-  as?: "button" | "a";
-  href?: string;
+  className?: string;
+  children: React.ReactNode;
 };
 
+type NativeButtonProps = SharedProps &
+  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof SharedProps> & {
+    as?: "button";
+    href?: never;
+  };
+
+type AnchorButtonProps = SharedProps &
+  Omit<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    keyof SharedProps | "href"
+  > & {
+    as: "a";
+    href: string;
+  };
+
+type NextLinkButtonProps = SharedProps &
+  Omit<React.ComponentProps<typeof Link>, keyof SharedProps | "href"> & {
+    as: "link";
+    href: string;
+  };
+
+export type ButtonProps =
+  | NativeButtonProps
+  | AnchorButtonProps
+  | NextLinkButtonProps;
+
+/* ================================================================
+   BASE STYLES
+================================================================ */
+
 const base =
-  "relative inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-300 ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-50 disabled:cursor-not-allowed select-none";
+  "relative inline-flex items-center justify-center gap-2 " +
+  "rounded-lg font-medium select-none " +
+  "transition-all duration-300 ease-smooth " +
+  "focus-visible:outline-none focus-visible:ring-2 " +
+  "focus-visible:ring-ring/70 focus-visible:ring-offset-2 " +
+  "focus-visible:ring-offset-bg " +
+  "disabled:cursor-not-allowed disabled:opacity-40 " +
+  "active:scale-[0.98]";
+
+/* ================================================================
+   SIZES
+================================================================ */
 
 const sizes: Record<ButtonSize, string> = {
   sm: "h-9 px-3.5 text-sm",
@@ -22,37 +62,147 @@ const sizes: Record<ButtonSize, string> = {
   lg: "h-12 px-6 text-base",
 };
 
+/* ================================================================
+   VARIANTS
+================================================================ */
+
 const variants: Record<ButtonVariant, string> = {
+  /*
+   * Primary
+   * Transparent background.
+   * Visible neon border and subtle glow on dark mode.
+   * Monochrome appearance on light mode.
+   */
   primary:
-    "text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow",
+    "border border-neon-green/60 " +
+    "bg-neon-green/[0.04] " +
+    "text-fg " +
+    "shadow-sm shadow-neon-green/5 " +
+    "hover:border-neon-green " +
+    "hover:bg-neon-green/10 " +
+    "hover:shadow-md hover:shadow-neon-green/10 " +
+    "dark:text-neon-green " +
+    "dark:hover:shadow-neon-green/20 " +
+    "active:bg-neon-green/15",
+
+  /*
+   * Accent
+   * Transparent green-cyan accent.
+   * More expressive than primary, without solid fill.
+   */
   accent:
-    "text-white bg-gradient-to-br from-neon-green to-neon-cyan shadow-glow-green hover:shadow-glow",
+    "border border-neon-cyan/60 " +
+    "bg-neon-cyan/[0.04] " +
+    "text-fg " +
+    "shadow-sm shadow-neon-cyan/5 " +
+    "hover:border-neon-green " +
+    "hover:bg-neon-green/10 " +
+    "hover:shadow-md hover:shadow-neon-cyan/10 " +
+    "dark:text-neon-cyan " +
+    "dark:hover:text-neon-green " +
+    "dark:hover:shadow-neon-cyan/20 " +
+    "active:bg-neon-cyan/15",
+
+  /*
+   * Outline
+   * Neutral transparent button.
+   * Minimal and premium in both themes.
+   */
   outline:
-    "text-fg border border-border dark:border-white/15 bg-bg-elev/60 backdrop-blur-md hover:border-neon-cyan/60 hover:text-neon-cyan",
-  ghost: "text-fg-soft hover:text-fg hover:bg-fg/5 dark:hover:bg-white/5",
+    "border border-border-strong/80 " +
+    "bg-transparent " +
+    "text-fg-soft " +
+    "hover:border-neon-green/70 " +
+    "hover:bg-neon-green/[0.04] " +
+    "hover:text-fg " +
+    "dark:hover:text-neon-green " +
+    "dark:hover:shadow-[0_0_14px_-10px_rgba(66,255,176,0.5)] " +
+    "active:bg-neon-green/10",
+
+  /*
+   * Ghost
+   * Borderless transparent button.
+   * Minimal interaction with no unnecessary glow.
+   */
+  ghost:
+    "border border-transparent " +
+    "bg-transparent " +
+    "text-fg-soft " +
+    "hover:bg-fg/[0.04] " +
+    "hover:text-fg " +
+    "dark:hover:bg-neon-green/[0.05] " +
+    "dark:hover:text-neon-green " +
+    "active:bg-fg/[0.08]",
 };
 
-export default function Button({
-  children,
-  variant = "primary",
-  size = "md",
-  className,
-  as = "button",
-  href,
-  ...props
-}: ButtonProps) {
-  const classes = cn(base, sizes[size], variants[variant], className);
+/* ================================================================
+   CLASS GENERATOR
+================================================================ */
 
-  if (as === "a" && href) {
+function getClasses(
+  variant: ButtonVariant,
+  size: ButtonSize,
+  className?: string,
+) {
+  return cn(base, sizes[size], variants[variant], className);
+}
+
+/* ================================================================
+   BUTTON COMPONENT
+================================================================ */
+
+export default function Button(props: ButtonProps) {
+  const { children, variant = "primary", size = "md", className } = props;
+
+  const classes = getClasses(variant, size, className);
+
+  if (props.as === "link") {
+    const {
+      as,
+      href,
+      variant: _variant,
+      size: _size,
+      className: _className,
+      children: _children,
+      ...linkProps
+    } = props;
+
     return (
-      <a href={href} className={classes}>
+      <Link href={href} className={classes} {...linkProps}>
+        {children}
+      </Link>
+    );
+  }
+
+  if (props.as === "a") {
+    const {
+      as,
+      href,
+      variant: _variant,
+      size: _size,
+      className: _className,
+      children: _children,
+      ...anchorProps
+    } = props;
+
+    return (
+      <a href={href} className={classes} {...anchorProps}>
         {children}
       </a>
     );
   }
 
+  const {
+    as,
+    variant: _variant,
+    size: _size,
+    className: _className,
+    children: _children,
+    ...buttonProps
+  } = props;
+
   return (
-    <button className={classes} {...props}>
+    <button className={classes} {...buttonProps}>
       {children}
     </button>
   );

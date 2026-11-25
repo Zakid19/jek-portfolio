@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
-import LazyView from "@/components/ui/LazyView";
 
-// Code-split below-hero sections — keeps initial JS payload tight.
+// Keep below-the-fold sections code-split.
+// LazyView is temporarily removed to isolate the blank-page issue.
 const About = dynamic(() => import("@/components/sections/About"));
 const Projects = dynamic(() => import("@/components/sections/Projects"));
 const Skills = dynamic(() => import("@/components/sections/Skills"));
@@ -12,18 +12,10 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <LazyView minHeight={680}>
-        <About />
-      </LazyView>
-      <LazyView minHeight={760}>
-        <Projects />
-      </LazyView>
-      <LazyView minHeight={620}>
-        <Skills />
-      </LazyView>
-      <LazyView minHeight={680}>
-        <Contact />
-      </LazyView>
+      <About />
+      <Projects />
+      <Skills />
+      <Contact />
     </>
   );
 }

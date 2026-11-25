@@ -63,7 +63,7 @@ export const SKILLS: SkillGroup[] = [
     ],
   },
   {
-    group: "AI & Vibe Coding",
+    group: "AI & Development Workflows",
     items: [
       { name: "Claude / Claude Code", level: 5, icon: SiClaude },
       { name: "ChatGPT / GPT-4o", level: 5, icon: SiOpenai },

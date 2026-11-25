@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-12">
       <div className="aurora" aria-hidden />
       <Section
         eyebrow="Portfolio"

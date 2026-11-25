@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   motion,
   useReducedMotion,
@@ -10,6 +10,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { ArrowRight, Github, Linkedin, MapPin, Sparkles } from "lucide-react";
+
 import { AVATAR_BLUR } from "@/data/projects";
 
 const ROLES = [
@@ -25,28 +26,43 @@ const STATS = [
   { value: "10+", label: "Clients" },
 ];
 
-function useTypewriter(words: string[], enabled: boolean, speed = 65, pause = 1500) {
+function useTypewriter(
+  words: string[],
+  enabled: boolean,
+  speed = 65,
+  pause = 1500,
+) {
   const [text, setText] = useState(enabled ? "" : words[0]);
   const [wordIdx, setWordIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || words.length === 0) return;
+
     const current = words[wordIdx % words.length];
+
     if (!deleting && text === current) {
-      const t = setTimeout(() => setDeleting(true), pause);
-      return () => clearTimeout(t);
+      const timeout = window.setTimeout(() => setDeleting(true), pause);
+
+      return () => window.clearTimeout(timeout);
     }
+
     if (deleting && text === "") {
       setDeleting(false);
-      setWordIdx((i) => (i + 1) % words.length);
+      setWordIdx((index) => (index + 1) % words.length);
       return;
     }
-    const next = deleting
+
+    const nextText = deleting
       ? current.slice(0, text.length - 1)
       : current.slice(0, text.length + 1);
-    const t = setTimeout(() => setText(next), deleting ? speed / 1.8 : speed);
-    return () => clearTimeout(t);
+
+    const timeout = window.setTimeout(
+      () => setText(nextText),
+      deleting ? speed / 1.8 : speed,
+    );
+
+    return () => window.clearTimeout(timeout);
   }, [enabled, text, deleting, wordIdx, words, speed, pause]);
 
   return text;
@@ -56,23 +72,35 @@ export default function Hero() {
   const reduce = useReducedMotion() ?? false;
   const role = useTypewriter(ROLES, !reduce);
 
-  // Avatar tilt — disabled on touch
+  // Avatar tilt interaction
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateY = useSpring(useTransform(x, (v) => v / 12), { stiffness: 220, damping: 22 });
-  const rotateX = useSpring(useTransform(y, (v) => -v / 12), { stiffness: 220, damping: 22 });
+
+  const rotateY = useSpring(
+    useTransform(x, (value) => value / 12),
+    { stiffness: 220, damping: 24 },
+  );
+
+  const rotateX = useSpring(
+    useTransform(y, (value) => -value / 12),
+    { stiffness: 220, damping: 24 },
+  );
 
   const onMove = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      if (reduce || e.pointerType === "touch") return;
-      const rect = e.currentTarget.getBoundingClientRect();
-      const px = e.clientX - (rect.left + rect.width / 2);
-      const py = e.clientY - (rect.top + rect.height / 2);
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (reduce || event.pointerType !== "mouse") return;
+
+      const rect = event.currentTarget.getBoundingClientRect();
+
+      const px = event.clientX - (rect.left + rect.width / 2);
+      const py = event.clientY - (rect.top + rect.height / 2);
+
       x.set(Math.max(-60, Math.min(60, px)));
       y.set(Math.max(-60, Math.min(60, py)));
     },
-    [reduce, x, y]
+    [reduce, x, y],
   );
+
   const onLeave = useCallback(() => {
     x.set(0);
     y.set(0);
@@ -81,194 +109,203 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-[100svh] flex items-center pt-28 pb-16 lg:pt-36 lg:pb-20 overflow-hidden cyber-grid"
+      className="relative flex min-h-[100svh] items-center overflow-hidden pb-16 pt-28 lg:pb-20 lg:pt-36"
     >
-      <div className="aurora" aria-hidden>
-        <div className="aurora__green" />
-      </div>
-
       <div className="container relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
-          {/* Copy */}
-          <div className="lg:col-span-3 max-w-2xl order-2 lg:order-1">
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="badge-glow"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-5 lg:gap-16">
+          {/* HERO CONTENT */}
+          <div className="order-2 max-w-2xl lg:order-1 lg:col-span-3">
+            {/* AVAILABILITY STATUS */}
+            <div className="inline-flex items-center gap-2 rounded border border-neon-green/50 px-3 py-2 font-mono text-[0.68rem] font-medium uppercase tracking-[0.12em] text-neon-green">
+              <span
+                className="h-1.5 w-1.5 rounded-full bg-neon-green"
+                aria-hidden="true"
+              />
+              <Sparkles className="h-3.5 w-3.5" />
               Available for new opportunities
-            </motion.div>
+            </div>
 
-            <motion.h1
-              initial={reduce ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.05 }}
-              className="mt-5 sm:mt-6 text-[2rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-display-2 font-extrabold tracking-tight text-fg"
-            >
-              Hi, I&apos;m{" "}
-              <span className="text-gradient text-gradient--animated">Zaki Deza</span>
-              <span className="block mt-2 sm:mt-3 text-[0.85em] sm:text-[0.75em]">
-                <span className="text-fg-soft font-medium">I&apos;m a</span>{" "}
-                <span className={`text-neon-cyan font-mono ${reduce ? "" : "cursor-blink"}`}>
-                  {role || " "}
+            {/* MAIN HEADING */}
+            <h1 className="mt-5 text-[2rem] font-extrabold leading-[1.12] tracking-[-0.05em] text-fg sm:text-5xl md:text-6xl lg:text-display-2">
+              Hi, I&apos;m <span className="text-neon-green">Zaki Deza</span>
+              <span className="mt-3 flex flex-wrap items-baseline gap-x-3 text-[0.68em] leading-tight sm:mt-4">
+                <span className="shrink-0 font-medium text-fg-soft">
+                  I&apos;m a
+                </span>
+
+                <span
+                  className={`inline-block min-h-[1.2em] font-mono font-medium text-neon-green ${
+                    reduce ? "" : "cursor-blink"
+                  }`}
+                  aria-label={reduce ? ROLES[0] : undefined}
+                >
+                  <span aria-hidden="true">{role || "\u00A0"}</span>
+                  <span className="sr-only">{role || ROLES[0]}</span>
                 </span>
               </span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={reduce ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.12 }}
-              className="mt-5 sm:mt-6 text-[15px] sm:text-base md:text-lg text-fg-muted leading-relaxed max-w-xl"
-            >
+            {/* DESCRIPTION */}
+            <p className="mt-5 max-w-xl text-[15px] font-normal leading-7 text-fg-muted sm:mt-6 sm:text-base md:text-lg md:leading-8">
               I craft scalable, AI-augmented web experiences with{" "}
-              <span className="text-fg font-medium">React</span>,{" "}
-              <span className="text-fg font-medium">Next.js</span>,{" "}
-              <span className="text-fg font-medium">Laravel</span> and{" "}
-              <span className="text-fg font-medium">Express</span>. Self-taught, product-minded,
-              shipping clean code at speed.
-            </motion.p>
+              <span className="font-semibold text-fg">React</span>,{" "}
+              <span className="font-semibold text-fg">Next.js</span>,{" "}
+              <span className="font-semibold text-fg">Laravel</span> and{" "}
+              <span className="font-semibold text-fg">Express</span>.
+              Self-taught, product-minded, shipping clean code at speed.
+            </p>
 
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.18 }}
-              className="mt-7 sm:mt-8 flex flex-wrap items-center gap-3"
-            >
+            {/* PRIMARY ACTIONS */}
+            <div className="mt-7 flex flex-wrap items-center gap-3 text-sm">
               <a
                 href="#projects"
-                className="group inline-flex items-center justify-center gap-2 h-12 px-5 rounded-lg text-white font-medium bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+                className="group inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-neon-green bg-neon-green/10 px-5 font-semibold text-neon-green transition-colors duration-300 hover:bg-neon-green hover:text-[#000103] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neon-green focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 View Projects
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
+
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-lg border border-border dark:border-white/15 bg-bg-elev/60 backdrop-blur-md text-fg hover:border-neon-cyan/60 hover:text-neon-cyan transition-all duration-300"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-border bg-bg px-5 font-medium text-fg transition-colors duration-300 hover:border-neon-green hover:text-neon-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neon-green focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 Contact Me
               </a>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={reduce ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.28 }}
-              className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-fg-muted"
-            >
+            {/* LOCATION AND SOCIAL LINKS */}
+            <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-fg-muted">
               <span className="inline-flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5" /> Remote · Indonesia
+                <MapPin className="h-3.5 w-3.5 text-neon-green" />
+                Remote · Indonesia
               </span>
+
               <a
                 href="https://github.com/Zakid19"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 link-underline hover:text-fg"
+                className="inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-neon-green"
               >
-                <Github className="w-3.5 h-3.5" /> GitHub
+                <Github className="h-3.5 w-3.5" />
+                GitHub
               </a>
+
               <a
                 href="https://linkedin.com/in/zaki-deza-31666719a"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 link-underline hover:text-fg"
+                className="inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-neon-green"
               >
-                <Linkedin className="w-3.5 h-3.5" /> LinkedIn
+                <Linkedin className="h-3.5 w-3.5" />
+                LinkedIn
               </a>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.35 }}
-              className="mt-9 grid grid-cols-3 gap-2.5 sm:gap-4 max-w-md"
-            >
-              {STATS.map((s) => (
+            {/* STATS */}
+            <div className="mt-9 grid max-w-md grid-cols-3 gap-2.5 sm:gap-4">
+              {STATS.map((stat) => (
                 <div
-                  key={s.label}
-                  className="relative p-3 sm:p-4 rounded-xl glass neon-edge text-center"
+                  key={stat.label}
+                  className="rounded-lg border border-border bg-bg p-3 text-center transition-colors duration-300 hover:border-neon-green/60 sm:p-4"
                 >
-                  <div className="text-xl sm:text-2xl font-bold font-mono text-gradient">{s.value}</div>
-                  <div className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-wider text-fg-muted mt-0.5 sm:mt-1">
-                    {s.label}
+                  <div className="font-mono text-xl font-bold tracking-tight text-neon-green sm:text-2xl">
+                    {stat.value}
+                  </div>
+
+                  <div className="mt-1 text-[0.65rem] font-medium uppercase tracking-[0.12em] text-fg-muted sm:text-[0.7rem]">
+                    {stat.label}
                   </div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
 
-          {/* Avatar */}
-          <motion.div
-            initial={reduce ? false : { opacity: 0, scale: 0.94 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="lg:col-span-2 flex justify-center lg:justify-end order-1 lg:order-2"
-          >
+          {/* AVATAR */}
+          <div className="order-1 flex justify-center lg:order-2 lg:col-span-2 lg:justify-end">
             <div
               className="relative"
               onPointerMove={onMove}
               onPointerLeave={onLeave}
               style={{ perspective: 1000 }}
             >
-              {/* Orbit rings — desktop only */}
-              <div className="hidden sm:block absolute -inset-4 rounded-full border border-neon-cyan/20 pulse-ring pointer-events-none" />
-              <div className="hidden sm:block absolute -inset-8 rounded-full border border-neon-purple/10 pointer-events-none" />
+              {/* SUBTLE FRAME */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-4 hidden rounded-[2rem] border border-border/60 sm:block"
+              />
 
+              {/* AVATAR CARD */}
               <motion.div
-                style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                className="relative w-[min(72vw,18rem)] sm:w-[clamp(14rem,32vw,20rem)] aspect-square"
+                style={{
+                  rotateX,
+                  rotateY,
+                  transformStyle: "preserve-3d",
+                }}
+                transition={{
+                  duration: reduce ? 0 : 0.3,
+                  ease: "easeOut",
+                }}
+                className="group relative aspect-square w-[min(72vw,18rem)] sm:w-[clamp(14rem,32vw,20rem)]"
               >
-                <div className="absolute -inset-1 rounded-[2rem] bg-brand-gradient bg-[length:200%_100%] opacity-60 sm:opacity-70 blur-md hidden sm:block" />
-                <div className="relative w-full h-full rounded-[2rem] overflow-hidden neon-edge shadow-glow">
+                {/* IMAGE FRAME */}
+                <div className="relative h-full w-full overflow-hidden rounded-[1.5rem] border border-border bg-bg transition-colors duration-300 group-hover:border-neon-green/70">
                   <Image
                     src="/assets/images/avatar.png"
                     alt="Portrait of Zaki Deza"
                     fill
-                    sizes="(max-width: 640px) 72vw, (max-width: 1024px) 320px, 400px"
-                    className="object-cover"
+                    sizes="(max-width: 640px) 72vw, (max-width: 1024px) 320px, 320px"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                     priority
                     placeholder="blur"
                     blurDataURL={AVATAR_BLUR}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                </div>
 
-                <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 px-3 py-1.5 rounded-lg glass neon-edge text-xs font-mono">
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="relative inline-flex w-2 h-2">
-                      <span className="absolute inset-0 rounded-full bg-neon-green animate-ping opacity-75" />
-                      <span className="relative inline-flex rounded-full w-2 h-2 bg-neon-green" />
-                    </span>
-                    Available
-                  </span>
+                  {/* IMAGE OVERLAY */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"
+                  />
+
+                  {/* STATUS BADGE */}
+                  <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
+                    <div className="inline-flex w-max items-center gap-2 rounded-md border border-neon-green/50 bg-[#000103]/90 px-4 py-2 font-mono text-xs font-medium text-neon-green sm:text-sm">
+                      <span className="relative flex h-2 w-2 shrink-0">
+                        {!reduce && (
+                          <span className="absolute inset-0 animate-ping rounded-full bg-neon-green opacity-50" />
+                        )}
+                        <span className="relative h-2 w-2 rounded-full bg-neon-green" />
+                      </span>
+                      Available
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
-        {/* Scroll cue — desktop only */}
-        <motion.a
+        {/* SCROLL CUE */}
+        <a
           href="#about"
-          initial={reduce ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1 }}
           aria-label="Scroll to about section"
-          className="hidden lg:flex absolute left-1/2 -translate-x-1/2 bottom-6 flex-col items-center gap-2 text-xs uppercase tracking-widest font-mono text-fg-muted hover:text-neon-cyan transition-colors"
+          className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 font-mono text-[0.68rem] font-medium uppercase tracking-[0.16em] text-fg-muted transition-colors duration-300 hover:text-neon-green lg:flex"
         >
           Scroll
-          <span className="relative w-px h-10 bg-fg/15 dark:bg-white/20 overflow-hidden">
-            <span className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-neon-cyan to-transparent animate-[slideDown_1.8s_ease-in-out_infinite]" />
+          <span className="relative h-10 w-px overflow-hidden bg-fg/15">
+            <span className="absolute inset-x-0 top-0 h-1/2 animate-[slideDown_1.8s_ease-in-out_infinite] bg-neon-green" />
           </span>
-        </motion.a>
+        </a>
       </div>
 
       <style jsx>{`
         @keyframes slideDown {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(200%); }
+          0% {
+            transform: translateY(-100%);
+          }
+
+          100% {
+            transform: translateY(200%);
+          }
         }
       `}</style>
     </section>

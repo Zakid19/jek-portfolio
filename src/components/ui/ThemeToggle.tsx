@@ -1,4 +1,5 @@
 // src/components/ui/ThemeToggle.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,28 +8,72 @@ import { Moon, Sun } from "lucide-react";
 
 type Theme = "light" | "dark";
 
+function getSavedTheme(): Theme {
+  try {
+    const saved = localStorage.getItem("theme");
+
+    if (saved === "light" || saved === "dark") {
+      return saved;
+    }
+  } catch {
+    // Fall back to dark theme when storage is unavailable.
+  }
+
+  return "dark";
+}
+
 export default function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
+
   const reduce = useReducedMotion();
 
+  // Initialize from the same preference used by layout.tsx.
   useEffect(() => {
+    setTheme(getSavedTheme());
     setMounted(true);
-    const saved = (localStorage.getItem("theme") as Theme | null) ?? null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setTheme(saved ?? (prefersDark ? "dark" : "light"));
   }, []);
 
+  // Apply theme and persist user preference.
   useEffect(() => {
     if (!mounted) return;
+
     const root = document.documentElement;
-    if (theme === "dark") root.classList.add("dark");
-    else root.classList.remove("dark");
-    localStorage.setItem("theme", theme);
+
+    root.classList.toggle("dark", theme === "dark");
+
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {
+      // Theme remains active for the current session.
+    }
+
     window.dispatchEvent(new Event("theme-change"));
   }, [theme, mounted]);
 
-  const toggle = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  // Synchronize theme changes from other browser tabs.
+  useEffect(() => {
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== "theme") return;
+
+      if (event.newValue === "light" || event.newValue === "dark") {
+        setTheme(event.newValue);
+      } else {
+        setTheme("dark");
+      }
+    };
+
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
+
+  const toggle = () => {
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
+  };
+
   const isDark = theme === "dark";
 
   return (
@@ -37,24 +82,55 @@ export default function ThemeToggle() {
       onClick={toggle}
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
       title={`Switch to ${isDark ? "light" : "dark"} mode`}
-      className="relative inline-flex items-center justify-center w-10 h-10 rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md hover:border-neon-cyan/40 hover:shadow-glow-soft transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
+      aria-pressed={isDark}
+      className="
+        inline-flex
+        h-10
+        w-10
+        items-center
+        justify-center
+        rounded-md
+        border
+        border-border
+        dark:border-white
+        bg-transparent
+        text-neon-green
+        dark:text-neon-green
+        transition-colors
+        duration-200
+        hover:border-neon-green
+        hover:text-neon-green
+        focus-visible:outline-none
+        focus-visible:ring-2
+        focus-visible:ring-ring
+      "
     >
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.span
-          key={isDark ? "moon" : "sun"}
-          initial={reduce ? false : { opacity: 0, rotate: -90, scale: 0.6 }}
-          animate={{ opacity: 1, rotate: 0, scale: 1 }}
-          exit={reduce ? undefined : { opacity: 0, rotate: 90, scale: 0.6 }}
-          transition={{ duration: 0.25 }}
-          className="absolute inset-0 flex items-center justify-center"
-        >
-          {isDark ? (
-            <Moon className="w-[18px] h-[18px] text-neon-cyan" strokeWidth={2} />
-          ) : (
-            <Sun className="w-[18px] h-[18px] text-amber-500" strokeWidth={2} />
-          )}
-        </motion.span>
-      </AnimatePresence>
+      {!mounted ? (
+        <span className="h-[18px] w-[18px]" aria-hidden="true" />
+      ) : (
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={theme}
+            initial={reduce ? false : { opacity: 0, rotate: -45, scale: 0.8 }}
+            animate={{ opacity: 1, rotate: 0, scale: 1 }}
+            exit={reduce ? undefined : { opacity: 0, rotate: 45, scale: 0.8 }}
+            transition={{ duration: 0.2 }}
+            className="flex items-center justify-center"
+          >
+            {isDark ? (
+              <Moon
+                className="h-[18px] w-[18px] text-neon-cyan"
+                strokeWidth={1.8}
+              />
+            ) : (
+              <Sun
+                className="h-[18px] w-[18px] text-neon-green"
+                strokeWidth={1.8}
+              />
+            )}
+          </motion.span>
+        </AnimatePresence>
+      )}
     </button>
   );
 }

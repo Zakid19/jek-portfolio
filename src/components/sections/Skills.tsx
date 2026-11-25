@@ -1,107 +1,353 @@
-"use client";
+import {
+  ArrowUpRight,
+  BrainCircuit,
+  BriefcaseBusiness,
+  Code2,
+  GitBranch,
+  Layers3,
+  Workflow,
+} from "lucide-react";
 
-import { useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Section from "@/components/ui/Section";
 import { SKILLS } from "@/data/skills";
 import { cn } from "@/lib/utils";
 
-export default function Skills() {
-  const categories = SKILLS.map((s) => s.group);
-  const [active, setActive] = useState(categories[0]);
-  const selectedGroup = SKILLS.find((s) => s.group === active);
-  const reduce = useReducedMotion();
+const TECHNICAL_GROUPS = [
+  { key: "Frontend", label: "Frontend Development" },
+  { key: "Backend", label: "Backend Development" },
+  { key: "Database", label: "Database Design" },
+  {
+    key: "AI & Development Workflows",
+    label: "AI / ML Integration",
+  },
+] as const;
+
+const SERVICES = [
+  {
+    title: "Web Application",
+    description: "Development",
+    icon: Code2,
+  },
+  {
+    title: "AI Integration",
+    description: "& Automation",
+    icon: BrainCircuit,
+  },
+  {
+    title: "AI-Powered Product",
+    description: "Development",
+    icon: Workflow,
+  },
+  {
+    title: "Technical Consulting",
+    description: "& Code Review",
+    icon: BriefcaseBusiness,
+  },
+];
+
+function PanelHeading({
+  number,
+  title,
+  icon: Icon,
+}: {
+  number: string;
+  title: string;
+  icon: typeof Code2;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3 border-b border-border pb-4">
+      <div className="flex min-w-0 items-center gap-2.5">
+        <Icon className="h-4 w-4 shrink-0 text-neon-green" strokeWidth={1.7} />
+
+        <h3 className="truncate font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-fg">
+          {number} / {title}
+        </h3>
+      </div>
+
+      <span className="shrink-0 font-mono text-[9px] tracking-wider text-fg-muted">
+        0{number}
+      </span>
+    </div>
+  );
+}
+
+function LevelIndicator({ level }: { level: number }) {
+  const safeLevel = Math.max(0, Math.min(5, level));
 
   return (
-    <Section
-      id="skills"
-      eyebrow="Toolbox"
-      title="Skills & Expertise"
-      subtitle="A pragmatic stack built around shipping fast, scaling cleanly, and embracing AI in the loop."
+    <div
+      className="grid w-12 shrink-0 grid-cols-5 gap-1"
+      role="img"
+      aria-label={`Level ${safeLevel} of 5`}
     >
-      {/* Tabs — horizontal scroll on mobile, wrap on tablet+ */}
-      <div className="flex sm:flex-wrap sm:justify-center gap-2 mt-2 mb-10 sm:mb-12 -mx-4 sm:mx-0 px-4 sm:px-0 overflow-x-auto sm:overflow-visible scrollbar-none">
-        {categories.map((cat) => {
-          const isActive = cat === active;
+      {Array.from({ length: 5 }).map((_, index) => (
+        <span
+          key={index}
+          className={cn(
+            "h-[3px] rounded-full",
+            index < safeLevel ? "bg-neon-green" : "bg-border",
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
+function TechnicalSkillsPanel() {
+  return (
+    <section className="min-w-0 border-b border-border p-5 sm:p-6 lg:border-b-0 lg:border-r">
+      <PanelHeading number="01" title="Technical Skills" icon={Code2} />
+
+      <div className="mt-5 space-y-5">
+        {TECHNICAL_GROUPS.map((group, index) => {
+          const skillGroup = SKILLS.find((item) => item.group === group.key);
+
+          if (!skillGroup) return null;
+
           return (
-            <button
-              key={cat}
-              onClick={() => setActive(cat)}
+            <div key={group.key} className="min-w-0">
+              <div className="mb-2.5 flex items-center gap-2">
+                <span className="font-mono text-[10px] text-neon-green">
+                  0{index + 1}
+                </span>
+
+                <h4 className="text-xs font-semibold tracking-tight text-fg">
+                  {group.label}
+                </h4>
+              </div>
+
+              <div className="flex flex-wrap gap-1.5">
+                {skillGroup.items.map((skill) => (
+                  <div
+                    key={skill.name}
+                    className={cn(
+                      "inline-flex max-w-full items-center gap-2",
+                      "rounded-md border border-border bg-bg-soft",
+                      "px-2.5 py-1.5 transition-colors",
+                      "hover:border-neon-green/40",
+                    )}
+                    title={`${skill.name}: Level ${skill.level}/5`}
+                  >
+                    <span className="truncate text-[10px] text-fg-soft">
+                      {skill.name}
+                    </span>
+
+                    <span className="font-mono text-[9px] tabular-nums text-neon-green">
+                      {skill.level}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function ServicesPanel() {
+  return (
+    <section className="min-w-0 border-b border-border p-5 sm:p-6 lg:border-b-0 lg:border-r">
+      <PanelHeading number="02" title="Services" icon={Layers3} />
+
+      <div className="mt-5 space-y-2">
+        {SERVICES.map((service, index) => {
+          const Icon = service.icon;
+
+          return (
+            <div
+              key={service.title}
               className={cn(
-                "relative px-4 sm:px-5 h-10 rounded-full text-sm font-medium tracking-wide transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 whitespace-nowrap flex-shrink-0",
-                isActive
-                  ? "text-white"
-                  : "text-fg-soft border border-border dark:border-white/10 hover:text-fg hover:border-neon-cyan/40"
+                "group flex items-center gap-3 rounded-lg",
+                "border border-border bg-bg p-3",
+                "transition-colors duration-200",
+                "hover:border-neon-green/40 hover:bg-bg-soft",
               )}
             >
-              {isActive && (
-                <motion.span
-                  layoutId="skills-tab-bg"
-                  transition={{ type: "spring", stiffness: 350, damping: 28 }}
-                  className="absolute inset-0 rounded-full bg-brand-gradient bg-[length:200%_100%] animate-gradient shadow-glow-soft"
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-bg-soft transition-colors group-hover:border-neon-green/40">
+                <Icon
+                  className="h-4 w-4 text-fg-muted transition-colors group-hover:text-neon-green"
+                  strokeWidth={1.7}
                 />
-              )}
-              <span className="relative z-10">{cat}</span>
-            </button>
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <h4 className="text-xs font-semibold leading-relaxed text-fg">
+                  {service.title}
+                </h4>
+
+                <p className="text-[10px] text-fg-muted">
+                  {service.description}
+                </p>
+              </div>
+
+              <span className="font-mono text-[9px] text-fg-muted">
+                0{index + 1}
+              </span>
+            </div>
           );
         })}
       </div>
 
-      {/* Cards */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={active}
-          initial={reduce ? false : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={reduce ? undefined : { opacity: 0, y: -12 }}
-          transition={{ duration: 0.35 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-        >
-          {selectedGroup?.items.map((item, idx) => {
-            const Icon = item.icon;
-            const pct = (item.level / 5) * 100;
-            return (
-              <motion.div
-                key={item.name}
-                initial={reduce ? false : { opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.06 }}
-                whileHover={reduce ? undefined : { y: -4 }}
-                className="group relative rounded-xl p-5 glass neon-edge overflow-hidden hover:shadow-glow-soft transition-shadow duration-500"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  {Icon ? (
-                    <div className="relative w-10 h-10 rounded-lg bg-bg-elev border border-border dark:border-white/10 flex items-center justify-center group-hover:border-neon-cyan/40 transition-colors">
-                      <Icon className="w-5 h-5 text-neon-cyan" />
-                    </div>
-                  ) : (
-                    <div className="w-10 h-10 rounded-lg bg-brand-gradient bg-[length:200%_100%] animate-gradient flex items-center justify-center font-mono text-white text-sm">
-                      {item.name.charAt(0)}
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <div className="font-medium text-fg text-sm">{item.name}</div>
-                    <div className="text-[0.7rem] font-mono uppercase tracking-wider text-fg-muted">
-                      Level {item.level}/5
-                    </div>
-                  </div>
-                </div>
+      <div className="mt-5 border-t border-border pt-4">
+        <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-fg-muted">
+          Working approach
+        </span>
 
-                {/* Animated bar */}
-                <div className="relative h-1.5 rounded-full bg-fg/10 dark:bg-white/[0.06] overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${pct}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.15 + idx * 0.04 }}
-                    className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple shadow-[0_0_8px_rgb(34_211_238_/_0.6)]"
-                  />
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </AnimatePresence>
+        <p className="mt-2 text-[11px] leading-relaxed text-fg-soft">
+          Engineering, automation, and thoughtful technology integration for
+          practical digital solutions.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function ToolsPanel() {
+  const toolsGroup = SKILLS.find((group) => group.group === "Tools");
+
+  return (
+    <section className="min-w-0 p-5 sm:p-6">
+      <PanelHeading number="03" title="Tools I Use" icon={GitBranch} />
+
+      <div className="mt-5 grid grid-cols-1 gap-x-3 gap-y-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+        {toolsGroup?.items.map((tool) => {
+          const Icon = tool.icon;
+
+          return (
+            <div
+              key={tool.name}
+              className="group flex min-w-0 items-center gap-2.5"
+              title={`${tool.name}: Level ${tool.level}/5`}
+            >
+              {Icon ? (
+                <Icon
+                  className="h-4 w-4 shrink-0 text-fg-muted transition-colors group-hover:text-neon-green"
+                  aria-hidden="true"
+                  strokeWidth={1.7}
+                />
+              ) : (
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-neon-green" />
+              )}
+
+              <span className="min-w-0 flex-1 truncate text-[11px] text-fg-soft transition-colors group-hover:text-fg">
+                {tool.name}
+              </span>
+
+              <span className="font-mono text-[9px] tabular-nums text-fg-muted">
+                {tool.level}/5
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-6 border-t border-border pt-4">
+        <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-fg-muted">
+          Environment
+        </span>
+
+        <div className="mt-2 flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-neon-green" />
+
+          <span className="font-mono text-[10px] text-fg-soft">
+            Development / Production
+          </span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AdditionalCapabilities() {
+  const softSkills = SKILLS.find((group) => group.group === "Soft Skills");
+
+  if (!softSkills) return null;
+
+  return (
+    <div className="flex flex-col gap-4 rounded-xl border border-border bg-bg px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-2.5">
+        <Workflow
+          className="h-4 w-4 shrink-0 text-neon-green"
+          strokeWidth={1.7}
+        />
+
+        <div>
+          <h3 className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-fg">
+            Additional Capabilities
+          </h3>
+
+          <p className="mt-1 text-[10px] text-fg-muted">
+            Beyond technical expertise
+          </p>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {softSkills.items.map((skill) => (
+          <span
+            key={skill.name}
+            className="rounded-md border border-border bg-bg-soft px-2.5 py-1.5 text-[10px] text-fg-soft"
+          >
+            {skill.name}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function Skills() {
+  return (
+    <Section
+      id="skills"
+      eyebrow="Technical Capabilities"
+      title="Skills & Expertise"
+      subtitle="A practical overview of my technical capabilities, services, and tools for building modern digital solutions."
+    >
+      <div className="space-y-3">
+        {/* MAIN DASHBOARD */}
+        <div className="overflow-hidden rounded-xl border border-border bg-bg">
+          {/* HEADER */}
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-bg-soft px-5 py-3.5">
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-neon-green opacity-30" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-neon-green" />
+              </span>
+
+              <span className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-fg">
+                Technical Overview
+              </span>
+            </div>
+
+            <span className="font-mono text-[9px] tracking-wider text-fg-muted">
+              ZD / CAPABILITY INDEX
+            </span>
+          </div>
+
+          {/* COLUMNS */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr_0.85fr]">
+            <TechnicalSkillsPanel />
+            <ServicesPanel />
+            <ToolsPanel />
+          </div>
+
+          {/* FOOTER */}
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-bg-soft px-5 py-3">
+            <span className="font-mono text-[9px] text-fg-muted">
+              SKILLS / SERVICES / TOOLCHAIN
+            </span>
+
+            <span className="font-mono text-[9px] text-neon-green">
+              SYSTEM OVERVIEW
+            </span>
+          </div>
+        </div>
+
+        <AdditionalCapabilities />
+      </div>
     </Section>
   );
 }

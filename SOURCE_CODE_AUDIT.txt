@@ -1,0 +1,4069 @@
+
+
+========== .\src\app\globals.css ==========
+/* src/app/globals.css
+ * Cyber / Neon design system — performance-tuned.
+ * - Dark-first, premium glow accents (cyan / green / purple)
+ * - Tokens via CSS variables, animations GPU-friendly
+ * - Mobile + touch path strips expensive composites
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------- *
+ * 1. Design tokens
+ * ---------------------------------------------------------------- */
+:root {
+  /* Light mode — tokens tuned for legibility on a near-white surface.
+   * Neon accents are deepened here so text, borders and badges stay
+   * crisp; the original bright neons live in `.dark` below. */
+  --bg: 250 250 252;
+  --bg-soft: 244 244 248;
+  --bg-elev: 255 255 255;
+  --border: 203 213 225;
+  --border-soft: 226 232 240;
+
+  --fg: 15 23 42;
+  --fg-soft: 51 65 85;
+  --muted: 71 85 105;
+
+  --neon-cyan: 14 116 144;
+  --neon-green: 5 150 105;
+  --neon-purple: 124 58 237;
+  --neon-pink: 219 39 119;
+  --neon-blue: 0 98 204;
+
+  --primary: 14 116 144;
+  --ring: 124 58 237;
+
+  --grid-color: 15 23 42;
+  --grid-opacity: 0.045;
+  --noise-opacity: 0.025;
+}
+
+.dark {
+  --bg: 8 9 14;
+  --bg-soft: 14 16 22;
+  --bg-elev: 18 21 28;
+  --border: 255 255 255;
+  --border-soft: 255 255 255;
+
+  --fg: 236 240 246;
+  --fg-soft: 203 213 225;
+  --muted: 148 163 184;
+
+  /* Bright neons — original values; dark mode is left untouched */
+  --neon-cyan: 34 211 238;
+  --neon-green: 20 241 149;
+  --neon-purple: 153 69 255;
+  --neon-pink: 244 114 182;
+  --neon-blue: 0 117 255;
+
+  --primary: 34 211 238;
+  --ring: 153 69 255;
+
+  --grid-color: 56 189 248;
+  --grid-opacity: 0.06;
+  --noise-opacity: 0.04;
+}
+
+/* ---------------------------------------------------------------- *
+ * 2. Base
+ * ---------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: rgb(var(--bg));
+    color: rgb(var(--fg));
+    min-height: 100vh;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: rgb(var(--neon-purple) / 0.35);
+    color: rgb(255 255 255);
+  }
+
+  :focus { outline: none; }
+  :focus-visible {
+    outline: 2px solid rgb(var(--ring) / 0.7);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  img { display: block; max-width: 100%; height: auto; }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgb(var(--neon-cyan) / 0.5), rgb(var(--neon-purple) / 0.5));
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+}
+
+/* ---------------------------------------------------------------- *
+ * 3. Layout helpers
+ * ---------------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+@media (min-width: 768px) { .container { padding-inline: 1.5rem; } }
+@media (min-width: 1280px) { .container { padding-inline: 2rem; } }
+
+/* Skip painting off-screen sections — massive scroll-perf win */
+.section-cv {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 800px;
+}
+
+/* ---------------------------------------------------------------- *
+ * 4. Cyber background
+ * ---------------------------------------------------------------- */
+.cyber-grid {
+  position: relative;
+  isolation: isolate;
+}
+.cyber-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgb(var(--grid-color) / var(--grid-opacity)) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--grid-color) / var(--grid-opacity)) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 80%);
+  pointer-events: none;
+}
+
+/* Aurora — light on phones, full on desktop */
+.aurora {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  contain: layout paint;
+}
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  mix-blend-mode: screen;
+  animation: aurora-drift 24s ease-in-out infinite alternate;
+  will-change: transform;
+  transform: translateZ(0);
+}
+.aurora::before {
+  background: radial-gradient(circle at 30% 30%, rgb(var(--neon-cyan) / 0.55), transparent 60%);
+  top: -20vmax; left: -10vmax;
+}
+.aurora::after {
+  background: radial-gradient(circle at 70% 70%, rgb(var(--neon-purple) / 0.55), transparent 60%);
+  bottom: -25vmax; right: -15vmax;
+  animation-direction: alternate-reverse;
+  animation-duration: 30s;
+}
+.aurora__green {
+  position: absolute;
+  width: 38vmax; height: 38vmax;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.32;
+  background: radial-gradient(circle, rgb(var(--neon-green) / 0.5), transparent 60%);
+  mix-blend-mode: screen;
+  top: 30%; left: 45%;
+  animation: aurora-drift 36s ease-in-out infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+@keyframes aurora-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(8%, -6%, 0) scale(1.06); }
+  100% { transform: translate3d(-6%, 8%, 0) scale(0.96); }
+}
+
+/* Spotlight follow-cursor */
+.spotlight-area { position: relative; }
+.spotlight-pointer {
+  position: fixed;
+  top: 0; left: 0;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgb(var(--neon-cyan) / 0.14), transparent 60%);
+  mix-blend-mode: screen;
+  transform: translate3d(-9999px, -9999px, 0);
+  z-index: 0;
+  will-change: transform;
+}
+
+/* Noise overlay — non-fixed so scroll doesn't re-composite the whole viewport */
+body::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+  mix-blend-mode: overlay;
+}
+
+/* ---------------------------------------------------------------- *
+ * 5. Component utilities
+ * ---------------------------------------------------------------- */
+.brand-gradient,
+.text-gradient {
+  background-image: linear-gradient(110deg,
+    rgb(var(--neon-green)) 0%,
+    rgb(var(--neon-cyan)) 45%,
+    rgb(var(--neon-purple)) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+}
+
+.text-gradient--animated {
+  animation: gradientShift 8s linear infinite;
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.glass {
+  background: rgb(var(--bg-elev) / 0.55);
+  border: 1px solid rgb(var(--neon-cyan) / 0.12);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+}
+.dark .glass {
+  background: rgb(255 255 255 / 0.03);
+  border-color: rgb(255 255 255 / 0.08);
+}
+
+.neon-edge {
+  position: relative;
+  isolation: isolate;
+}
+.neon-edge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg,
+    rgb(var(--neon-cyan) / 0.55),
+    rgb(var(--neon-purple) / 0.05) 50%,
+    rgb(var(--neon-green) / 0.55));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.shadow-glow {
+  box-shadow:
+    0 0 0 1px rgb(var(--neon-cyan) / 0.18),
+    0 10px 40px -10px rgb(var(--neon-cyan) / 0.35),
+    0 24px 60px -20px rgb(var(--neon-purple) / 0.35);
+}
+.shadow-glow-soft {
+  box-shadow:
+    0 8px 30px -12px rgb(var(--neon-cyan) / 0.45),
+    0 0 24px -8px rgb(var(--neon-purple) / 0.25);
+}
+
+.badge-glow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  line-height: 1;
+  border-radius: 999px;
+  background: linear-gradient(120deg, rgb(var(--neon-cyan) / 0.12), rgb(var(--neon-purple) / 0.12));
+  border: 1px solid rgb(var(--neon-cyan) / 0.3);
+  color: rgb(var(--neon-cyan));
+  box-shadow: 0 0 12px -2px rgb(var(--neon-cyan) / 0.45);
+  white-space: nowrap;
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg,
+    transparent 30%,
+    rgb(255 255 255 / 0.18) 50%,
+    transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.9s cubic-bezier(.2,.9,.3,1);
+  pointer-events: none;
+}
+.shimmer:hover::after { transform: translateX(120%); }
+
+.link-underline {
+  background-image: linear-gradient(90deg, rgb(var(--neon-cyan)), rgb(var(--neon-purple)));
+  background-size: 0% 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s cubic-bezier(.2,.9,.3,1);
+}
+.link-underline:hover { background-size: 100% 2px; }
+
+.theme-transition,
+.theme-transition * {
+  transition-property: background-color, color, border-color, box-shadow;
+  transition-duration: 280ms;
+  transition-timing-function: cubic-bezier(.2,.9,.3,1);
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.cursor-blink::after {
+  content: "▍";
+  display: inline-block;
+  margin-left: 2px;
+  color: rgb(var(--neon-cyan));
+  animation: blink 1.05s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.marquee {
+  display: flex;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+}
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+.animate-float {
+  animation: float 4.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* GPU-friendly pulse — transform-based, not box-shadow (saves a repaint per frame) */
+@keyframes pulse-ring-gpu {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.6); opacity: 0;   }
+}
+.pulse-ring {
+  position: relative;
+}
+.pulse-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgb(var(--neon-cyan) / 0.55);
+  animation: pulse-ring-gpu 2.4s cubic-bezier(.4,0,.6,1) infinite;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ---------------------------------------------------------------- *
+ * 6. Responsive / performance overrides
+ * ---------------------------------------------------------------- */
+
+/* Phones: lighter compositing, smaller blur, no noise overlay */
+@media (max-width: 768px) {
+  .aurora::before,
+  .aurora::after {
+    width: 80vmax;
+    height: 80vmax;
+    filter: blur(60px);
+    opacity: 0.32;
+  }
+  .aurora__green { display: none; }
+  body::after { display: none; }
+  .glass {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgb(var(--bg-elev) / 0.85);
+  }
+  .dark .glass {
+    background: rgb(20 22 30 / 0.7);
+  }
+  .text-gradient--animated { animation-duration: 14s; }
+  .container { padding-inline: 1.25rem; }
+}
+
+/* Touch-only devices: drop pointer-tracked effects entirely */
+@media (hover: none), (pointer: coarse) {
+  .spotlight-pointer { display: none; }
+  .shimmer::after { display: none; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .text-gradient--animated { background-position: 0% 50%; }
+  .aurora::before, .aurora::after, .aurora__green { animation: none; }
+  .pulse-ring::before { display: none; }
+}
+
+/* Low-power data-saver hint: same as reduce-motion when user opts in */
+@media (prefers-reduced-data: reduce) {
+  .aurora::before, .aurora::after, .aurora__green { display: none; }
+  body::after { display: none; }
+}
+
+
+
+========== .\src\app\layout.tsx ==========
+// src/app/layout.tsx
+import "./globals.css";
+import type { ReactNode } from "react";
+import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
+import ThemeTransition from "@/components/ui/ThemeTransition";
+import BackToTop from "@/components/ui/BackToTop";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "600", "800"],
+  variable: "--font-sans",
+  display: "swap",
+  preload: true,
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["500"],
+  variable: "--font-mono",
+  display: "swap",
+  preload: false,
+});
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://zakideza.dev";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Zaki Deza - Fullstack Web Developer",
+    template: "%s · Zaki Deza",
+  },
+  description:
+    "Fullstack web developer crafting scalable, AI-augmented web experiences with React, Next.js, Laravel, and Express.",
+  keywords: [
+    "Zaki Deza",
+    "Zakida",
+    "Fullstack Developer",
+    "Frontend Developer",
+    "Next.js",
+    "React",
+    "Laravel",
+    "TypeScript",
+    "Portfolio",
+  ],
+  authors: [{ name: "Zaki Deza" }],
+  creator: "Zaki Deza",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: "Zaki Deza · Portfolio",
+    title: "Zaki Deza — Fullstack Web Developer",
+    description:
+      "Building scalable, AI-augmented web experiences with React, Next.js, Laravel, and Express.",
+    images: [
+      {
+        url: "/assets/images/avatar.png",
+        width: 1200,
+        height: 630,
+        alt: "Zaki Deza — Fullstack Web Developer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Zaki Deza - Fullstack Web Developer",
+    description:
+      "Building scalable, AI-augmented web experiences with React, Next.js, Laravel, and Express.",
+    images: ["/assets/images/avatar.png"],
+  },
+  alternates: { canonical: "/" },
+  icons: { icon: "/favicon.ico" },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#08090e" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  // Inline pre-hydration script: applies the dark class BEFORE first paint
+  // so users never see a flash of the wrong theme.
+  const setInitialTheme = `
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var useDark = saved ? saved === 'dark' : prefersDark;
+        if (useDark) document.documentElement.classList.add('dark');
+      } catch (_) {}
+    })();
+  `;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Zaki Deza",
+    url: SITE_URL,
+    image: `${SITE_URL}/assets/images/avatar.png`,
+    jobTitle: "Fullstack Web Developer",
+    sameAs: [
+      "https://github.com/Zakid19",
+      "https://linkedin.com/in/zaki-deza-31666719a",
+    ],
+    knowsAbout: ["React", "Next.js", "TypeScript", "Laravel", "Tailwind CSS"],
+  };
+
+  return (
+    <html
+      lang="en"
+      className={`${inter.variable} ${mono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: setInitialTheme }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
+
+      <body className="font-sans antialiased selection:bg-neon-purple/30 selection:text-white">
+        <a
+          href="#content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] bg-bg-elev text-fg text-sm px-3 py-2 rounded-md shadow-glow"
+        >
+          Skip to content
+        </a>
+
+        <Navbar />
+
+        <main id="content" className="min-h-[60vh] relative" tabIndex={-1}>
+          {children}
+        </main>
+
+        <BackToTop threshold={400} />
+        <Footer />
+
+        <ThemeTransition />
+        <div id="modal-root" />
+      </body>
+    </html>
+  );
+}
+
+
+
+========== .\src\app\page.tsx ==========
+import dynamic from "next/dynamic";
+import Hero from "@/components/sections/Hero";
+import LazyView from "@/components/ui/LazyView";
+
+// Code-split below-hero sections — keeps initial JS payload tight.
+const About = dynamic(() => import("@/components/sections/About"));
+const Projects = dynamic(() => import("@/components/sections/Projects"));
+const Skills = dynamic(() => import("@/components/sections/Skills"));
+const Contact = dynamic(() => import("@/components/sections/Contact"));
+
+export default function HomePage() {
+  return (
+    <>
+      <LazyView minHeight={680}>
+        <About />
+      </LazyView>
+      <LazyView minHeight={760}>
+        <Projects />
+      </LazyView>
+      <LazyView minHeight={620}>
+        <Skills />
+      </LazyView>
+      <LazyView minHeight={680}>
+        <Contact />
+      </LazyView>
+    </>
+  );
+}
+
+
+
+========== .\src\app\projects\page.tsx ==========
+// src/app/projects/page.tsx
+import React from "react";
+import type { Metadata } from "next";
+import Section from "@/components/ui/Section";
+import ProjectsGridClient from "@/components/project/ProjectsGrid";
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description:
+    "Selected projects and case studies — built with Next.js, React, Laravel, and TypeScript.",
+  openGraph: {
+    title: "Projects · Zaki Deza",
+    description: "A collection of projects and case studies.",
+  },
+};
+
+export default function ProjectsPage() {
+  return (
+    <main className="relative pt-20">
+      <div className="aurora" aria-hidden />
+      <Section
+        eyebrow="Portfolio"
+        title="All Projects"
+        subtitle="Browse the full archive of case studies and experiments — search by name, filter by stack."
+      >
+        <ProjectsGridClient />
+      </Section>
+    </main>
+  );
+}
+
+
+
+==========  ==========
+// src/app/projects/[slug]/page.tsx
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+
+import { projects } from "@/data/projects";
+import type { Project } from "@/types";
+import ProjectAsideClient from "@/components/project/ProjectAsideClient";
+import { formatTech } from "@/lib/utils";
+
+export const generateStaticParams = async () =>
+  projects.map((p) => ({ slug: p.id }));
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const project = projects.find((p) => p.id === slug);
+
+  if (!project) {
+    return {
+      title: "Project Not Found",
+      description: "This project could not be found.",
+    };
+  }
+
+  const description = `${project.short} Built with ${formatTech(project.tech)}.`;
+
+  return {
+    title: project.title,
+    description,
+    openGraph: {
+      title: project.title,
+      description,
+      type: "article",
+      url: `/projects/${project.id}`,
+      images: project.image
+        ? [{ url: project.image, width: 1200, height: 630, alt: project.title }]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description,
+      images: project.image ? [project.image] : undefined,
+    },
+    alternates: { canonical: `/projects/${project.id}` },
+  };
+}
+
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const idx = projects.findIndex((p) => p.id === slug);
+  if (idx === -1) return notFound();
+
+  const project = projects[idx] as Project;
+  const prev = projects[idx - 1];
+  const next = projects[idx + 1];
+
+  const externalUrl =
+    project.demo || (project.href && project.href !== "#" ? project.href : undefined);
+
+  return (
+    <main className="relative">
+      <div className="aurora" aria-hidden />
+
+      <article className="container pt-32 pb-20">
+        {/* Back link */}
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-1.5 text-sm text-fg-muted hover:text-neon-cyan transition-colors mb-8 group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          All projects
+        </Link>
+
+        {/* Header */}
+        <header className="max-w-3xl">
+          <div className="flex flex-wrap items-center gap-2 mb-5">
+            {project.featured && <span className="badge-glow">Featured</span>}
+            {project.type && (
+              <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono uppercase tracking-widest text-fg-muted border border-border dark:border-white/10">
+                {project.type}
+              </span>
+            )}
+            {project.year && (
+              <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono text-fg-muted border border-border dark:border-white/10">
+                {project.year}
+              </span>
+            )}
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-fg">
+            {project.title}
+          </h1>
+          <p className="mt-5 text-lg text-fg-muted leading-relaxed">{project.short}</p>
+        </header>
+
+        {/* Hero image */}
+        <div className="relative w-full aspect-[16/9] sm:aspect-[2/1] mt-10 rounded-2xl overflow-hidden neon-edge shadow-glow">
+          {project.image ? (
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              sizes="(max-width: 1024px) 100vw, 1100px"
+              className="object-cover"
+              priority
+              placeholder={project.blurDataURL ? "blur" : undefined}
+              blurDataURL={project.blurDataURL}
+            />
+          ) : (
+            <div className="w-full h-full bg-bg-soft flex items-center justify-center text-fg-muted text-sm">
+              No image
+            </div>
+          )}
+        </div>
+
+        {/* Body */}
+        <div className="mt-14 grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14">
+          <div className="lg:col-span-2 space-y-12">
+            {project.longDescription && (
+              <section>
+                <h2 className="text-2xl font-bold text-fg mb-4">Overview</h2>
+                <p className="text-base text-fg-soft leading-relaxed">
+                  {project.longDescription}
+                </p>
+              </section>
+            )}
+
+            {project.highlights?.length ? (
+              <section>
+                <h2 className="text-2xl font-bold text-fg mb-4">Highlights</h2>
+                <ul className="space-y-3">
+                  {project.highlights.map((h) => (
+                    <li
+                      key={h}
+                      className="flex items-start gap-3 p-4 rounded-xl glass neon-edge"
+                    >
+                      <CheckCircle2 className="w-5 h-5 text-neon-cyan flex-shrink-0 mt-0.5" />
+                      <span className="text-sm sm:text-base text-fg-soft">{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {project.tech?.length ? (
+              <section>
+                <h2 className="text-2xl font-bold text-fg mb-4">Tech Stack</h2>
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="px-3 py-1.5 rounded-lg text-sm border border-neon-cyan/20 bg-neon-cyan/[0.04] text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {externalUrl && (
+              <section>
+                <a
+                  href={externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 h-12 px-6 rounded-lg text-white font-medium bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+                >
+                  Visit live project
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </section>
+            )}
+          </div>
+
+          <ProjectAsideClient project={project} />
+        </div>
+
+        {/* Prev / next */}
+        {(prev || next) && (
+          <nav
+            className="mt-20 pt-10 border-t border-border dark:border-white/[0.06] grid grid-cols-1 sm:grid-cols-2 gap-4"
+            aria-label="Project navigation"
+          >
+            {prev ? (
+              <Link
+                href={`/projects/${prev.id}`}
+                className="group p-5 rounded-xl glass neon-edge hover:shadow-glow-soft transition-shadow"
+              >
+                <div className="text-xs font-mono uppercase tracking-widest text-fg-muted flex items-center gap-1.5">
+                  <ArrowLeft className="w-3.5 h-3.5" /> Previous
+                </div>
+                <div className="mt-2 font-semibold text-fg group-hover:text-neon-cyan transition-colors">
+                  {prev.title}
+                </div>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next ? (
+              <Link
+                href={`/projects/${next.id}`}
+                className="group p-5 rounded-xl glass neon-edge hover:shadow-glow-soft transition-shadow sm:text-right"
+              >
+                <div className="text-xs font-mono uppercase tracking-widest text-fg-muted flex items-center sm:justify-end gap-1.5">
+                  Next <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+                <div className="mt-2 font-semibold text-fg group-hover:text-neon-cyan transition-colors">
+                  {next.title}
+                </div>
+              </Link>
+            ) : null}
+          </nav>
+        )}
+      </article>
+    </main>
+  );
+}
+
+
+
+========== .\src\components\project\ProjectAsideClient.tsx ==========
+"use client";
+
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
+import { projects } from "@/data/projects";
+import type { Project } from "@/types";
+
+export default function ProjectAsideClient({ project }: { project: Project }) {
+  const others = projects.filter((p) => p.id !== project.id).slice(0, 3);
+  const externalUrl = project.demo || (project.href !== "#" ? project.href : undefined);
+
+  return (
+    <aside className="lg:sticky lg:top-28 space-y-6">
+      {/* Quick facts */}
+      <div className="rounded-2xl p-6 glass neon-edge">
+        <div className="font-mono text-xs uppercase tracking-widest text-neon-cyan mb-4">
+          Project Info
+        </div>
+        <dl className="space-y-3 text-sm">
+          <Row label="Role" value={project.role ?? "Developer"} />
+          <Row label="Status" value={project.status ?? "Completed"} />
+          <Row label="Type" value={project.type ?? "Web App"} />
+          {project.year && <Row label="Year" value={project.year} />}
+        </dl>
+
+        <div className="mt-6 space-y-2.5">
+          {externalUrl && (
+            <a
+              href={externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full h-11 px-4 rounded-lg text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+            >
+              <ExternalLink className="w-4 h-4" /> Visit Project
+            </a>
+          )}
+          {project.repo && (
+            <a
+              href={project.repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full h-11 px-4 rounded-lg text-sm font-medium border border-border dark:border-white/15 text-fg hover:border-neon-cyan/50 hover:text-neon-cyan transition-all"
+            >
+              <Github className="w-4 h-4" /> View Source
+            </a>
+          )}
+          {project.caseStudy && (
+            <a
+              href={project.caseStudy}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-neon-cyan hover:underline"
+            >
+              Case study <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* Other projects */}
+      {others.length > 0 && (
+        <div className="rounded-2xl p-6 glass neon-edge">
+          <div className="font-mono text-xs uppercase tracking-widest text-neon-cyan mb-4">
+            Other Projects
+          </div>
+          <div className="space-y-3">
+            {others.map((p) => (
+              <Link
+                key={p.id}
+                href={`/projects/${p.id}`}
+                className="group flex items-center gap-3 rounded-xl overflow-hidden border border-border dark:border-white/[0.06] hover:border-neon-cyan/40 transition-colors"
+              >
+                <div className="relative w-16 h-16 flex-shrink-0 bg-bg-soft">
+                  {p.image && (
+                    <Image
+                      src={p.image}
+                      alt={p.title}
+                      fill
+                      sizes="64px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      placeholder={p.blurDataURL ? "blur" : undefined}
+                      blurDataURL={p.blurDataURL}
+                    />
+                  )}
+                </div>
+                <div className="flex-1 pr-3 py-2 min-w-0">
+                  <h4 className="text-sm font-semibold text-fg truncate group-hover:text-neon-cyan transition-colors">
+                    {p.title}
+                  </h4>
+                  <p className="text-xs text-fg-muted truncate">{p.type ?? "Project"}</p>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-fg-muted group-hover:text-neon-cyan mr-4 transition-colors flex-shrink-0" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </aside>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3">
+      <dt className="text-xs uppercase tracking-wider font-mono text-fg-muted">{label}</dt>
+      <dd className="text-sm font-medium text-fg text-right">{value}</dd>
+    </div>
+  );
+}
+
+
+
+========== .\src\components\project\ProjectCard.tsx ==========
+"use client";
+
+import Image from "next/image";
+import React, { useCallback } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, ExternalLink, Github, Sparkles } from "lucide-react";
+import type { Project } from "@/types";
+
+type Props = {
+  project: Project;
+  onOpen?: (project: Project) => void;
+};
+
+const MotionArticle = motion.article;
+
+export default React.memo(function ProjectCard({ project, onOpen }: Props) {
+  const reduce = useReducedMotion();
+
+  const handleOpen = useCallback(() => {
+    onOpen?.(project);
+  }, [onOpen, project]);
+
+  const onKey = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onOpen?.(project);
+      }
+    },
+    [onOpen, project]
+  );
+
+  const openExternal = (url?: string) => (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!url || url === "#") return;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const visibleTech = project.tech?.slice(0, 4) ?? [];
+  const remaining = Math.max(0, (project.tech?.length ?? 0) - visibleTech.length);
+
+  return (
+    <MotionArticle
+      initial={reduce ? false : { opacity: 0, y: 22 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      whileHover={reduce ? undefined : { y: -6 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      onClick={handleOpen}
+      onKeyDown={onKey}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open ${project.title}`}
+      className="group relative flex flex-col h-full rounded-2xl overflow-hidden cursor-pointer glass neon-edge hover:shadow-glow transition-shadow duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
+    >
+      {/* Image */}
+      <div className="relative h-48 w-full overflow-hidden bg-bg-soft">
+        {project.image ? (
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-[700ms] ease-smooth group-hover:scale-[1.06]"
+            loading="lazy"
+            placeholder={project.blurDataURL ? "blur" : undefined}
+            blurDataURL={project.blurDataURL}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-sm text-fg-muted">
+            No image
+          </div>
+        )}
+
+        {/* Gradient mask */}
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-elev via-bg-elev/10 to-transparent opacity-80" />
+
+        {/* Featured badge */}
+        {project.featured && (
+          <div className="absolute top-3 left-3 badge-glow">
+            <Sparkles className="w-3 h-3" />
+            Featured
+          </div>
+        )}
+
+        {/* Year */}
+        {project.year && (
+          <div className="absolute top-3 right-3 px-2 py-1 rounded-md text-[0.7rem] font-mono bg-bg/70 backdrop-blur-md border border-border dark:border-white/10 text-fg-soft">
+            {project.year}
+          </div>
+        )}
+
+        {/* External quick-actions — always visible on touch, hover-revealed on desktop */}
+        <div className="absolute bottom-3 right-3 flex gap-2 opacity-100 sm:opacity-0 sm:translate-y-2 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
+          {project.repo && (
+            <button
+              onClick={openExternal(project.repo)}
+              aria-label={`Open repository for ${project.title}`}
+              className="w-9 h-9 rounded-lg bg-bg/80 backdrop-blur-md border border-border dark:border-white/15 flex items-center justify-center text-fg hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
+            >
+              <Github className="w-4 h-4" />
+            </button>
+          )}
+          {(project.demo || (project.href && project.href !== "#")) && (
+            <button
+              onClick={openExternal(project.demo ?? project.href)}
+              aria-label={`Open live demo for ${project.title}`}
+              className="w-9 h-9 rounded-lg bg-bg/80 backdrop-blur-md border border-border dark:border-white/15 flex items-center justify-center text-fg hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="p-5 flex flex-col gap-3 flex-1">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-semibold text-base md:text-lg text-fg leading-tight group-hover:text-neon-cyan transition-colors">
+            {project.title}
+          </h3>
+          {project.type && (
+            <span className="text-[0.65rem] font-mono uppercase tracking-widest text-fg-muted whitespace-nowrap pt-1">
+              {project.type}
+            </span>
+          )}
+        </div>
+
+        <p className="text-sm text-fg-muted leading-relaxed flex-1 line-clamp-2">
+          {project.short}
+        </p>
+
+        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+          {visibleTech.map((t) => (
+            <span
+              key={t}
+              className="px-2 py-0.5 rounded-md text-[0.7rem] border border-neon-cyan/20 bg-neon-cyan/[0.04] text-fg-soft"
+            >
+              {t}
+            </span>
+          ))}
+          {remaining > 0 && (
+            <span className="px-2 py-0.5 rounded-md text-[0.7rem] border border-border dark:border-white/10 text-fg-muted">
+              +{remaining}
+            </span>
+          )}
+        </div>
+
+        <div className="mt-2 pt-3 border-t border-border dark:border-white/[0.06] flex items-center justify-between">
+          <span className="text-xs text-fg-muted">{project.role ?? "Developer"}</span>
+          <span className="inline-flex items-center gap-1 text-sm font-medium text-neon-cyan group-hover:gap-2 transition-all">
+            View details
+            <ArrowUpRight className="w-4 h-4" />
+          </span>
+        </div>
+      </div>
+    </MotionArticle>
+  );
+});
+
+
+
+========== .\src\components\project\ProjectModal.tsx ==========
+// src/components/project/ProjectModal.tsx
+"use client";
+
+import React, { useEffect, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { createPortal } from "react-dom";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, ExternalLink, Github, X } from "lucide-react";
+import type { Project } from "@/types";
+
+type Props = {
+  project: Project;
+  onClose: () => void;
+};
+
+export default function ProjectModal({ project, onClose }: Props) {
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const lastActiveRef = useRef<HTMLElement | null>(null);
+  const reduce = useReducedMotion();
+
+  useEffect(() => {
+    lastActiveRef.current = document.activeElement as HTMLElement | null;
+    const t = setTimeout(() => dialogRef.current?.focus(), 60);
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key !== "Tab") return;
+      const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+      lastActiveRef.current?.focus();
+    };
+  }, [onClose]);
+
+  const externalUrl = project.demo || (project.href !== "#" ? project.href : undefined);
+
+  const content = (
+    <AnimatePresence>
+      <motion.div
+        initial={reduce ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={reduce ? undefined : { opacity: 0 }}
+        transition={{ duration: 0.25 }}
+        className="fixed inset-0 z-[60] flex items-center justify-center p-4 backdrop-blur-md bg-black/70"
+        role="presentation"
+      >
+        <button
+          aria-hidden
+          tabIndex={-1}
+          className="absolute inset-0 cursor-default"
+          onClick={onClose}
+        />
+
+        <motion.div
+          ref={dialogRef}
+          initial={reduce ? false : { y: 28, opacity: 0, scale: 0.97 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          exit={reduce ? undefined : { y: 28, opacity: 0, scale: 0.97 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          tabIndex={-1}
+          className="relative z-10 w-full max-w-5xl rounded-2xl glass neon-edge overflow-hidden shadow-glow"
+        >
+          {/* Close */}
+          <button
+            onClick={onClose}
+            aria-label="Close modal"
+            className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-bg/80 backdrop-blur-md border border-border dark:border-white/15 flex items-center justify-center text-fg hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+
+          <div className="grid grid-cols-1 lg:grid-cols-5">
+            {/* Image */}
+            <div className="relative w-full h-64 lg:h-full lg:col-span-2 bg-bg-soft">
+              {project.image ? (
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  priority
+                  placeholder={project.blurDataURL ? "blur" : undefined}
+                  blurDataURL={project.blurDataURL}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-fg-muted text-sm">
+                  No image
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-bg/80 via-transparent to-transparent lg:bg-gradient-to-r" />
+            </div>
+
+            {/* Content */}
+            <div className="lg:col-span-3 p-6 sm:p-8 flex flex-col max-h-[80vh] overflow-y-auto">
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                {project.featured && <span className="badge-glow">Featured</span>}
+                {project.type && (
+                  <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono uppercase tracking-widest text-fg-muted border border-border dark:border-white/10">
+                    {project.type}
+                  </span>
+                )}
+                {project.year && (
+                  <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono text-fg-muted border border-border dark:border-white/10">
+                    {project.year}
+                  </span>
+                )}
+              </div>
+
+              <h3
+                id="modal-title"
+                className="text-2xl sm:text-3xl font-bold tracking-tight text-fg"
+              >
+                {project.title}
+              </h3>
+
+              <p className="mt-3 text-sm sm:text-base text-fg-muted leading-relaxed">
+                {project.longDescription ?? project.short}
+              </p>
+
+              {project.highlights?.length ? (
+                <ul className="mt-5 space-y-2">
+                  {project.highlights.map((h) => (
+                    <li key={h} className="flex items-start gap-2 text-sm text-fg-soft">
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-neon-cyan flex-shrink-0 shadow-[0_0_8px_rgb(34_211_238_/_0.7)]" />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+
+              <div className="mt-6 flex flex-wrap gap-1.5">
+                {project.tech.map((t) => (
+                  <span
+                    key={t}
+                    className="px-2.5 py-1 rounded-md text-xs border border-neon-cyan/20 bg-neon-cyan/[0.04] text-fg-soft"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-7 pt-5 border-t border-border dark:border-white/[0.06] flex flex-wrap items-center gap-3">
+                {externalUrl && (
+                  <a
+                    href={externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 h-11 px-5 rounded-lg text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Live Demo
+                  </a>
+                )}
+                {project.repo && (
+                  <a
+                    href={project.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 h-11 px-5 rounded-lg text-sm font-medium border border-border dark:border-white/15 text-fg hover:border-neon-cyan/50 hover:text-neon-cyan transition-all"
+                  >
+                    <Github className="w-4 h-4" />
+                    Source
+                  </a>
+                )}
+                <Link
+                  href={`/projects/${project.id}`}
+                  className="inline-flex items-center gap-1.5 ml-auto text-sm text-neon-cyan hover:gap-2.5 transition-all"
+                >
+                  Full case study
+                  <ArrowUpRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+
+  if (typeof document === "undefined") return null;
+  const root = document.getElementById("modal-root") ?? document.body;
+  return createPortal(content, root);
+}
+
+
+
+========== .\src\components\project\ProjectsCarousel.tsx ==========
+// src/components/project/ProjectsCarousel.tsx
+"use client";
+
+import React, { useCallback, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
+import { projects } from "@/data/projects";
+import ProjectCard from "@/components/project/ProjectCard";
+import type { Project } from "@/types";
+
+const DynamicModal = dynamic(
+  () => import("@/components/project/ProjectModal"),
+  { ssr: false },
+);
+
+const GAP_PX = 24;
+
+export default function ProjectsCarousel() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "start",
+    skipSnaps: false,
+    containScroll: "trimSnaps",
+  });
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+  const [snaps, setSnaps] = useState<number[]>([]);
+  const [selectedSnap, setSelectedSnap] = useState(0);
+  const [selected, setSelected] = useState<Project | null>(null);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCanPrev(emblaApi.canScrollPrev());
+    setCanNext(emblaApi.canScrollNext());
+    setSelectedSnap(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    setSnaps(emblaApi.scrollSnapList());
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+    onSelect();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") emblaApi.scrollPrev();
+      if (e.key === "ArrowRight") emblaApi.scrollNext();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  return (
+    <div className="relative">
+      <div className="embla overflow-hidden -mx-2 px-2" ref={emblaRef}>
+        <div className="embla__container flex gap-6 py-2">
+          {projects.map((p) => (
+            <div
+              key={p.id}
+              className="embla__slide flex-shrink-0"
+              role="group"
+              aria-roledescription="slide"
+              aria-label={p.title}
+            >
+              <ProjectCard project={p} onOpen={setSelected} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-8 flex items-center justify-end gap-4">
+        <div className="flex items-center gap-2">
+          <a
+            href="/projects"
+            className="ml-2 inline-flex items-center gap-1.5 h-10 px-4 rounded-full text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+          >
+            View all
+            <ArrowUpRight className="w-4 h-4" />
+          </a>
+        </div>
+      </div>
+
+      {/* Controls row */}
+      <div className="mt-8 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          {snaps.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => emblaApi?.scrollTo(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === selectedSnap
+                  ? "w-8 bg-gradient-to-r from-neon-green to-neon-cyan shadow-[0_0_10px_rgb(34_211_238_/_0.6)]"
+                  : "w-2 bg-fg/20 hover:bg-fg/40 dark:bg-white/15 dark:hover:bg-white/30"
+              }`}
+            />
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => emblaApi?.scrollPrev()}
+            disabled={!canPrev}
+            aria-label="Previous"
+            className="w-10 h-10 rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center text-fg hover:border-neon-cyan/50 hover:text-neon-cyan disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => emblaApi?.scrollNext()}
+            disabled={!canNext}
+            aria-label="Next"
+            className="w-10 h-10 rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center text-fg hover:border-neon-cyan/50 hover:text-neon-cyan disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+          <a
+            href="/projects"
+            className="ml-2 hidden md:inline-flex items-center gap-1.5 h-10 px-4 rounded-full text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+          >
+            View all
+            <ArrowUpRight className="w-4 h-4" />
+          </a>
+        </div>
+      </div>
+
+      {selected && (
+        <DynamicModal project={selected} onClose={() => setSelected(null)} />
+      )}
+
+      <style jsx>{`
+        .embla__slide {
+          flex: 0 0 85%;
+        }
+        @media (min-width: 640px) {
+          .embla__slide {
+            flex: 0 0 calc((100% - ${GAP_PX}px) / 2);
+          }
+        }
+        @media (min-width: 1024px) {
+          .embla__slide {
+            flex: 0 0 calc((100% - ${GAP_PX * 2}px) / 3);
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+
+
+========== .\src\components\project\ProjectsGrid.tsx ==========
+// src/components/project/ProjectsGrid.tsx
+"use client";
+
+import React, { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Search } from "lucide-react";
+import ProjectCard from "@/components/project/ProjectCard";
+import { projects as allProjects } from "@/data/projects";
+import type { Project } from "@/types";
+import { cn } from "@/lib/utils";
+
+const DynamicModal = dynamic(() => import("@/components/project/ProjectModal"), { ssr: false });
+
+export default function ProjectsGrid({
+  initialProjects,
+}: {
+  initialProjects?: Project[];
+}) {
+  const [selected, setSelected] = useState<Project | null>(null);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<string>("All");
+  const reduce = useReducedMotion();
+
+  const projects = initialProjects ?? allProjects;
+
+  const filters = useMemo(() => {
+    const set = new Set<string>();
+    projects.forEach((p) => p.tech.forEach((t) => set.add(t)));
+    return ["All", ...Array.from(set).sort()];
+  }, [projects]);
+
+  const visible = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return projects.filter((p) => {
+      const matchesFilter = filter === "All" || p.tech.includes(filter);
+      const matchesQuery =
+        !q ||
+        p.title.toLowerCase().includes(q) ||
+        p.short.toLowerCase().includes(q) ||
+        p.tech.some((t) => t.toLowerCase().includes(q));
+      return matchesFilter && matchesQuery;
+    });
+  }, [projects, filter, query]);
+
+  return (
+    <>
+      {/* Controls */}
+      <div className="mb-10 flex flex-col md:flex-row md:items-center gap-4">
+        <div className="relative w-full md:max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-fg-muted" />
+          <input
+            type="search"
+            placeholder="Search projects…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full h-11 pl-10 pr-3 rounded-lg bg-bg-elev/60 backdrop-blur-md border border-border dark:border-white/10 text-sm text-fg placeholder:text-fg-muted focus-visible:outline-none focus-visible:border-neon-cyan/60 focus-visible:shadow-glow-soft transition-all"
+            aria-label="Search projects"
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-2 -mr-2 overflow-x-auto pb-1">
+          {filters.map((t) => (
+            <button
+              key={t}
+              onClick={() => setFilter(t)}
+              className={cn(
+                "px-3.5 h-9 rounded-full text-xs font-medium tracking-wide whitespace-nowrap transition-all duration-300",
+                filter === t
+                  ? "text-white bg-brand-gradient bg-[length:200%_100%] shadow-glow-soft"
+                  : "text-fg-soft border border-border dark:border-white/10 hover:text-fg hover:border-neon-cyan/40"
+              )}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Grid */}
+      <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <AnimatePresence initial={false} mode="popLayout">
+          {visible.map((p) => (
+            <motion.div
+              key={p.id}
+              layout
+              initial={reduce ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduce ? undefined : { opacity: 0, y: -8 }}
+              transition={{ duration: 0.4 }}
+            >
+              <ProjectCard project={p} onOpen={(proj) => setSelected(proj)} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
+
+      {visible.length === 0 && (
+        <div className="text-center py-16 text-fg-muted">
+          No projects match your search.
+        </div>
+      )}
+
+      {selected && <DynamicModal project={selected} onClose={() => setSelected(null)} />}
+    </>
+  );
+}
+
+
+
+========== .\src\components\sections\About.tsx ==========
+"use client";
+
+import Image from "next/image";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { CheckCircle2, CalendarDays, Briefcase } from "lucide-react";
+import Section from "@/components/ui/Section";
+import { AVATAR_BLUR } from "@/data/projects";
+
+const EXPERTISE = [
+  "React & Next.js",
+  "TypeScript",
+  "Laravel & Express",
+  "REST & API Design",
+  "UI/UX & Animation",
+  "AI-Augmented Workflows",
+];
+
+const EXPERIENCE = [
+  {
+    role: "Frontend / Web Developer",
+    company: "Freelance",
+    period: "2022 — Present",
+    details:
+      "Designing and shipping modern interfaces and crypto-themed experiences for international clients.",
+  },
+  {
+    role: "Fullstack Developer",
+    company: "Lorehype Agency",
+    period: "2024 — 2025",
+    details:
+      "Owned end-to-end fullstack delivery for agency projects spanning React, Tailwind, and Firebase.",
+  },
+  {
+    role: "Fullstack Developer",
+    company: "Abie Group",
+    period: "2023 — 2024",
+    details:
+      "Built corporate websites and internal tools with Laravel + React, integrating CMS workflows.",
+  },
+];
+
+export default function About() {
+  const reduce = useReducedMotion();
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 0.8", "end 0.2"],
+  });
+  const progressHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const progressOpacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
+
+  // Spotlight follow-cursor — desktop pointer only
+  useEffect(() => {
+    if (reduce) return;
+    if (typeof window === "undefined") return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    const node = sectionRef.current;
+    if (!node) return;
+    const pointer = node.querySelector<HTMLDivElement>(".spotlight-pointer");
+    if (!pointer) return;
+
+    let raf = 0;
+    const onMove = (e: MouseEvent) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        pointer.style.transform = `translate3d(${e.clientX - 160}px, ${e.clientY - 160}px, 0)`;
+      });
+    };
+    node.addEventListener("mousemove", onMove, { passive: true });
+    return () => {
+      node.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(raf);
+    };
+  }, [reduce]);
+
+  return (
+    <Section
+      id="about"
+      eyebrow="About"
+      title="Engineer, builder, lifelong learner."
+      subtitle="Self-taught fullstack developer with a product-first mindset focused on clean code, fast iteration, and AI-accelerated workflows."
+    >
+      <div ref={sectionRef} className="relative spotlight-area">
+        <div className="spotlight-pointer" aria-hidden />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+          {/* Left column */}
+          <div className="space-y-8">
+            {/* Profile card */}
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6 }}
+              className="relative rounded-2xl p-8 glass neon-edge overflow-hidden"
+            >
+              <div className="flex items-start gap-5">
+                <div className="relative w-20 h-20 rounded-full overflow-hidden ring-2 ring-neon-cyan/30 shadow-glow-soft flex-shrink-0">
+                  <Image
+                    src="/assets/images/avatar.png"
+                    alt="Zaki Deza"
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                    placeholder="blur"
+                    blurDataURL={AVATAR_BLUR}
+                  />
+                </div>
+                <div>
+                  <div className="font-mono text-xs uppercase tracking-widest text-neon-cyan">
+                    /whoami
+                  </div>
+                  <h3 className="mt-1 text-xl font-semibold text-fg">Zaki Deza</h3>
+                  <p className="text-sm text-fg-muted">Fullstack Web Developer · Remote</p>
+                </div>
+              </div>
+
+              <p className="mt-6 text-sm sm:text-[15px] leading-relaxed text-fg-soft">
+                I&apos;m a self-taught fullstack developer experienced in building scalable,
+                user-friendly web applications with{" "}
+                <span className="text-fg font-medium">React</span>,{" "}
+                <span className="text-fg font-medium">Next.js</span>,{" "}
+                <span className="text-fg font-medium">Laravel</span>, and{" "}
+                <span className="text-fg font-medium">Express</span>. I care about clean code,
+                fast execution, and leveraging AI-assisted workflows to ship better products
+                in less time.
+              </p>
+            </motion.div>
+
+            {/* Expertise */}
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="rounded-2xl p-7 glass neon-edge"
+            >
+              <h3 className="font-mono text-xs uppercase tracking-widest text-neon-cyan mb-4">
+                Core Expertise
+              </h3>
+              <ul className="flex flex-wrap gap-2.5">
+                {EXPERTISE.map((skill) => (
+                  <li
+                    key={skill}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm border border-neon-cyan/20 bg-neon-cyan/[0.04] text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 hover:shadow-glow-soft transition-all duration-300"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-neon-cyan" />
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+
+          {/* Right column — Timeline */}
+          <div id="work" ref={timelineRef} className="relative pl-10">
+            <motion.div
+              style={{ height: progressHeight, opacity: progressOpacity }}
+              className="absolute left-0 top-0 w-[2px] bg-gradient-to-b from-neon-green via-neon-cyan to-neon-purple rounded-full shadow-[0_0_20px_rgb(34_211_238_/_0.6)]"
+              aria-hidden
+            />
+            <div className="absolute left-0 top-0 w-[2px] h-full bg-fg/10 dark:bg-white/[0.06] rounded-full" aria-hidden />
+
+            <div className="flex items-center gap-2 mb-8">
+              <Briefcase className="w-5 h-5 text-neon-cyan" />
+              <h3 className="font-semibold text-xl text-fg">Professional Journey</h3>
+            </div>
+
+            <div className="space-y-6">
+              {EXPERIENCE.map((exp, i) => (
+                <motion.article
+                  key={exp.company + exp.period}
+                  initial={reduce ? false : { opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="relative rounded-xl p-6 glass neon-edge hover:shadow-glow-soft transition-shadow duration-500"
+                >
+                  <div className="absolute -left-[11px] top-7 w-4 h-4 rounded-full bg-gradient-to-br from-neon-green to-neon-cyan shadow-[0_0_15px_rgb(34_211_238_/_0.7)]" />
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <h4 className="font-semibold text-fg text-base">{exp.role}</h4>
+                    <span className="font-mono text-xs text-neon-cyan inline-flex items-center gap-1.5">
+                      <CalendarDays className="w-3.5 h-3.5" />
+                      {exp.period}
+                    </span>
+                  </div>
+                  <div className="text-sm text-neon-purple mt-1">{exp.company}</div>
+                  <p className="mt-3 text-sm text-fg-muted leading-relaxed">{exp.details}</p>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+
+
+========== .\src\components\sections\Contact.tsx ==========
+"use client";
+
+import { ChangeEvent, FormEvent, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import {
+  CheckCircle2,
+  Copy,
+  Github,
+  Linkedin,
+  Loader2,
+  Mail,
+  MapPin,
+  Send,
+  XCircle,
+} from "lucide-react";
+import Section from "@/components/ui/Section";
+
+const FORMSPREE_URL = "https://formspree.io/f/mqayvvjq";
+const EMAIL = "zakideza19@gmail.com";
+
+type Status = "idle" | "sending" | "sent" | "error";
+
+export default function Contact() {
+  const reduce = useReducedMotion();
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<Status>("idle");
+  const [copied, setCopied] = useState(false);
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Honeypot — bots fill hidden field
+    const hp = (e.currentTarget.elements.namedItem("company") as HTMLInputElement | null)?.value;
+    if (hp) return;
+
+    setStatus("sending");
+    try {
+      const res = await fetch(FORMSPREE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error("Send failed");
+      setStatus("sent");
+      setFormData({ name: "", email: "", message: "" });
+      setTimeout(() => setStatus("idle"), 4500);
+    } catch {
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 4500);
+    }
+  };
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* noop */
+    }
+  };
+
+  return (
+    <Section
+      id="contact"
+      eyebrow="Get in touch"
+      title="Let's build something."
+      subtitle="Open for new opportunities and collaborations. Drop a message or reach out via email I usually reply within a day."
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
+        {/* Form */}
+        <motion.form
+          onSubmit={handleSubmit}
+          initial={reduce ? false : { opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6 }}
+          className="lg:col-span-3 p-7 sm:p-9 rounded-2xl glass neon-edge space-y-5"
+          noValidate
+        >
+          <h3 className="text-xl font-semibold text-fg">Send me a message</h3>
+
+          {/* Honeypot */}
+          <input
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            className="sr-only"
+            aria-hidden
+          />
+
+          <div className="grid sm:grid-cols-2 gap-5">
+            <Field id="name" label="Name" required>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                placeholder="Jane Doe"
+                className="input"
+              />
+            </Field>
+
+            <Field id="email" label="Email" required>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                placeholder="jane@company.com"
+                className="input"
+              />
+            </Field>
+          </div>
+
+          <Field id="message" label="Message" required>
+            <textarea
+              id="message"
+              name="message"
+              rows={5}
+              value={formData.message}
+              onChange={handleChange}
+              required
+              placeholder="Tell me about your project, timeline, and what you're trying to build…"
+              className="input resize-y min-h-[140px]"
+            />
+          </Field>
+
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            className={`w-full inline-flex items-center justify-center gap-2 h-12 rounded-lg font-medium text-white transition-all duration-500 ${
+              status === "sent"
+                ? "bg-emerald-500/90 shadow-glow-green"
+                : status === "error"
+                ? "bg-rose-500/90"
+                : "bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow"
+            }`}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={status}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.18 }}
+                className="inline-flex items-center gap-2"
+              >
+                {status === "sending" && <Loader2 className="w-4 h-4 animate-spin" />}
+                {status === "sent" && <CheckCircle2 className="w-4 h-4" />}
+                {status === "error" && <XCircle className="w-4 h-4" />}
+                {status === "idle" && <Send className="w-4 h-4" />}
+                {status === "sending"
+                  ? "Sending…"
+                  : status === "sent"
+                  ? "Message sent — talk soon!"
+                  : status === "error"
+                  ? "Something went wrong"
+                  : "Send message"}
+              </motion.span>
+            </AnimatePresence>
+          </button>
+        </motion.form>
+
+        {/* Side panel */}
+        <motion.aside
+          initial={reduce ? false : { opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="lg:col-span-2 space-y-5"
+        >
+          {/* Email card */}
+          <div className="p-7 rounded-2xl glass neon-edge">
+            <div className="font-mono text-xs uppercase tracking-widest text-neon-cyan mb-3">
+              Email
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <a
+                href={`mailto:${EMAIL}`}
+                className="text-base font-medium text-fg hover:text-neon-cyan transition-colors break-all link-underline"
+              >
+                {EMAIL}
+              </a>
+              <button
+                onClick={copyEmail}
+                aria-label="Copy email"
+                className="flex-shrink-0 w-10 h-10 rounded-lg border border-border dark:border-white/15 bg-bg-elev/60 flex items-center justify-center text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-all"
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={copied ? "ok" : "copy"}
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.7 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    {copied ? (
+                      <CheckCircle2 className="w-4 h-4 text-neon-green" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </motion.span>
+                </AnimatePresence>
+              </button>
+            </div>
+          </div>
+
+          {/* Location */}
+          <div className="p-5 rounded-2xl glass neon-edge flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-bg-elev border border-border dark:border-white/10 flex items-center justify-center">
+              <MapPin className="w-4 h-4 text-neon-cyan" />
+            </div>
+            <div>
+              <div className="font-mono text-[0.7rem] uppercase tracking-widest text-fg-muted">
+                Location
+              </div>
+              <div className="text-sm text-fg">Remote · Indonesia (UTC+7)</div>
+            </div>
+          </div>
+
+          {/* Socials */}
+          <div className="p-5 rounded-2xl glass neon-edge">
+            <div className="font-mono text-[0.7rem] uppercase tracking-widest text-fg-muted mb-3">
+              Elsewhere
+            </div>
+            <div className="grid grid-cols-2 gap-2.5">
+              <SocialLink
+                href="https://github.com/Zakid19"
+                icon={<Github className="w-4 h-4" />}
+                label="GitHub"
+              />
+              <SocialLink
+                href="https://linkedin.com/in/zaki-deza-31666719a"
+                icon={<Linkedin className="w-4 h-4" />}
+                label="LinkedIn"
+              />
+              <SocialLink
+                href={`mailto:${EMAIL}`}
+                icon={<Mail className="w-4 h-4" />}
+                label="Email"
+                external={false}
+              />
+            </div>
+          </div>
+        </motion.aside>
+      </div>
+
+      <style jsx>{`
+        :global(.input) {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border-radius: 0.5rem;
+          background: rgb(var(--bg-elev));
+          border: 1px solid rgb(var(--border));
+          color: rgb(var(--fg));
+          font-size: 0.9rem;
+          transition: border-color 200ms, box-shadow 200ms, background-color 200ms;
+          outline: none;
+        }
+        :global(.dark .input) {
+          background: rgb(255 255 255 / 0.02);
+          border-color: rgb(255 255 255 / 0.08);
+        }
+        :global(.input::placeholder) {
+          color: rgb(var(--muted));
+        }
+        :global(.input:focus) {
+          border-color: rgb(var(--neon-cyan) / 0.6);
+          box-shadow: 0 0 0 3px rgb(var(--neon-cyan) / 0.12);
+        }
+        :global(.dark .input:focus) {
+          background: rgb(255 255 255 / 0.04);
+        }
+      `}</style>
+    </Section>
+  );
+}
+
+function Field({
+  id,
+  label,
+  required,
+  children,
+}: {
+  id: string;
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <label htmlFor={id} className="block">
+      <span className="block text-xs font-mono uppercase tracking-widest text-fg-muted mb-1.5">
+        {label}
+        {required && <span className="text-neon-cyan ml-1">*</span>}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+function SocialLink({
+  href,
+  icon,
+  label,
+  external = true,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  external?: boolean;
+}) {
+  return (
+    <a
+      href={href}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className="inline-flex items-center gap-2 px-3 h-10 rounded-lg border border-border dark:border-white/10 text-sm text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-all"
+    >
+      {icon}
+      <span>{label}</span>
+    </a>
+  );
+}
+
+
+
+========== .\src\components\sections\Hero.tsx ==========
+"use client";
+
+import Image from "next/image";
+import { useEffect, useState, useCallback } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useMotionValue,
+  useTransform,
+  useSpring,
+} from "framer-motion";
+import { ArrowRight, Github, Linkedin, MapPin, Sparkles } from "lucide-react";
+import { AVATAR_BLUR } from "@/data/projects";
+
+const ROLES = [
+  "Fullstack Web Developer",
+  "Next.js · React Engineer",
+  "Laravel · Express Builder",
+  "AI-Augmented Developer",
+];
+
+const STATS = [
+  { value: "3+", label: "Years" },
+  { value: "20+", label: "Projects" },
+  { value: "10+", label: "Clients" },
+];
+
+function useTypewriter(words: string[], enabled: boolean, speed = 65, pause = 1500) {
+  const [text, setText] = useState(enabled ? "" : words[0]);
+  const [wordIdx, setWordIdx] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) return;
+    const current = words[wordIdx % words.length];
+    if (!deleting && text === current) {
+      const t = setTimeout(() => setDeleting(true), pause);
+      return () => clearTimeout(t);
+    }
+    if (deleting && text === "") {
+      setDeleting(false);
+      setWordIdx((i) => (i + 1) % words.length);
+      return;
+    }
+    const next = deleting
+      ? current.slice(0, text.length - 1)
+      : current.slice(0, text.length + 1);
+    const t = setTimeout(() => setText(next), deleting ? speed / 1.8 : speed);
+    return () => clearTimeout(t);
+  }, [enabled, text, deleting, wordIdx, words, speed, pause]);
+
+  return text;
+}
+
+export default function Hero() {
+  const reduce = useReducedMotion() ?? false;
+  const role = useTypewriter(ROLES, !reduce);
+
+  // Avatar tilt — disabled on touch
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateY = useSpring(useTransform(x, (v) => v / 12), { stiffness: 220, damping: 22 });
+  const rotateX = useSpring(useTransform(y, (v) => -v / 12), { stiffness: 220, damping: 22 });
+
+  const onMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (reduce || e.pointerType === "touch") return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      const px = e.clientX - (rect.left + rect.width / 2);
+      const py = e.clientY - (rect.top + rect.height / 2);
+      x.set(Math.max(-60, Math.min(60, px)));
+      y.set(Math.max(-60, Math.min(60, py)));
+    },
+    [reduce, x, y]
+  );
+  const onLeave = useCallback(() => {
+    x.set(0);
+    y.set(0);
+  }, [x, y]);
+
+  return (
+    <section
+      id="home"
+      className="relative min-h-[100svh] flex items-center pt-28 pb-16 lg:pt-36 lg:pb-20 overflow-hidden cyber-grid"
+    >
+      <div className="aurora" aria-hidden>
+        <div className="aurora__green" />
+      </div>
+
+      <div className="container relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
+          {/* Copy */}
+          <div className="lg:col-span-3 max-w-2xl order-2 lg:order-1">
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="badge-glow"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              Available for new opportunities
+            </motion.div>
+
+            <motion.h1
+              initial={reduce ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.05 }}
+              className="mt-5 sm:mt-6 text-[2rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-display-2 font-extrabold tracking-tight text-fg"
+            >
+              Hi, I&apos;m{" "}
+              <span className="text-gradient text-gradient--animated">Zaki Deza</span>
+              <span className="block mt-2 sm:mt-3 text-[0.85em] sm:text-[0.75em]">
+                <span className="text-fg-soft font-medium">I&apos;m a</span>{" "}
+                <span className={`text-neon-cyan font-mono ${reduce ? "" : "cursor-blink"}`}>
+                  {role || " "}
+                </span>
+              </span>
+            </motion.h1>
+
+            <motion.p
+              initial={reduce ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.12 }}
+              className="mt-5 sm:mt-6 text-[15px] sm:text-base md:text-lg text-fg-muted leading-relaxed max-w-xl"
+            >
+              I craft scalable, AI-augmented web experiences with{" "}
+              <span className="text-fg font-medium">React</span>,{" "}
+              <span className="text-fg font-medium">Next.js</span>,{" "}
+              <span className="text-fg font-medium">Laravel</span> and{" "}
+              <span className="text-fg font-medium">Express</span>. Self-taught, product-minded,
+              shipping clean code at speed.
+            </motion.p>
+
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.18 }}
+              className="mt-7 sm:mt-8 flex flex-wrap items-center gap-3"
+            >
+              <a
+                href="#projects"
+                className="group inline-flex items-center justify-center gap-2 h-12 px-5 rounded-lg text-white font-medium bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+              >
+                View Projects
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-lg border border-border dark:border-white/15 bg-bg-elev/60 backdrop-blur-md text-fg hover:border-neon-cyan/60 hover:text-neon-cyan transition-all duration-300"
+              >
+                Contact Me
+              </a>
+            </motion.div>
+
+            <motion.div
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.28 }}
+              className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-fg-muted"
+            >
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5" /> Remote · Indonesia
+              </span>
+              <a
+                href="https://github.com/Zakid19"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 link-underline hover:text-fg"
+              >
+                <Github className="w-3.5 h-3.5" /> GitHub
+              </a>
+              <a
+                href="https://linkedin.com/in/zaki-deza-31666719a"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 link-underline hover:text-fg"
+              >
+                <Linkedin className="w-3.5 h-3.5" /> LinkedIn
+              </a>
+            </motion.div>
+
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+              className="mt-9 grid grid-cols-3 gap-2.5 sm:gap-4 max-w-md"
+            >
+              {STATS.map((s) => (
+                <div
+                  key={s.label}
+                  className="relative p-3 sm:p-4 rounded-xl glass neon-edge text-center"
+                >
+                  <div className="text-xl sm:text-2xl font-bold font-mono text-gradient">{s.value}</div>
+                  <div className="text-[0.65rem] sm:text-[0.7rem] uppercase tracking-wider text-fg-muted mt-0.5 sm:mt-1">
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Avatar */}
+          <motion.div
+            initial={reduce ? false : { opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="lg:col-span-2 flex justify-center lg:justify-end order-1 lg:order-2"
+          >
+            <div
+              className="relative"
+              onPointerMove={onMove}
+              onPointerLeave={onLeave}
+              style={{ perspective: 1000 }}
+            >
+              {/* Orbit rings — desktop only */}
+              <div className="hidden sm:block absolute -inset-4 rounded-full border border-neon-cyan/20 pulse-ring pointer-events-none" />
+              <div className="hidden sm:block absolute -inset-8 rounded-full border border-neon-purple/10 pointer-events-none" />
+
+              <motion.div
+                style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+                className="relative w-[min(72vw,18rem)] sm:w-[clamp(14rem,32vw,20rem)] aspect-square"
+              >
+                <div className="absolute -inset-1 rounded-[2rem] bg-brand-gradient bg-[length:200%_100%] opacity-60 sm:opacity-70 blur-md hidden sm:block" />
+                <div className="relative w-full h-full rounded-[2rem] overflow-hidden neon-edge shadow-glow">
+                  <Image
+                    src="/assets/images/avatar.png"
+                    alt="Portrait of Zaki Deza"
+                    fill
+                    sizes="(max-width: 640px) 72vw, (max-width: 1024px) 320px, 400px"
+                    className="object-cover"
+                    priority
+                    placeholder="blur"
+                    blurDataURL={AVATAR_BLUR}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                </div>
+
+                <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 px-3 py-1.5 rounded-lg glass neon-edge text-xs font-mono">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="relative inline-flex w-2 h-2">
+                      <span className="absolute inset-0 rounded-full bg-neon-green animate-ping opacity-75" />
+                      <span className="relative inline-flex rounded-full w-2 h-2 bg-neon-green" />
+                    </span>
+                    Available
+                  </span>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Scroll cue — desktop only */}
+        <motion.a
+          href="#about"
+          initial={reduce ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 1 }}
+          aria-label="Scroll to about section"
+          className="hidden lg:flex absolute left-1/2 -translate-x-1/2 bottom-6 flex-col items-center gap-2 text-xs uppercase tracking-widest font-mono text-fg-muted hover:text-neon-cyan transition-colors"
+        >
+          Scroll
+          <span className="relative w-px h-10 bg-fg/15 dark:bg-white/20 overflow-hidden">
+            <span className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-neon-cyan to-transparent animate-[slideDown_1.8s_ease-in-out_infinite]" />
+          </span>
+        </motion.a>
+      </div>
+
+      <style jsx>{`
+        @keyframes slideDown {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(200%); }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+
+
+========== .\src\components\sections\Projects.tsx ==========
+// src/components/sections/Projects.tsx
+"use client";
+
+import Section from "@/components/ui/Section";
+import ProjectsCarousel from "@/components/project/ProjectsCarousel";
+
+export default function Projects() {
+  return (
+    <Section
+      id="projects"
+      eyebrow="Selected Work"
+      title="Projects shipped with intent."
+      subtitle="A showcase of recent builds from production SaaS to landing pages each crafted with purpose, clean architecture, and a touch of polish."
+    >
+      <ProjectsCarousel />
+    </Section>
+  );
+}
+
+
+
+========== .\src\components\sections\Skills.tsx ==========
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import Section from "@/components/ui/Section";
+import { SKILLS } from "@/data/skills";
+import { cn } from "@/lib/utils";
+
+export default function Skills() {
+  const categories = SKILLS.map((s) => s.group);
+  const [active, setActive] = useState(categories[0]);
+  const selectedGroup = SKILLS.find((s) => s.group === active);
+  const reduce = useReducedMotion();
+
+  return (
+    <Section
+      id="skills"
+      eyebrow="Toolbox"
+      title="Skills & Expertise"
+      subtitle="A pragmatic stack built around shipping fast, scaling cleanly, and embracing AI in the loop."
+    >
+      {/* Tabs — horizontal scroll on mobile, wrap on tablet+ */}
+      <div className="flex sm:flex-wrap sm:justify-center gap-2 mt-2 mb-10 sm:mb-12 -mx-4 sm:mx-0 px-4 sm:px-0 overflow-x-auto sm:overflow-visible scrollbar-none">
+        {categories.map((cat) => {
+          const isActive = cat === active;
+          return (
+            <button
+              key={cat}
+              onClick={() => setActive(cat)}
+              className={cn(
+                "relative px-4 sm:px-5 h-10 rounded-full text-sm font-medium tracking-wide transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 whitespace-nowrap flex-shrink-0",
+                isActive
+                  ? "text-white"
+                  : "text-fg-soft border border-border dark:border-white/10 hover:text-fg hover:border-neon-cyan/40"
+              )}
+            >
+              {isActive && (
+                <motion.span
+                  layoutId="skills-tab-bg"
+                  transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                  className="absolute inset-0 rounded-full bg-brand-gradient bg-[length:200%_100%] animate-gradient shadow-glow-soft"
+                />
+              )}
+              <span className="relative z-10">{cat}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Cards */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={active}
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? undefined : { opacity: 0, y: -12 }}
+          transition={{ duration: 0.35 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+        >
+          {selectedGroup?.items.map((item, idx) => {
+            const Icon = item.icon;
+            const pct = (item.level / 5) * 100;
+            return (
+              <motion.div
+                key={item.name}
+                initial={reduce ? false : { opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.06 }}
+                whileHover={reduce ? undefined : { y: -4 }}
+                className="group relative rounded-xl p-5 glass neon-edge overflow-hidden hover:shadow-glow-soft transition-shadow duration-500"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  {Icon ? (
+                    <div className="relative w-10 h-10 rounded-lg bg-bg-elev border border-border dark:border-white/10 flex items-center justify-center group-hover:border-neon-cyan/40 transition-colors">
+                      <Icon className="w-5 h-5 text-neon-cyan" />
+                    </div>
+                  ) : (
+                    <div className="w-10 h-10 rounded-lg bg-brand-gradient bg-[length:200%_100%] animate-gradient flex items-center justify-center font-mono text-white text-sm">
+                      {item.name.charAt(0)}
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <div className="font-medium text-fg text-sm">{item.name}</div>
+                    <div className="text-[0.7rem] font-mono uppercase tracking-wider text-fg-muted">
+                      Level {item.level}/5
+                    </div>
+                  </div>
+                </div>
+
+                {/* Animated bar */}
+                <div className="relative h-1.5 rounded-full bg-fg/10 dark:bg-white/[0.06] overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${pct}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.15 + idx * 0.04 }}
+                    className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple shadow-[0_0_8px_rgb(34_211_238_/_0.6)]"
+                  />
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </AnimatePresence>
+    </Section>
+  );
+}
+
+
+
+========== .\src\components\ui\BackToTop.tsx ==========
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowUp } from "lucide-react";
+
+/**
+ * BackToTop with progress ring
+ * - shows when user scrolled past `threshold`
+ * - click scrolls to top (smooth unless reduced-motion)
+ */
+export default function BackToTop({
+  threshold = 400,
+  size = 52,
+}: {
+  threshold?: number;
+  size?: number;
+}) {
+  const [visible, setVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const reduce = useReducedMotion();
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const update = () => {
+      const doc = document.documentElement;
+      const scrollTop = window.scrollY || window.pageYOffset;
+      const height = Math.max(doc.scrollHeight - window.innerHeight, 1);
+      const pct = Math.min(1, Math.max(0, scrollTop / height));
+      setProgress(pct);
+      setVisible(scrollTop > threshold);
+      rafRef.current = null;
+    };
+    update();
+    const onScroll = () => {
+      if (rafRef.current !== null) return;
+      rafRef.current = requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [threshold]);
+
+  const handleClick = () => {
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  };
+
+  const stroke = 3;
+  const r = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * r;
+  const dash = circumference * progress;
+  const remaining = circumference - dash;
+
+  return (
+    <div aria-hidden={!visible} className="fixed right-4 bottom-6 z-40 sm:right-6">
+      <motion.button
+        type="button"
+        onClick={handleClick}
+        initial={{ opacity: 0, y: 16, scale: 0.9 }}
+        animate={visible ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 16, scale: 0.9 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="group relative inline-flex items-center justify-center rounded-full bg-bg-elev/80 backdrop-blur-md border border-neon-cyan/30 shadow-glow-soft hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
+        aria-label="Back to top"
+        title="Back to top"
+        style={{ width: size, height: size, pointerEvents: visible ? "auto" : "none" }}
+      >
+        <svg
+          width={size}
+          height={size}
+          viewBox={`0 0 ${size} ${size}`}
+          className="absolute inset-0 -rotate-90"
+        >
+          <defs>
+            <linearGradient id="bt-grad" x1="0%" x2="100%">
+              <stop offset="0%" stopColor="rgb(20 241 149)" />
+              <stop offset="100%" stopColor="rgb(153 69 255)" />
+            </linearGradient>
+          </defs>
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={r}
+            stroke="rgb(255 255 255 / 0.06)"
+            strokeWidth={stroke}
+            fill="transparent"
+          />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={r}
+            stroke="url(#bt-grad)"
+            strokeWidth={stroke}
+            fill="transparent"
+            strokeLinecap="round"
+            strokeDasharray={`${dash} ${remaining}`}
+            style={{ transition: "stroke-dasharray 120ms linear" }}
+          />
+        </svg>
+        <ArrowUp className="relative z-10 w-5 h-5 text-fg group-hover:text-neon-cyan transition-colors" strokeWidth={2.5} />
+        <span className="sr-only" aria-live="polite">
+          {visible ? `Page scrolled ${Math.round(progress * 100)}%` : ""}
+        </span>
+      </motion.button>
+    </div>
+  );
+}
+
+
+
+========== .\src\components\ui\Button.tsx ==========
+// src/components/ui/Button.tsx
+import React from "react";
+import { cn } from "@/lib/utils";
+
+type ButtonVariant = "primary" | "outline" | "ghost" | "accent";
+type ButtonSize = "sm" | "md" | "lg";
+
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  /** Render as <a> when an href is provided. */
+  as?: "button" | "a";
+  href?: string;
+};
+
+const base =
+  "relative inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-300 ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-50 disabled:cursor-not-allowed select-none";
+
+const sizes: Record<ButtonSize, string> = {
+  sm: "h-9 px-3.5 text-sm",
+  md: "h-11 px-5 text-sm",
+  lg: "h-12 px-6 text-base",
+};
+
+const variants: Record<ButtonVariant, string> = {
+  primary:
+    "text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow",
+  accent:
+    "text-white bg-gradient-to-br from-neon-green to-neon-cyan shadow-glow-green hover:shadow-glow",
+  outline:
+    "text-fg border border-border dark:border-white/15 bg-bg-elev/60 backdrop-blur-md hover:border-neon-cyan/60 hover:text-neon-cyan",
+  ghost: "text-fg-soft hover:text-fg hover:bg-fg/5 dark:hover:bg-white/5",
+};
+
+export default function Button({
+  children,
+  variant = "primary",
+  size = "md",
+  className,
+  as = "button",
+  href,
+  ...props
+}: ButtonProps) {
+  const classes = cn(base, sizes[size], variants[variant], className);
+
+  if (as === "a" && href) {
+    return (
+      <a href={href} className={classes}>
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <button className={classes} {...props}>
+      {children}
+    </button>
+  );
+}
+
+
+
+========== .\src\components\ui\Footer.tsx ==========
+// src/components/ui/Footer.tsx
+import Link from "next/link";
+import { Github, Linkedin, Mail, ArrowUpRight } from "lucide-react";
+
+const NAV = [
+  { label: "About", href: "/#about" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Skills", href: "/#skills" },
+  { label: "Experience", href: "/#work" },
+  { label: "Contact", href: "/#contact" },
+];
+
+const SOCIAL = [
+  { label: "GitHub", href: "https://github.com/Zakid19", icon: Github },
+  { label: "LinkedIn", href: "https://linkedin.com/in/zaki-deza-31666719a", icon: Linkedin },
+  { label: "Email", href: "mailto:zakideza19@gmail.com", icon: Mail },
+];
+
+export default function Footer() {
+  return (
+    <footer className="relative mt-24 border-t border-border dark:border-white/[0.06] bg-bg-soft/40">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-neon-cyan/40 to-transparent" />
+      <div className="container py-14">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+          {/* Brand block */}
+          <div className="md:col-span-5">
+            <Link href="/" className="inline-flex items-center gap-3 group">
+              <div className="w-10 h-10 rounded-xl bg-brand-gradient bg-[length:200%_100%] flex items-center justify-center text-white font-bold font-mono shadow-glow-soft group-hover:bg-[position:100%_0] transition-all duration-500">
+                Z
+              </div>
+              <div>
+                <div className="font-semibold text-fg">Zaki Deza</div>
+                <div className="text-xs text-fg-muted">Fullstack Web Developer</div>
+              </div>
+            </Link>
+
+            <p className="mt-5 text-sm text-fg-muted leading-relaxed max-w-sm">
+              Building scalable, AI-augmented web experiences with React, Next.js, Laravel, and
+              Express. Available for remote work and collaborations.
+            </p>
+
+            <div className="mt-6 flex items-center gap-2">
+              {SOCIAL.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="inline-flex w-10 h-10 items-center justify-center rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 hover:shadow-glow-soft transition-all duration-300"
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <div className="md:col-span-4">
+            <h4 className="font-mono text-[0.7rem] uppercase tracking-widest text-fg-muted">
+              Navigate
+            </h4>
+            <nav className="mt-4 grid grid-cols-2 gap-y-2.5 text-sm" aria-label="Footer">
+              {NAV.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-fg-soft hover:text-fg link-underline w-fit"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          {/* CTA */}
+          <div className="md:col-span-3">
+            <h4 className="font-mono text-[0.7rem] uppercase tracking-widest text-fg-muted">
+              Resume
+            </h4>
+            <Link
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center justify-center gap-2 w-full h-11 px-4 rounded-lg text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+            >
+              Download Resume
+              <ArrowUpRight className="w-4 h-4" />
+            </Link>
+            <p className="mt-3 text-xs text-fg-muted leading-relaxed">
+              PDF — work history, selected projects, and contact details.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-12 pt-6 border-t border-border dark:border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-fg-muted">
+          <span>© {new Date().getFullYear()} Zaki Deza. All rights reserved.</span>
+          <span className="font-mono">
+            Built with Next.js · Tailwind · Framer Motion
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+
+
+========== .\src\components\ui\GlowSeparator.tsx ==========
+export default function GlowSeparator({ className = "" }: { className?: string }) {
+  return (
+    <div
+      className={`relative w-full h-px my-10 ${className}`}
+      aria-hidden
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-neon-cyan/60 to-transparent" />
+      <div className="absolute inset-x-1/4 -top-px h-[2px] bg-gradient-to-r from-transparent via-neon-purple/80 to-transparent blur-sm" />
+    </div>
+  );
+}
+
+
+
+========== .\src\components\ui\LazyView.tsx ==========
+"use client";
+
+import { useEffect, useRef, useState, type ReactNode } from "react";
+
+/**
+ * Defers mounting of `children` until the placeholder is near the viewport.
+ * Use to keep below-the-fold sections (and their Framer Motion overhead)
+ * out of the initial hydration path.
+ *
+ * `rootMargin` controls how early we wake up. Default starts mounting
+ * 600px before the section scrolls in — feels instant on phones.
+ */
+export default function LazyView({
+  children,
+  rootMargin = "600px 0px",
+  minHeight = 600,
+  className = "",
+  id,
+}: {
+  children: ReactNode;
+  rootMargin?: string;
+  minHeight?: number;
+  className?: string;
+  id?: string;
+}) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (show) return;
+    const el = ref.current;
+    if (!el) return;
+
+    // Old Safari / very limited environments: just mount.
+    if (typeof IntersectionObserver === "undefined") {
+      setShow(true);
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShow(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin }
+    );
+    io.observe(el);
+
+    // Also wake up on idle as a safety net (e.g. when user pastes a hash anchor).
+    type IdleWindow = Window & {
+      requestIdleCallback?: (cb: () => void) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+    const w = window as IdleWindow;
+    const idleHandle = w.requestIdleCallback
+      ? w.requestIdleCallback(() => setShow(true))
+      : window.setTimeout(() => setShow(true), 2500);
+
+    return () => {
+      io.disconnect();
+      if (w.cancelIdleCallback) w.cancelIdleCallback(idleHandle);
+      else clearTimeout(idleHandle);
+    };
+  }, [rootMargin, show]);
+
+  return (
+    <div
+      ref={ref}
+      id={id}
+      className={className}
+      style={!show ? { minHeight, contain: "layout paint" } : undefined}
+    >
+      {show ? children : null}
+    </div>
+  );
+}
+
+
+
+========== .\src\components\ui\MotionContainer.tsx ==========
+// src/components/ui/MotionContainer.tsx
+"use client";
+
+import { ReactNode, Children } from "react";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
+
+export default function MotionContainer({
+  children,
+  stagger = 0.08,
+  className = "",
+}: {
+  children: ReactNode;
+  stagger?: number;
+  className?: string;
+}) {
+  const reduce = useReducedMotion();
+
+  const containerVariants: Variants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: reduce ? 0 : stagger,
+        delayChildren: 0.08,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 12 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
+    },
+  };
+
+  const arr = Children.toArray(children);
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.12 }}
+      className={className}
+    >
+      {arr.map((child, i) => (
+        <motion.div key={i} variants={itemVariants}>
+          {child}
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+}
+
+
+
+========== .\src\components\ui\MotionSection.tsx ==========
+// src/components/ui/MotionSection.tsx
+"use client";
+
+import { ReactNode, useRef } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+
+type Props = {
+  id?: string;
+  children: ReactNode;
+  className?: string;
+  amount?: number;
+  delay?: number;
+};
+
+export default function MotionSection({
+  id,
+  children,
+  className = "",
+  amount = 0.15,
+  delay = 0,
+}: Props) {
+  const ref = useRef<HTMLElement | null>(null);
+  const shouldReduce = useReducedMotion();
+  const inView = useInView(ref, { once: true, amount });
+
+  return (
+    <motion.section
+      id={id}
+      ref={ref}
+      initial={shouldReduce ? false : { opacity: 0, y: 24 }}
+      animate={shouldReduce || inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      transition={{ duration: 0.7, ease: [0.22, 0.8, 0.2, 1], delay }}
+      className={className}
+    >
+      {children}
+    </motion.section>
+  );
+}
+
+
+
+========== .\src\components\ui\Navbar.tsx ==========
+// src/components/ui/Navbar.tsx
+"use client";
+
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { FileText, Menu, X } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
+import { cn } from "@/lib/utils";
+
+const NAV_ITEMS = [
+  { label: "Home", href: "/", id: "home" },
+  { label: "About", href: "/#about", id: "about" },
+  { label: "Projects", href: "/#projects", id: "projects" },
+  { label: "Skills", href: "/#skills", id: "skills" },
+  { label: "Experience", href: "/#work", id: "work" },
+  { label: "Contact", href: "/#contact", id: "contact" },
+];
+
+export default function Navbar() {
+  const pathname = usePathname();
+  const reduce = useReducedMotion();
+
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [hidden, setHidden] = useState(false);
+
+  const toggleRef = useRef<HTMLButtonElement | null>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
+  const panelRef = useRef<HTMLElement | null>(null);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
+
+  // Close menu on route change
+  useEffect(() => setOpen(false), [pathname]);
+
+  // Scrolled state for backdrop blur
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Hide-on-scroll-down (mobile)
+  useEffect(() => {
+    if (reduce) return;
+    const threshold = 40;
+    const handler = () => {
+      if (ticking.current) return;
+      ticking.current = true;
+      requestAnimationFrame(() => {
+        const current = window.scrollY;
+        const last = lastScrollY.current;
+        const isMobile = window.innerWidth < 1024;
+        if (isMobile) {
+          if (current - last > threshold && current > 120) setHidden(true);
+          else if (last - current > 20) setHidden(false);
+        } else {
+          setHidden(false);
+        }
+        lastScrollY.current = current;
+        ticking.current = false;
+      });
+    };
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, [reduce]);
+
+  // Focus trap + scroll lock for mobile menu
+  useEffect(() => {
+    if (!open) {
+      document.body.style.overflow = "";
+      return;
+    }
+    document.body.style.overflow = "hidden";
+    const focusT = setTimeout(() => firstLinkRef.current?.focus(), 80);
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+      if (e.key !== "Tab") return;
+      const root = panelRef.current;
+      if (!root) return;
+      const focusables = Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      clearTimeout(focusT);
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+      toggleRef.current?.focus();
+    };
+  }, [open]);
+
+  // Scrollspy
+  useEffect(() => {
+    const ids = ["about", "projects", "skills", "work", "contact"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { threshold: 0.4 },
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  const isActive = (id: string) => {
+    if (id === "home") return pathname === "/" && !activeSection;
+    return activeSection === id;
+  };
+
+  return (
+    <>
+      <motion.header
+        initial={reduce ? false : { y: -16, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className={cn(
+          "fixed top-0 inset-x-0 z-50 transition-all duration-300",
+          scrolled
+            ? "backdrop-blur-md bg-bg/80 border-b border-border dark:border-white/[0.06] shadow-sm"
+            : "bg-transparent",
+        )}
+        style={{
+          transform: hidden ? "translateY(-110%)" : undefined,
+          transition: reduce
+            ? "none"
+            : "transform 280ms cubic-bezier(.2,.9,.3,1), background-color 280ms",
+        }}
+        aria-label="Primary navigation"
+      >
+        <div className="container flex items-center justify-between gap-3 py-3">
+          {/* Brand */}
+          <Link
+            href="/"
+            className="flex items-center gap-3 group"
+            aria-label="Zaki Deza — home"
+          >
+            <div className="relative w-9 h-9 rounded-xl bg-brand-gradient bg-[length:200%_100%] flex items-center justify-center text-white font-bold font-mono shadow-glow-soft group-hover:bg-[position:100%_0] transition-all duration-500">
+              <span className="relative z-10">Z</span>
+              <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-fg/15 dark:ring-white/20" />
+            </div>
+            <span className="font-semibold text-lg tracking-tight text-fg">
+              Zaki<span className="text-neon-cyan">.</span>Deza
+            </span>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-1" aria-label="Main">
+            {NAV_ITEMS.map((item) => {
+              const active = isActive(item.id);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "relative px-3.5 py-2 rounded-md text-sm transition-colors",
+                    active ? "text-fg" : "text-fg-soft hover:text-fg",
+                  )}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {item.label}
+                  {active && (
+                    <motion.span
+                      layoutId="nav-underline"
+                      className="absolute left-1/2 -translate-x-1/2 bottom-1 h-[2px] w-1/2 rounded-full bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple shadow-[0_0_12px_rgb(34_211_238_/_0.6)]"
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Desktop right */}
+          <div className="hidden md:flex items-center gap-2">
+            <Link
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener"
+              className="hidden lg:inline-flex items-center gap-2 px-4 h-10 rounded-lg text-sm font-medium text-white bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
+            >
+              <FileText className="w-4 h-4" />
+              Resume
+            </Link>
+            <ThemeToggle />
+          </div>
+
+          {/* Mobile right */}
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <button
+              ref={toggleRef}
+              type="button"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              onClick={() => setOpen((s) => !s)}
+              className="relative z-50 w-10 h-10 rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md flex items-center justify-center hover:border-neon-cyan/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 transition-colors"
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={open ? "close" : "menu"}
+                  initial={reduce ? false : { opacity: 0, rotate: -90 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={reduce ? undefined : { opacity: 0, rotate: 90 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  {open ? (
+                    <X className="w-5 h-5" />
+                  ) : (
+                    <Menu className="w-5 h-5" />
+                  )}
+                </motion.span>
+              </AnimatePresence>
+            </button>
+          </div>
+        </div>
+      </motion.header>
+
+      {/* Mobile panel */}
+      <div
+        id="mobile-menu"
+        aria-hidden={!open}
+        className={cn(
+          "md:hidden fixed inset-0 z-40 pointer-events-none",
+          open && "pointer-events-auto",
+        )}
+      >
+        <motion.div
+          onClick={() => setOpen(false)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: open ? 1 : 0 }}
+          transition={{ duration: 0.25 }}
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          aria-hidden
+        />
+
+        <motion.aside
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile menu"
+          ref={panelRef}
+          initial={{ x: "100%" }}
+          animate={{ x: open ? 0 : "100%" }}
+          transition={{ type: "spring", stiffness: 240, damping: 28 }}
+          className="absolute right-0 top-0 h-full w-[88%] max-w-xs bg-bg-elev border-l border-white/10 shadow-2xl p-6 flex flex-col overflow-y-auto"
+        >
+          <div className="flex items-center justify-between mb-8">
+            <span className="font-semibold text-lg text-fg">Menu</span>
+          </div>
+
+          <nav className="flex flex-col gap-1" aria-label="Mobile">
+            {NAV_ITEMS.map((item, idx) => {
+              const active = isActive(item.id);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  ref={idx === 0 ? firstLinkRef : undefined}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "px-4 py-3 rounded-lg text-base font-medium transition-colors",
+                    active
+                      ? "text-fg dark:text-white bg-gradient-to-r from-neon-cyan/15 to-neon-purple/15 border border-neon-cyan/30"
+                      : "text-fg-soft hover:text-fg hover:bg-fg/5 dark:hover:bg-white/5",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <Link
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener"
+            onClick={() => setOpen(false)}
+            className="mt-auto inline-flex items-center justify-center gap-2 w-full h-12 rounded-lg text-white font-medium bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft transition-all duration-500"
+          >
+            <FileText className="w-4 h-4" />
+            Download Resume
+          </Link>
+        </motion.aside>
+      </div>
+    </>
+  );
+}
+
+
+
+========== .\src\components\ui\Section.tsx ==========
+// src/components/ui/Section.tsx
+import React, { ReactNode } from "react";
+import MotionSection from "./MotionSection";
+import { cn } from "@/lib/utils";
+
+type Props = {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  children: ReactNode;
+  className?: string;
+  innerClassName?: string;
+  useMotion?: boolean;
+  align?: "left" | "center";
+};
+
+export default function Section({
+  id,
+  eyebrow,
+  title,
+  subtitle,
+  children,
+  className = "",
+  innerClassName = "",
+  useMotion = true,
+  align = "left",
+}: Props) {
+  const heading = (title || subtitle || eyebrow) && (
+    <header
+      className={cn(
+        "mb-10 max-w-2xl",
+        align === "center" && "mx-auto text-center"
+      )}
+    >
+      {eyebrow && (
+        <span className="inline-flex items-center gap-2 badge-glow mb-4 font-mono uppercase tracking-widest">
+          <span className="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-pulse" />
+          {eyebrow}
+        </span>
+      )}
+      {title && (
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-fg">
+          {title}
+        </h2>
+      )}
+      {subtitle && (
+        <p className="mt-4 text-base sm:text-lg text-fg-muted leading-relaxed">
+          {subtitle}
+        </p>
+      )}
+    </header>
+  );
+
+  const inner = (
+    <div className={cn("container", innerClassName)}>
+      {heading}
+      {children}
+    </div>
+  );
+
+  const base = "relative section-cv py-16 sm:py-24 scroll-mt-24";
+
+  if (useMotion) {
+    return (
+      <MotionSection id={id} className={cn(base, className)}>
+        {inner}
+      </MotionSection>
+    );
+  }
+
+  return (
+    <section id={id} className={cn(base, className)}>
+      {inner}
+    </section>
+  );
+}
+
+
+
+========== .\src\components\ui\ThemeToggle.tsx ==========
+// src/components/ui/ThemeToggle.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Moon, Sun } from "lucide-react";
+
+type Theme = "light" | "dark";
+
+export default function ThemeToggle() {
+  const [theme, setTheme] = useState<Theme>("dark");
+  const [mounted, setMounted] = useState(false);
+  const reduce = useReducedMotion();
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = (localStorage.getItem("theme") as Theme | null) ?? null;
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setTheme(saved ?? (prefersDark ? "dark" : "light"));
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const root = document.documentElement;
+    if (theme === "dark") root.classList.add("dark");
+    else root.classList.remove("dark");
+    localStorage.setItem("theme", theme);
+    window.dispatchEvent(new Event("theme-change"));
+  }, [theme, mounted]);
+
+  const toggle = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  const isDark = theme === "dark";
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+      title={`Switch to ${isDark ? "light" : "dark"} mode`}
+      className="relative inline-flex items-center justify-center w-10 h-10 rounded-full border border-border dark:border-white/10 bg-bg-elev/60 backdrop-blur-md hover:border-neon-cyan/40 hover:shadow-glow-soft transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={isDark ? "moon" : "sun"}
+          initial={reduce ? false : { opacity: 0, rotate: -90, scale: 0.6 }}
+          animate={{ opacity: 1, rotate: 0, scale: 1 }}
+          exit={reduce ? undefined : { opacity: 0, rotate: 90, scale: 0.6 }}
+          transition={{ duration: 0.25 }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          {isDark ? (
+            <Moon className="w-[18px] h-[18px] text-neon-cyan" strokeWidth={2} />
+          ) : (
+            <Sun className="w-[18px] h-[18px] text-amber-500" strokeWidth={2} />
+          )}
+        </motion.span>
+      </AnimatePresence>
+    </button>
+  );
+}
+
+
+
+========== .\src\components\ui\ThemeTransition.tsx ==========
+// src/components/ui/ThemeTransition.tsx
+"use client";
+
+import { useEffect } from "react";
+
+export default function ThemeTransition() {
+  useEffect(() => {
+    const handler = () => {
+      const html = document.documentElement;
+      // Respect reduced-motion
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReduced) return;
+      html.classList.add("theme-transition");
+      window.setTimeout(() => html.classList.remove("theme-transition"), 350);
+    };
+
+    window.addEventListener("theme-change", handler);
+    // Also react to storage (if user toggles in other tab)
+    window.addEventListener("storage", handler);
+
+    return () => {
+      window.removeEventListener("theme-change", handler);
+      window.removeEventListener("storage", handler);
+    };
+  }, []);
+
+  return null;
+}
+
+
+
+========== .\src\components\ui\Tooltip.tsx ==========
+"use client";
+
+import { ReactNode, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+
+interface TooltipProps {
+  text: string;
+  children: ReactNode;
+  side?: "top" | "bottom";
+}
+
+export default function Tooltip({ text, children, side = "top" }: TooltipProps) {
+  const [open, setOpen] = useState(false);
+  const reduce = useReducedMotion();
+  const isTop = side === "top";
+
+  return (
+    <span
+      className="relative inline-flex"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={() => setOpen(false)}
+    >
+      {children}
+      <AnimatePresence>
+        {open && (
+          <motion.span
+            role="tooltip"
+            initial={reduce ? false : { opacity: 0, y: isTop ? 4 : -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: isTop ? 4 : -4 }}
+            transition={{ duration: 0.15 }}
+            className={`absolute left-1/2 -translate-x-1/2 z-30 ${
+              isTop ? "bottom-[125%]" : "top-[125%]"
+            } text-xs text-fg dark:text-white bg-bg-elev/95 backdrop-blur-md px-2.5 py-1 rounded-md whitespace-nowrap border border-neon-cyan/30 shadow-glow-soft`}
+          >
+            {text}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </span>
+  );
+}
+
+
+
+========== .\src\data\projects.ts ==========
+// src/data/projects.ts
+import type { Project } from "@/types";
+
+export const projects: Project[] = [
+  {
+    id: "p1",
+    title: "Hospital Management System",
+    short:
+      "Role-based hospital management platform handling patients, inpatient care, room assignment, and reporting — with a live monitoring dashboard.",
+    longDescription:
+      "An end-to-end hospital operations suite built with Laravel and Blade. Includes role-based access for admins, doctors, and nurses, modular patient & room workflows, and a real-time dashboard that surfaces ward occupancy and KPIs.",
+    tech: ["Laravel", "Blade", "Tailwind CSS", "MySQL"],
+    image: "/assets/images/project-1.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAQAgCdASoQAAgAA4BaJbACdLoAApv8w+hAAOvmC1+aa/Jpczu+LPHK0FXDAxr9b0L7dT8kMbMrgtn+LR/8y78HAAA=",
+    href: "https://github.com/Zakid19/Sm-Hospital",
+    repo: "https://github.com/Zakid19/Sm-Hospital",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2024",
+    highlights: [
+      "Role-based access (admin / doctor / nurse)",
+      "Real-time ward & occupancy dashboard",
+      "Modular patient and room workflows",
+    ],
+    featured: true,
+  },
+  {
+    id: "p2",
+    title: "NFT Generator System",
+    short:
+      "Fullstack NFT collection generator with automated image compositing, JSON metadata, and a live preview UI.",
+    longDescription:
+      "Simulates a production NFT workflow end-to-end: trait-based image compositing, deterministic metadata generation, and a polished Next.js preview for curating outputs before mint.",
+    tech: ["Next.js", "Express.js", "Node.js"],
+    image: "/assets/images/project-2.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAABwAQCdASoQAAgAA4BaJaVnyAGIAAD+8HQIGGlCydJXQkeullAAAA==",
+    href: "https://github.com/Zakid19/generator-system-NFT",
+    repo: "https://github.com/Zakid19/generator-system-NFT",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2024",
+    highlights: [
+      "Trait-based automated image compositing",
+      "Deterministic JSON metadata output",
+      "Web preview interface for the entire collection",
+    ],
+    featured: true,
+  },
+  {
+    id: "p3",
+    title: "Parodee — Crypto Landing",
+    short:
+      "Modern landing page for a cryptocurrency project — responsive layout, interactive CTAs, and lightweight motion.",
+    tech: ["React", "Tailwind CSS", "TypeScript"],
+    image: "/assets/images/project-3.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoQAAoAA4BaJQBOj+ADAEOz+scwAAD+7StUosQXT2W+TKt5Ex+ySbyaskwNGLAuP388fg1a/miBUWwO1MOxuUslhuVTsUlYgcl1kEFBNvGQrOCxyB2tbQGKAAA=",
+    href: "https://parodee.fun/",
+    demo: "https://parodee.fun/",
+    role: "Frontend Developer",
+    status: "Live",
+    type: "Landing Page",
+    year: "2024",
+  },
+  {
+    id: "p4",
+    title: "PT Anak Bungsu Indo Energi",
+    short:
+      "Corporate profile site with a lightweight Laravel CMS and a React-driven admin panel for content management.",
+    tech: ["Laravel", "React", "MySQL", "Tailwind CSS"],
+    image: "/assets/images/project-4.jpeg",
+    blurDataURL:
+      "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoQAAkAA4BaJaACdH8AFnfkrc6FAADNk6pO2BzLiRqr64k+8Q1ty5SbGKH6PfHUYZOJ1LlmOonFxc8pgDogFfaTyqsBnr/HRdJo/fruRGE7wCprAAA=",
+    href: "http://www.abienergi.com/",
+    demo: "http://www.abienergi.com/",
+    role: "Fullstack Developer",
+    status: "Live",
+    type: "CMS",
+    year: "2023",
+  },
+  {
+    id: "p5",
+    title: "Lorehype Agency",
+    short:
+      "Interactive agency profile with Firebase authentication and an integrated content management layer.",
+    tech: ["React", "Tailwind CSS", "Firebase"],
+    image: "/assets/images/project-5.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoQAAkAA4BaJZwAAsdBbIJ0AAD+4eyXO4CvbVaw1Hylki3P1SAnHq+3i1ZhmtN0QADxoEwg8IwZN2SNmMf2DQB51GI22SA0HBDCgAAA",
+    href: "https://lorehype.com/",
+    demo: "https://lorehype.com/",
+    role: "Fullstack Developer",
+    status: "Live",
+    type: "Web App",
+    year: "2024",
+    featured: true,
+  },
+  {
+    id: "p6",
+    title: "Kalisloka — Export Landing",
+    short:
+      "Modern landing page for an export company — focused on storytelling, product showcases, and clean conversions.",
+    tech: ["React", "Tailwind CSS"],
+    image: "/assets/images/project-6.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAACwAQCdASoQAAcAA4BaJZQAAu0eDYEoAP7tCdjXhuFqRrM301XGrHt0z+YJQzfMxQD6WYAA",
+    href: "https://www.kalisloka.com/",
+    demo: "https://www.kalisloka.com/",
+    role: "Frontend Developer",
+    status: "Live",
+    type: "Landing Page",
+    year: "2024",
+  },
+  {
+    id: "p7",
+    title: "Fingerprint Attendance Simulator",
+    short:
+      "Laravel 11 school attendance system that talks to standalone fingerprint devices (no SDK) and logs entries in real time.",
+    longDescription:
+      "Captures fingerprint IDs straight from entry-level standalone devices, maps them to student records via a controlled registration flow, and records attendance in real time with dynamic late-time calculation. Ships with student/teacher/class management, anti double-scan validation, attendance reports, and a modular architecture designed for cost-effective hardware.",
+    tech: ["Laravel", "Tailwind CSS", "MySQL"],
+    image: "/assets/images/project-7.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAACQAQCdASoQAAcAA4BaJZwAApKugoAA/oo5j51KfmdTYO3L/dxAr/t/Z3D34tHdCZxiH9QsBrHAAA==",
+    href: "#",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2025",
+    highlights: [
+      "SDK-less integration with standalone fingerprint devices",
+      "Real-time attendance with dynamic late-time logic",
+      "Anti double-scan validation & reporting",
+    ],
+  },
+  {
+    id: "p8",
+    title: "Smart Workshop Booking & Chatbot",
+    short:
+      "Laravel 11 booking and queue platform for auto workshops — real-time queue monitoring with a rule-based chatbot.",
+    longDescription:
+      "Manages online booking, real-time queue monitoring, and wait-time estimation using rule-based decision support that factors in service duration, queue length, and mechanic availability. A command-based chatbot (no ML required) lets customers check booking, queue, and schedule instantly. Built on an MVC + Service Layer architecture so it stays lightweight and easy to extend.",
+    tech: ["Laravel", "Tailwind CSS", "MySQL"],
+    image: "/assets/images/project-8.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAAAQAgCdASoQAAcAA4BaJZACdAEf/qnmyfAAAP5tJLobcWbFP037kG1bGDxLqKtPXw/7EAAA",
+    href: "#",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2025",
+    highlights: [
+      "Rule-based wait-time estimation",
+      "Command-based chatbot (no ML dependency)",
+      "MVC + Service Layer architecture",
+    ],
+    featured: true,
+  },
+  {
+    id: "p9",
+    title: "Barbershop Booking System",
+    short:
+      "Web-based booking platform for small-to-mid barbershops — zero-conflict scheduling, MVP-first, shared-hosting friendly.",
+    longDescription:
+      "Designed to replace messy WhatsApp/DM bookings with a clean, automated flow. Built around real operational needs: tight scheduling, admin- and customer-friendly UI, and shared-hosting friendly deployment.",
+    tech: ["Laravel", "Tailwind CSS", "MySQL"],
+    image: "/assets/images/project-9.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACwAQCdASoQAAcAA4BaJZQCdAEO9p5AAP3GSnNVUE9mIr5iuIN4fXfkGi9FsgASxefklQtL5ThXMTmAAAA=",
+    href: "#",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2025",
+  },
+  {
+    id: "p10",
+    title: "Crypto Landing Page",
+    short:
+      "Modern crypto landing page with responsive layout, interactive CTAs, and lightweight motion.",
+    tech: ["React", "Tailwind CSS"],
+    image: "/assets/images/project-10.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADQAQCdASoQAAcAA4BaJaACdAEO+xazAAD+o398gej5a+yOe58dG3X4u7EcZPDsQ5gK81NpEOtyYAAA",
+    href: "#",
+    role: "Frontend Developer",
+    status: "Completed",
+    type: "Landing Page",
+    year: "2024",
+  },
+  {
+    id: "p11",
+    title: "Smart Stock Prediction for SMBs",
+    short:
+      "Laravel 11 Decision Support System helping SMBs forecast inventory needs with Moving Average — explainable, no black-box ML.",
+    longDescription:
+      "A Decision Support System (DSS) for small businesses that combines product & sales management, historical sales analytics, and inventory forecasting using Moving Average. Includes a rule-based chatbot, real-time stock validation, reports & data visualisation, and role-based access (Admin / Staff). Designed to be lightweight, explainable, and ML-free so it's easy to adopt.",
+    tech: ["Laravel", "Tailwind CSS", "MySQL"],
+    image: "/assets/images/project-11.png",
+    blurDataURL:
+      "data:image/webp;base64,UklGRjYAAABXRUJQVlA4ICoAAACwAQCdASoQAAcAA4BaJZwAAudM1z3wAPw+RZ65Z2DV5kuV5kNg07VlIAA=",
+    href: "#",
+    role: "Fullstack Developer",
+    status: "Completed",
+    type: "Web App",
+    year: "2025",
+    highlights: [
+      "Moving-Average inventory forecasting",
+      "Rule-based chatbot + real-time stock validation",
+      "Role-based access (Admin / Staff)",
+    ],
+    featured: true,
+  },
+];
+
+/** Used by the Hero component to render a smooth LQIP while the avatar loads. */
+export const AVATAR_BLUR =
+  "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoQABAAA4BaJagCdAEfbhGqNgAA/vaqviv7cxW4ghYdLwzbeob344JRoyGH+Ix58l6zDMV0wyaVrRimAAA=";
+
+
+
+========== .\src\data\skills.ts ==========
+import {
+  SiNextdotjs,
+  SiReact,
+  SiTypescript,
+  SiTailwindcss,
+  SiNodedotjs,
+  SiExpress,
+  SiLaravel,
+  SiGit,
+  SiDocker,
+  SiVercel,
+  SiPython,
+  SiFigma,
+  SiPostman,
+  SiGithub,
+  SiOpenai,
+  SiMysql,
+  SiPostgresql,
+  SiFirebase,
+  SiJavascript,
+  SiClaude,
+  SiGithubcopilot,
+} from "react-icons/si";
+import type { IconType } from "react-icons";
+
+export type Skill = {
+  name: string;
+  level: number;
+  icon: IconType | null;
+};
+
+export type SkillGroup = {
+  group: string;
+  items: Skill[];
+};
+
+export const SKILLS: SkillGroup[] = [
+  {
+    group: "Frontend",
+    items: [
+      { name: "Next.js", level: 5, icon: SiNextdotjs },
+      { name: "React", level: 5, icon: SiReact },
+      { name: "TypeScript", level: 4, icon: SiTypescript },
+      { name: "Tailwind CSS", level: 5, icon: SiTailwindcss },
+      { name: "JavaScript", level: 5, icon: SiJavascript },
+    ],
+  },
+  {
+    group: "Backend",
+    items: [
+      { name: "Node.js", level: 4, icon: SiNodedotjs },
+      { name: "Express", level: 4, icon: SiExpress },
+      { name: "Laravel", level: 4, icon: SiLaravel },
+      { name: "Python", level: 3, icon: SiPython },
+    ],
+  },
+  {
+    group: "Database",
+    items: [
+      { name: "MySQL", level: 4, icon: SiMysql },
+      { name: "PostgreSQL", level: 4, icon: SiPostgresql },
+      { name: "Firebase", level: 3, icon: SiFirebase },
+    ],
+  },
+  {
+    group: "AI & Vibe Coding",
+    items: [
+      { name: "Claude / Claude Code", level: 5, icon: SiClaude },
+      { name: "ChatGPT / GPT-4o", level: 5, icon: SiOpenai },
+      { name: "Cursor", level: 5, icon: null },
+      { name: "GitHub Copilot", level: 4, icon: SiGithubcopilot },
+      { name: "v0 by Vercel", level: 4, icon: SiVercel },
+      { name: "Prompt Engineering", level: 5, icon: null },
+      { name: "LLM API Integration", level: 4, icon: null },
+      { name: "AI-Augmented Workflow", level: 5, icon: null },
+    ],
+  },
+  {
+    group: "Tools",
+    items: [
+      { name: "Git", level: 4, icon: SiGit },
+      { name: "GitHub", level: 4, icon: SiGithub },
+      { name: "Postman", level: 4, icon: SiPostman },
+      { name: "Vercel", level: 5, icon: SiVercel },
+      { name: "Docker (basic)", level: 3, icon: SiDocker },
+      { name: "Figma", level: 4, icon: SiFigma },
+    ],
+  },
+  {
+    group: "Soft Skills",
+    items: [
+      { name: "Problem Solving", level: 5, icon: null },
+      { name: "Product Mindset", level: 5, icon: null },
+      { name: "Collaboration", level: 5, icon: null },
+      { name: "Fast Iteration", level: 5, icon: null },
+    ],
+  },
+];
+
+
+
+========== .\src\lib\utils.ts ==========
+// src/lib/utils.ts
+
+/**
+ * Class-name combiner. Filters out falsy values so you can pass
+ * conditional class strings safely:
+ *   cn("base", isActive && "active", maybeUndefined)
+ */
+export function cn(...classes: Array<string | false | null | undefined>): string {
+  return classes.filter(Boolean).join(" ");
+}
+
+/**
+ * Format a tech-stack array into a comma-separated, human-readable string
+ * with an Oxford "and" — used in OG descriptions and aria-labels.
+ */
+export function formatTech(tech: string[]): string {
+  if (tech.length === 0) return "";
+  if (tech.length === 1) return tech[0];
+  if (tech.length === 2) return `${tech[0]} and ${tech[1]}`;
+  return `${tech.slice(0, -1).join(", ")}, and ${tech[tech.length - 1]}`;
+}
+
+/**
+ * Resolve the best external link for a project, preferring `demo`, then
+ * `href`, then `repo`. Returns `null` when no link is available.
+ */
+export function projectLink(p: {
+  demo?: string;
+  href?: string;
+  repo?: string;
+}): string | null {
+  return p.demo || p.href || p.repo || null;
+}
+
+
+
+========== .\src\types\index.ts ==========
+// src/types/index.ts
+
+export type Project = {
+  id: string;
+  title: string;
+  /** Short pitch — used on cards & modals (1–2 sentences). */
+  short: string;
+  /** Long-form description — used on detail page. */
+  longDescription?: string;
+  tech: string[];
+  image?: string;
+  blurDataURL?: string;
+  /** Primary link — usually live demo, falls back to repo. */
+  href?: string;
+  demo?: string;
+  repo?: string;
+  caseStudy?: string;
+  role?: string;
+  status?: "Live" | "In Progress" | "Completed" | "Archived" | string;
+  type?: "Web App" | "Landing Page" | "Dashboard" | "SaaS" | "CMS" | string;
+  year?: string;
+  highlights?: string[];
+  featured?: boolean;
+};
+

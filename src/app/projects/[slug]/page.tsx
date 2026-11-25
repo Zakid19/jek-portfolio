@@ -1,9 +1,13 @@
-// src/app/projects/[slug]/page.tsx
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  ExternalLink,
+} from "lucide-react";
 
 import { projects } from "@/data/projects";
 import type { Project } from "@/types";
@@ -11,7 +15,7 @@ import ProjectAsideClient from "@/components/project/ProjectAsideClient";
 import { formatTech } from "@/lib/utils";
 
 export const generateStaticParams = async () =>
-  projects.map((p) => ({ slug: p.id }));
+  projects.map((project) => ({ slug: project.id }));
 
 export async function generateMetadata({
   params,
@@ -19,7 +23,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const project = projects.find((p) => p.id === slug);
+  const project = projects.find((item) => item.id === slug);
 
   if (!project) {
     return {
@@ -39,7 +43,14 @@ export async function generateMetadata({
       type: "article",
       url: `/projects/${project.id}`,
       images: project.image
-        ? [{ url: project.image, width: 1200, height: 630, alt: project.title }]
+        ? [
+            {
+              url: project.image,
+              width: 1200,
+              height: 630,
+              alt: project.title,
+            },
+          ]
         : undefined,
     },
     twitter: {
@@ -48,7 +59,9 @@ export async function generateMetadata({
       description,
       images: project.image ? [project.image] : undefined,
     },
-    alternates: { canonical: `/projects/${project.id}` },
+    alternates: {
+      canonical: `/projects/${project.id}`,
+    },
   };
 }
 
@@ -58,169 +71,306 @@ export default async function ProjectPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const idx = projects.findIndex((p) => p.id === slug);
-  if (idx === -1) return notFound();
 
-  const project = projects[idx] as Project;
-  const prev = projects[idx - 1];
-  const next = projects[idx + 1];
+  const index = projects.findIndex((project) => project.id === slug);
+
+  if (index === -1) return notFound();
+
+  const project = projects[index] as Project;
+  const previousProject = projects[index - 1];
+  const nextProject = projects[index + 1];
 
   const externalUrl =
-    project.demo || (project.href && project.href !== "#" ? project.href : undefined);
+    project.demo ||
+    (project.href && project.href !== "#" ? project.href : undefined);
 
   return (
-    <main className="relative">
-      <div className="aurora" aria-hidden />
-
-      <article className="container pt-32 pb-20">
-        {/* Back link */}
+    <main className="min-h-screen">
+      <article className="container pb-16 pt-24 sm:pb-20 sm:pt-28 lg:pt-32">
+        {/* BACK NAVIGATION */}
         <Link
           href="/projects"
-          className="inline-flex items-center gap-1.5 text-sm text-fg-muted hover:text-neon-cyan transition-colors mb-8 group"
+          className={[
+            "group mb-8 inline-flex items-center gap-2",
+            "text-sm text-fg-muted",
+            "transition-colors duration-200",
+            "hover:text-neon-green",
+            "focus-visible:outline-none",
+            "focus-visible:ring-2 focus-visible:ring-ring",
+            "rounded-md",
+          ].join(" ")}
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-          All projects
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Back to projects
         </Link>
 
-        {/* Header */}
-        <header className="max-w-3xl">
-          <div className="flex flex-wrap items-center gap-2 mb-5">
-            {project.featured && <span className="badge-glow">Featured</span>}
+        {/* PROJECT HEADER */}
+        <header className="max-w-4xl">
+          <div className="mb-5 flex flex-wrap items-center gap-2">
+            {project.featured && (
+              <span className="inline-flex items-center rounded-md border border-neon-green/40 bg-neon-green/10 px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-neon-green">
+                Featured Project
+              </span>
+            )}
+
             {project.type && (
-              <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono uppercase tracking-widest text-fg-muted border border-border dark:border-white/10">
+              <span className="rounded-md border border-border px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-fg-muted">
                 {project.type}
               </span>
             )}
+
             {project.year && (
-              <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-mono text-fg-muted border border-border dark:border-white/10">
+              <span className="rounded-md border border-border px-3 py-1 font-mono text-[10px] text-fg-muted">
                 {project.year}
               </span>
             )}
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-fg">
+          <h1 className="text-3xl font-semibold leading-tight tracking-tight text-fg sm:text-4xl md:text-5xl lg:text-6xl">
             {project.title}
           </h1>
-          <p className="mt-5 text-lg text-fg-muted leading-relaxed">{project.short}</p>
+
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-fg-muted sm:mt-5 sm:text-lg">
+            {project.short}
+          </p>
+
+          {externalUrl && (
+            <a
+              href={externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={[
+                "mt-6 inline-flex h-10 items-center gap-2",
+                "rounded-md border border-neon-green/40",
+                "px-4 text-sm font-medium text-neon-green",
+                "transition-colors duration-200",
+                "hover:border-neon-green",
+                "hover:bg-neon-green/5",
+                "focus-visible:outline-none",
+                "focus-visible:ring-2 focus-visible:ring-ring",
+              ].join(" ")}
+            >
+              Visit Live Project
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          )}
         </header>
 
-        {/* Hero image */}
-        <div className="relative w-full aspect-[16/9] sm:aspect-[2/1] mt-10 rounded-2xl overflow-hidden neon-edge shadow-glow">
-          {project.image ? (
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              sizes="(max-width: 1024px) 100vw, 1100px"
-              className="object-cover"
-              priority
-              placeholder={project.blurDataURL ? "blur" : undefined}
-              blurDataURL={project.blurDataURL}
-            />
-          ) : (
-            <div className="w-full h-full bg-bg-soft flex items-center justify-center text-fg-muted text-sm">
-              No image
-            </div>
-          )}
-        </div>
+        {/* PROJECT IMAGE */}
+        <section aria-label="Project preview" className="mt-9 sm:mt-12">
+          <div
+            className={[
+              "relative isolate aspect-[4/3]",
+              "overflow-hidden rounded-xl",
+              "border border-border bg-bg-soft",
+              "sm:aspect-[16/9]",
+            ].join(" ")}
+          >
+            {project.image ? (
+              <Image
+                src={project.image}
+                alt={`${project.title} project preview`}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1280px) 90vw, 1200px"
+                className="object-contain p-2 sm:p-4 lg:p-6"
+                priority
+                placeholder={project.blurDataURL ? "blur" : undefined}
+                blurDataURL={project.blurDataURL}
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-sm text-fg-muted">
+                Project preview unavailable
+              </div>
+            )}
+          </div>
 
-        {/* Body */}
-        <div className="mt-14 grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14">
-          <div className="lg:col-span-2 space-y-12">
+          <p className="mt-3 text-center text-xs text-fg-muted">
+            Project preview — {project.title}
+          </p>
+        </section>
+
+        {/* PROJECT CONTENT */}
+        <div className="mt-12 grid grid-cols-1 items-start gap-10 lg:mt-16 lg:grid-cols-3 lg:gap-12">
+          {/* MAIN CONTENT */}
+          <div className="min-w-0 space-y-12 lg:col-span-2">
+            {/* OVERVIEW */}
             {project.longDescription && (
               <section>
-                <h2 className="text-2xl font-bold text-fg mb-4">Overview</h2>
-                <p className="text-base text-fg-soft leading-relaxed">
+                <div className="mb-4">
+                  <p className="mb-2 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-neon-green">
+                    Introduction
+                  </p>
+
+                  <h2 className="text-2xl font-semibold tracking-tight text-fg sm:text-3xl">
+                    Project Overview
+                  </h2>
+                </div>
+
+                <p className="max-w-3xl text-sm leading-7 text-fg-soft sm:text-base sm:leading-8">
                   {project.longDescription}
                 </p>
               </section>
             )}
 
-            {project.highlights?.length ? (
+            {/* HIGHLIGHTS */}
+            {project.highlights && project.highlights.length > 0 && (
               <section>
-                <h2 className="text-2xl font-bold text-fg mb-4">Highlights</h2>
-                <ul className="space-y-3">
-                  {project.highlights.map((h) => (
+                <div className="mb-5">
+                  <p className="mb-2 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-neon-green">
+                    What was built
+                  </p>
+
+                  <h2 className="text-2xl font-semibold tracking-tight text-fg sm:text-3xl">
+                    Key Highlights
+                  </h2>
+                </div>
+
+                <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {project.highlights.map((highlight, index) => (
                     <li
-                      key={h}
-                      className="flex items-start gap-3 p-4 rounded-xl glass neon-edge"
+                      key={`${project.id}-highlight-${index}`}
+                      className={[
+                        "flex items-start gap-3",
+                        "rounded-lg border border-border",
+                        "bg-bg p-4",
+                        "transition-colors duration-200",
+                        "hover:border-neon-green/40",
+                      ].join(" ")}
                     >
-                      <CheckCircle2 className="w-5 h-5 text-neon-cyan flex-shrink-0 mt-0.5" />
-                      <span className="text-sm sm:text-base text-fg-soft">{h}</span>
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-neon-green" />
+
+                      <span className="text-sm leading-relaxed text-fg-soft">
+                        {highlight}
+                      </span>
                     </li>
                   ))}
                 </ul>
               </section>
-            ) : null}
+            )}
 
-            {project.tech?.length ? (
+            {/* TECHNOLOGY STACK */}
+            {project.tech && project.tech.length > 0 && (
               <section>
-                <h2 className="text-2xl font-bold text-fg mb-4">Tech Stack</h2>
+                <div className="mb-5">
+                  <p className="mb-2 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-neon-green">
+                    Tools & Technologies
+                  </p>
+
+                  <h2 className="text-2xl font-semibold tracking-tight text-fg sm:text-3xl">
+                    Technology Stack
+                  </h2>
+                </div>
+
                 <div className="flex flex-wrap gap-2">
-                  {project.tech.map((t) => (
+                  {project.tech.map((technology) => (
                     <span
-                      key={t}
-                      className="px-3 py-1.5 rounded-lg text-sm border border-neon-cyan/20 bg-neon-cyan/[0.04] text-fg-soft hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors"
+                      key={technology}
+                      className={[
+                        "rounded-md border border-border",
+                        "bg-bg px-3.5 py-2",
+                        "text-sm font-medium text-fg-soft",
+                        "transition-colors duration-200",
+                        "hover:border-neon-green/40",
+                        "hover:text-neon-green",
+                      ].join(" ")}
                     >
-                      {t}
+                      {technology}
                     </span>
                   ))}
                 </div>
               </section>
-            ) : null}
-
-            {externalUrl && (
-              <section>
-                <a
-                  href={externalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 h-12 px-6 rounded-lg text-white font-medium bg-brand-gradient bg-[length:200%_100%] hover:bg-[position:100%_0] shadow-glow-soft hover:shadow-glow transition-all duration-500"
-                >
-                  Visit live project
-                  <ArrowRight className="w-4 h-4" />
-                </a>
-              </section>
             )}
           </div>
 
+          {/* PROJECT INFORMATION SIDEBAR */}
           <ProjectAsideClient project={project} />
         </div>
 
-        {/* Prev / next */}
-        {(prev || next) && (
+        {/* PREVIOUS / NEXT PROJECT */}
+        {(previousProject || nextProject) && (
           <nav
-            className="mt-20 pt-10 border-t border-border dark:border-white/[0.06] grid grid-cols-1 sm:grid-cols-2 gap-4"
+            className="mt-16 border-t border-border pt-8 sm:mt-20 sm:pt-10"
             aria-label="Project navigation"
           >
-            {prev ? (
+            <div className="mb-5">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-neon-green">
+                Keep exploring
+              </p>
+
+              <h2 className="mt-2 text-xl font-semibold text-fg sm:text-2xl">
+                More Projects
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
+              {previousProject ? (
+                <Link
+                  href={`/projects/${previousProject.id}`}
+                  className={[
+                    "group rounded-lg border border-border",
+                    "bg-bg p-5",
+                    "transition-colors duration-200",
+                    "hover:border-neon-green/40",
+                  ].join(" ")}
+                >
+                  <div className="flex items-center gap-2 text-xs font-medium text-fg-muted">
+                    <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" />
+                    Previous Project
+                  </div>
+
+                  <p className="mt-3 font-medium text-fg transition-colors group-hover:text-neon-green">
+                    {previousProject.title}
+                  </p>
+
+                  <p className="mt-1 line-clamp-1 text-xs text-fg-muted">
+                    {previousProject.short}
+                  </p>
+                </Link>
+              ) : (
+                <div />
+              )}
+
+              {nextProject && (
+                <Link
+                  href={`/projects/${nextProject.id}`}
+                  className={[
+                    "group rounded-lg border border-border",
+                    "bg-bg p-5",
+                    "transition-colors duration-200",
+                    "hover:border-neon-green/40",
+                    "sm:text-right",
+                  ].join(" ")}
+                >
+                  <div className="flex items-center gap-2 text-xs font-medium text-fg-muted sm:justify-end">
+                    Next Project
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                  </div>
+
+                  <p className="mt-3 font-medium text-fg transition-colors group-hover:text-neon-green">
+                    {nextProject.title}
+                  </p>
+
+                  <p className="mt-1 line-clamp-1 text-xs text-fg-muted">
+                    {nextProject.short}
+                  </p>
+                </Link>
+              )}
+            </div>
+
+            <div className="mt-7 text-center">
               <Link
-                href={`/projects/${prev.id}`}
-                className="group p-5 rounded-xl glass neon-edge hover:shadow-glow-soft transition-shadow"
+                href="/projects"
+                className={[
+                  "inline-flex items-center gap-2",
+                  "text-sm font-medium text-fg-muted",
+                  "transition-colors duration-200",
+                  "hover:text-neon-green",
+                ].join(" ")}
               >
-                <div className="text-xs font-mono uppercase tracking-widest text-fg-muted flex items-center gap-1.5">
-                  <ArrowLeft className="w-3.5 h-3.5" /> Previous
-                </div>
-                <div className="mt-2 font-semibold text-fg group-hover:text-neon-cyan transition-colors">
-                  {prev.title}
-                </div>
+                <ArrowLeft className="h-4 w-4" />
+                Explore all projects
               </Link>
-            ) : (
-              <span />
-            )}
-            {next ? (
-              <Link
-                href={`/projects/${next.id}`}
-                className="group p-5 rounded-xl glass neon-edge hover:shadow-glow-soft transition-shadow sm:text-right"
-              >
-                <div className="text-xs font-mono uppercase tracking-widest text-fg-muted flex items-center sm:justify-end gap-1.5">
-                  Next <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-                <div className="mt-2 font-semibold text-fg group-hover:text-neon-cyan transition-colors">
-                  {next.title}
-                </div>
-              </Link>
-            ) : null}
+            </div>
           </nav>
         )}
       </article>

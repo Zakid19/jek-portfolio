@@ -1,4 +1,3 @@
-// src/components/ui/Section.tsx
 import React, { ReactNode } from "react";
 import MotionSection from "./MotionSection";
 import { cn } from "@/lib/utils";
@@ -30,22 +29,27 @@ export default function Section({
     <header
       className={cn(
         "mb-10 max-w-2xl",
-        align === "center" && "mx-auto text-center"
+        align === "center" && "mx-auto text-center",
       )}
     >
       {eyebrow && (
-        <span className="inline-flex items-center gap-2 badge-glow mb-4 font-mono uppercase tracking-widest">
-          <span className="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-pulse" />
+        <span className="mb-4 inline-flex items-center gap-2 rounded border border-neon-green px-3 py-1.5 font-mono text-[0.68rem] font-medium uppercase tracking-[0.16em] text-neon-green">
+          <span
+            className="h-1.5 w-1.5 rounded-full bg-neon-green"
+            aria-hidden="true"
+          />
           {eyebrow}
         </span>
       )}
+
       {title && (
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-fg">
+        <h2 className="text-3xl font-bold leading-tight tracking-[-0.04em] text-fg sm:text-4xl md:text-5xl">
           {title}
         </h2>
       )}
+
       {subtitle && (
-        <p className="mt-4 text-base sm:text-lg text-fg-muted leading-relaxed">
+        <p className="mt-4 max-w-2xl text-sm font-normal leading-7 text-fg-muted sm:text-base sm:leading-8">
           {subtitle}
         </p>
       )}
@@ -59,7 +63,7 @@ export default function Section({
     </div>
   );
 
-  const base = "relative section-cv py-16 sm:py-24 scroll-mt-24";
+  const base = "relative section-cv py-16 sm:py-24 scroll-mt-6";
 
   if (useMotion) {
     return (
