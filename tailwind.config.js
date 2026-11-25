@@ -80,8 +80,18 @@ module.exports = {
       },
 
       /* ==========================================================
-         TYPOGRAPHY
-      ========================================================== */
+   TYPOGRAPHY
+========================================================== */
+
+      /*
+       * Full Monospace Typography
+       *
+       * All typography uses JetBrains Mono to maintain
+       * the portfolio's developer-oriented visual identity.
+       *
+       * The Next.js font variable is provided by:
+       * --font-mono
+       */
 
       fontFamily: {
         sans: [

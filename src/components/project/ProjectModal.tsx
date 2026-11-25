@@ -266,13 +266,13 @@ export default function ProjectModal({ project, onClose }: Props) {
                   )}
 
                   {project.type && (
-                    <span className="rounded-md border border-border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-fg-muted">
+                    <span className="inline-flex items-center rounded-md border border-border bg-bg-soft px-2.5 py-1 font-mono text-[0.65rem] uppercase tracking-wider text-fg-muted">
                       {project.type}
                     </span>
                   )}
 
                   {project.year && (
-                    <span className="rounded-md border border-border px-2.5 py-1 font-mono text-[10px] text-fg-muted">
+                    <span className="inline-flex items-center rounded-md border border-border bg-bg-soft px-2.5 py-1 font-mono text-[0.65rem] text-fg-muted">
                       {project.year}
                     </span>
                   )}
@@ -399,6 +399,8 @@ export default function ProjectModal({ project, onClose }: Props) {
                   {/* SECONDARY ACTION */}
                   <Link
                     href={`/projects/${project.id}`}
+                    onClick={onClose}
+                    prefetch={false}
                     aria-label={`View full case study for ${project.title}`}
                     className={[
                       "group ml-auto inline-flex items-center gap-2",

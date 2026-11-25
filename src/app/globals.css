@@ -13,13 +13,31 @@
    1. DESIGN TOKENS
 ================================================================ */
 
+/* src/app/globals.css
+ * Premium Stealth-Tech Design System
+ * Dark: near-black surfaces, white borders, Neon Mint accent.
+ * Light: white surfaces, dark borders, Ubuntu Orange accent.
+ * Typography: JetBrains Mono across the entire interface.
+ * Minimal visual language; no glassmorphism or gradient borders.
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================================
+   1. DESIGN TOKENS
+================================================================ */
+
 :root {
-  /* Light Theme */
+  /* --------------------------------------------------------------
+     LIGHT THEME
+  -------------------------------------------------------------- */
+
   --bg: 255 255 255;
   --bg-soft: 255 255 255;
   --bg-elev: 255 255 255;
 
-  /* Dark / black borders */
   --border: 15 23 42;
   --border-soft: 15 23 42;
 
@@ -27,32 +45,37 @@
   --fg-soft: 51 65 85;
   --muted: 100 116 139;
 
-  /* Monochrome accent system */
+  /* Primary accent: Ubuntu Orange */
   --neon-green: 233 84 32;
-  --neon-cyan: 15 118 110;
+  --neon-cyan: 233 84 32;
+
+  /* Legacy aliases retained for compatibility */
   --neon-purple: 71 85 105;
   --neon-pink: 71 85 105;
-  --neon-blue: 15 118 110;
+  --neon-blue: 233 84 32;
 
   --primary: 233 84 32;
   --ring: 233 84 32;
   --accent-muted: 233 84 32;
 
+  /* Neutral interaction surfaces */
+  --surface-hover: 241 245 249;
+
+  /* Decorative backgrounds disabled */
   --grid-color: 15 23 42;
   --grid-opacity: 0;
   --noise-opacity: 0;
-
-  --surface-hover: 241 245 249;
-  --accent-muted: 4 120 87;
 }
 
 .dark {
-  /* Dark Theme */
+  /* --------------------------------------------------------------
+     DARK THEME
+  -------------------------------------------------------------- */
+
   --bg: 0 1 3;
   --bg-soft: 0 1 3;
   --bg-elev: 0 1 3;
 
-  /* Pure white borders */
   --border: 255 255 255;
   --border-soft: 255 255 255;
 
@@ -60,24 +83,26 @@
   --fg-soft: 203 213 225;
   --muted: 148 163 184;
 
-  /* Neon accents */
+  /* Primary accent: Neon Mint */
   --neon-green: 57 255 176;
-  --neon-cyan: 54 229 242;
+  --neon-cyan: 57 255 176;
 
-  /* Retained legacy aliases, neutralized */
+  /* Legacy aliases retained and neutralized */
   --neon-purple: 148 163 184;
   --neon-pink: 148 163 184;
-  --neon-blue: 54 229 242;
+  --neon-blue: 57 255 176;
 
   --primary: 57 255 176;
   --ring: 57 255 176;
+  --accent-muted: 57 255 176;
 
+  /* Neutral interaction surfaces */
+  --surface-hover: 15 23 42;
+
+  /* Decorative backgrounds disabled */
   --grid-color: 255 255 255;
   --grid-opacity: 0;
   --noise-opacity: 0;
-
-  --surface-hover: 15 23 42;
-  --accent-muted: 57 255 176;
 }
 
 /* ================================================================
@@ -280,16 +305,20 @@
 }
 
 /* Minimal accent badge */
+
+/* Minimal Premium Stealth-Tech Badge */
 .badge-glow {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   padding: 0.3rem 0.65rem;
+  font-family: var(--font-mono), monospace;
   font-size: 0.68rem;
+  font-weight: 500;
   line-height: 1.2;
-  border-radius: 4px;
-  background: transparent;
-  border: 1px solid rgb(var(--neon-green));
+  border-radius: 0.375rem;
+  background: rgb(var(--neon-green) / 0.05);
+  border: 1px solid rgb(var(--neon-green) / 0.35);
   color: rgb(var(--neon-green));
   box-shadow: none;
   white-space: nowrap;

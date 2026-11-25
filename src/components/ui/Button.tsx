@@ -45,11 +45,12 @@ export type ButtonProps =
 const base =
   "relative inline-flex items-center justify-center gap-2 " +
   "rounded-lg font-medium select-none " +
-  "transition-all duration-300 ease-smooth " +
+  "transition-colors duration-200 ease-smooth " +
   "focus-visible:outline-none focus-visible:ring-2 " +
   "focus-visible:ring-ring/70 focus-visible:ring-offset-2 " +
   "focus-visible:ring-offset-bg " +
   "disabled:cursor-not-allowed disabled:opacity-40 " +
+  "aria-disabled:pointer-events-none aria-disabled:opacity-40 " +
   "active:scale-[0.98]";
 
 /* ================================================================
@@ -67,47 +68,26 @@ const sizes: Record<ButtonSize, string> = {
 ================================================================ */
 
 const variants: Record<ButtonVariant, string> = {
-  /*
-   * Primary
-   * Transparent background.
-   * Visible neon border and subtle glow on dark mode.
-   * Monochrome appearance on light mode.
-   */
+  // Primary: restrained accent border and subtle accent surface.
   primary:
     "border border-neon-green/60 " +
     "bg-neon-green/[0.04] " +
     "text-fg " +
-    "shadow-sm shadow-neon-green/5 " +
     "hover:border-neon-green " +
     "hover:bg-neon-green/10 " +
-    "hover:shadow-md hover:shadow-neon-green/10 " +
     "dark:text-neon-green " +
-    "dark:hover:shadow-neon-green/20 " +
     "active:bg-neon-green/15",
 
-  /*
-   * Accent
-   * Transparent green-cyan accent.
-   * More expressive than primary, without solid fill.
-   */
+  // Accent: stronger accent surface for higher-priority actions.
   accent:
-    "border border-neon-cyan/60 " +
-    "bg-neon-cyan/[0.04] " +
+    "border border-neon-green " +
+    "bg-neon-green/10 " +
     "text-fg " +
-    "shadow-sm shadow-neon-cyan/5 " +
-    "hover:border-neon-green " +
-    "hover:bg-neon-green/10 " +
-    "hover:shadow-md hover:shadow-neon-cyan/10 " +
-    "dark:text-neon-cyan " +
-    "dark:hover:text-neon-green " +
-    "dark:hover:shadow-neon-cyan/20 " +
-    "active:bg-neon-cyan/15",
+    "hover:bg-neon-green/15 " +
+    "dark:text-neon-green " +
+    "active:bg-neon-green/20",
 
-  /*
-   * Outline
-   * Neutral transparent button.
-   * Minimal and premium in both themes.
-   */
+  // Outline: neutral secondary action.
   outline:
     "border border-border-strong/80 " +
     "bg-transparent " +
@@ -116,14 +96,9 @@ const variants: Record<ButtonVariant, string> = {
     "hover:bg-neon-green/[0.04] " +
     "hover:text-fg " +
     "dark:hover:text-neon-green " +
-    "dark:hover:shadow-[0_0_14px_-10px_rgba(66,255,176,0.5)] " +
     "active:bg-neon-green/10",
 
-  /*
-   * Ghost
-   * Borderless transparent button.
-   * Minimal interaction with no unnecessary glow.
-   */
+  // Ghost: minimal borderless action.
   ghost:
     "border border-transparent " +
     "bg-transparent " +
