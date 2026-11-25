@@ -71,28 +71,6 @@ function PanelHeading({
   );
 }
 
-function LevelIndicator({ level }: { level: number }) {
-  const safeLevel = Math.max(0, Math.min(5, level));
-
-  return (
-    <div
-      className="grid w-12 shrink-0 grid-cols-5 gap-1"
-      role="img"
-      aria-label={`Level ${safeLevel} of 5`}
-    >
-      {Array.from({ length: 5 }).map((_, index) => (
-        <span
-          key={index}
-          className={cn(
-            "h-[3px] rounded-full",
-            index < safeLevel ? "bg-neon-green" : "bg-border",
-          )}
-        />
-      ))}
-    </div>
-  );
-}
-
 function TechnicalSkillsPanel() {
   return (
     <section className="min-w-0 border-b border-border p-5 sm:p-6 lg:border-b-0 lg:border-r">
@@ -126,14 +104,9 @@ function TechnicalSkillsPanel() {
                       "px-2.5 py-1.5 transition-colors",
                       "hover:border-neon-green/40",
                     )}
-                    title={`${skill.name}: Level ${skill.level}/5`}
                   >
                     <span className="truncate text-[10px] text-fg-soft">
                       {skill.name}
-                    </span>
-
-                    <span className="font-mono text-[9px] tabular-nums text-neon-green">
-                      {skill.level}
                     </span>
                   </div>
                 ))}
@@ -219,7 +192,6 @@ function ToolsPanel() {
             <div
               key={tool.name}
               className="group flex min-w-0 items-center gap-2.5"
-              title={`${tool.name}: Level ${tool.level}/5`}
             >
               {Icon ? (
                 <Icon
@@ -233,10 +205,6 @@ function ToolsPanel() {
 
               <span className="min-w-0 flex-1 truncate text-[11px] text-fg-soft transition-colors group-hover:text-fg">
                 {tool.name}
-              </span>
-
-              <span className="font-mono text-[9px] tabular-nums text-fg-muted">
-                {tool.level}/5
               </span>
             </div>
           );

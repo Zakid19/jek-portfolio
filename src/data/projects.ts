@@ -23,7 +23,6 @@ export const projects: Project[] = [
       "Ward and occupancy dashboard",
       "Modular patient and room workflows",
     ],
-    featured: true,
   },
 
   {
@@ -104,6 +103,7 @@ export const projects: Project[] = [
     status: "Live",
     type: "Landing Page",
     year: "2024",
+    featured: true,
   },
 
   {
@@ -138,7 +138,7 @@ export const projects: Project[] = [
     status: "Live",
     type: "Web App",
     year: "2024",
-    featured: true,
+
     caseStudyContent: {
       overview: {
         background:
@@ -214,6 +214,7 @@ export const projects: Project[] = [
       "Daily and monthly attendance reports",
       "Attendance data export",
     ],
+    featured: true,
     caseStudyContent: {
       overview: {
         background:

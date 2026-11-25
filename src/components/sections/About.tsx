@@ -22,33 +22,36 @@ import { AVATAR_BLUR } from "@/data/projects";
 const EXPERTISE = [
   "React & Next.js",
   "TypeScript",
-  "Laravel & Express",
-  "REST & API Design",
-  "UI/UX & Animation",
-  "AI-Augmented Workflows",
+  "Laravel & Express.js",
+  "REST API & Integration",
+  "Database Design",
+  "System Development",
+  "AI Integration",
+  "Prompt Engineering",
+  "AI-Assisted Workflows",
 ];
 
 const EXPERIENCE = [
   {
-    role: "Frontend / Web Developer",
-    company: "Freelance",
-    period: "2022 — Present",
+    role: "Fullstack Web Developer",
+    company: "Freelance / Remote",
+    period: "2023 — Present",
     details:
-      "Designing and shipping modern interfaces and crypto-themed experiences for international clients.",
+      "Developing web applications and digital solutions for local and international clients, covering backend architecture, frontend implementation, API integration, database management, and deployment.",
   },
   {
-    role: "Fullstack Developer",
+    role: "Fullstack Web Developer",
     company: "Lorehype Agency",
-    period: "2024 — 2025",
+    period: "Sep 2024 — Sep 2025",
     details:
-      "Owned end-to-end fullstack delivery for agency projects spanning React, Tailwind, and Firebase.",
+      "Building dynamic web applications using React.js, Tailwind CSS, and Firebase, contributing to frontend optimization, development workflows, and collaboration through Git and pull request reviews.",
   },
   {
-    role: "Fullstack Developer",
-    company: "Abie Group",
-    period: "2023 — 2024",
+    role: "Fullstack Web Developer / Web Administrator",
+    company: "PT Abie Indonesia Energi",
+    period: "Aug 2023 — Aug 2024",
     details:
-      "Built corporate websites and internal tools with Laravel + React, integrating CMS workflows.",
+      "Developing and maintaining internal business applications using Laravel and MySQL, designing REST APIs with JWT authentication, and managing deployment, monitoring, and internal IT operations.",
   },
 ];
 
@@ -112,14 +115,18 @@ export default function About() {
               <div className="my-5 h-px w-full bg-border sm:my-6" />
 
               <p className="text-sm font-normal leading-7 text-fg-soft sm:text-[15px]">
-                I&apos;m a web developer with a background in software
-                engineering and experience building web applications using{" "}
+                I&apos;m a Fullstack Web Developer with a background in Software
+                Engineering and experience building web applications using{" "}
                 <span className="font-semibold text-fg">React</span>,{" "}
                 <span className="font-semibold text-fg">Next.js</span>,{" "}
                 <span className="font-semibold text-fg">Laravel</span>, and{" "}
-                <span className="font-semibold text-fg">Express</span>. My
-                interests extend to AI integration, automation, and building
-                practical digital products.
+                <span className="font-semibold text-fg">Express.js</span>. My
+                experience spans corporate environments, digital agencies, and
+                remote freelance projects, covering application development,
+                REST API integration, database management, and deployment. I
+                also explore AI integration, prompt engineering, context
+                engineering, and automation to improve development workflows and
+                build practical digital solutions.
               </p>
 
               <Link

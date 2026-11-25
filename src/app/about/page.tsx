@@ -22,39 +22,39 @@ import { AVATAR_BLUR } from "@/data/projects";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn more about Zaki Deza, his background, professional journey, technical interests, and approach to building digital products.",
+    "Discover Zaki Deza's professional background, fullstack web development experience, AI-assisted development interests, and approach to building practical digital solutions.",
   openGraph: {
     title: "About · Zaki Deza",
     description:
-      "Professional background, journey, areas of focus, and working principles.",
+      "Fullstack Web Developer focused on web engineering, AI integration, automation, and practical digital product development.",
     type: "profile",
   },
 };
 
 const EXPERIENCE = [
   {
-    role: "Frontend / Web Developer",
-    company: "Freelance",
-    period: "2022 — Present",
+    role: "Fullstack Web Developer",
+    company: "Freelance / Remote",
+    period: "2023 — Present",
     type: "Independent Work",
     details:
-      "Designing and delivering modern web interfaces and digital experiences for clients, with an emphasis on usability, responsive layouts, and practical implementation.",
+      "Working independently with local and international clients to develop web applications and digital solutions. Responsible for end-to-end development, including Laravel backend architecture, React.js and Next.js frontend implementation, REST API integration, database management, deployment, and performance optimization. Also incorporating AI-assisted development into daily workflows for debugging, code review, and technical documentation.",
   },
   {
-    role: "Fullstack Developer",
+    role: "Fullstack Web Developer",
     company: "Lorehype Agency",
-    period: "2024 — 2025",
+    period: "Sep 2024 — Sep 2025",
     type: "Agency Experience",
     details:
-      "Worked on end-to-end web development for agency projects, including frontend implementation and backend integration using React, Tailwind CSS, and Firebase.",
+      "Developed dynamic web applications for agency clients using React.js, Tailwind CSS, and Firebase. Contributed to frontend performance optimization through code splitting, lazy loading, and asset compression. Worked with Git/Gitflow, participated in pull request reviews, and translated design and business requirements into consistent frontend implementations. Also supported content planning, copywriting, and social media activities within the agency.",
   },
   {
-    role: "Fullstack Developer",
-    company: "Abie Group",
-    period: "2023 — 2024",
-    type: "Professional Experience",
+    role: "Fullstack Web Developer / Web Administrator",
+    company: "PT Abie Indonesia Energi",
+    period: "Aug 2023 — Aug 2024",
+    type: "Corporate Experience",
     details:
-      "Developed corporate websites and internal tools using Laravel and React, including content management workflows and application features.",
+      "Built and maintained internal business applications using Laravel, PHP, and MySQL to support daily company operations. Designed REST APIs with JWT authentication for cross-departmental data integration, helping reduce manual data entry and duplication. Also handled deployment, application monitoring, database management, CMS administration, and internal IT support.",
   },
 ];
 
@@ -63,11 +63,12 @@ const PROFESSIONAL_FOCUS = [
     number: "01",
     title: "Web Engineering",
     description:
-      "Building modern web applications with attention to architecture, maintainability, performance, responsive interfaces, and reliable functionality.",
+      "Developing fullstack web applications and business systems, covering frontend interfaces, backend logic, REST API development, database integration, and application deployment with an emphasis on maintainability and performance.",
     capabilities: [
       "Frontend Development",
       "Backend Development",
-      "API Integration",
+      "REST API & Integration",
+      "Database Design",
       "Application Architecture",
     ],
     icon: Code2,
@@ -76,11 +77,12 @@ const PROFESSIONAL_FOCUS = [
     number: "02",
     title: "AI Integration",
     description:
-      "Exploring practical ways to integrate AI capabilities into applications and workflows, turning model capabilities into useful product features.",
+      "Exploring how large language models and generative AI capabilities can be integrated into applications to support information processing, intelligent features, and more effective digital experiences.",
     capabilities: [
-      "LLM Integration",
+      "LLM API Integration",
       "AI-Powered Applications",
       "Prompt Engineering",
+      "Context Engineering",
       "Generative AI",
     ],
     icon: Lightbulb,
@@ -89,12 +91,13 @@ const PROFESSIONAL_FOCUS = [
     number: "03",
     title: "Automation & Intelligent Workflows",
     description:
-      "Designing workflows that reduce repetitive work, connect different tools, and make digital processes more efficient and consistent.",
+      "Designing practical workflows that connect applications, APIs, and AI capabilities to reduce repetitive tasks, streamline processes, and improve consistency across digital operations.",
     capabilities: [
       "Workflow Automation",
       "API-Based Integration",
       "AI-Assisted Workflows",
       "Process Optimization",
+      "Development Automation",
     ],
     icon: Workflow,
   },
@@ -102,9 +105,10 @@ const PROFESSIONAL_FOCUS = [
     number: "04",
     title: "Digital Product Development",
     description:
-      "Turning practical problems and ideas into useful digital solutions, from understanding requirements to building and improving working products.",
+      "Turning business requirements and practical problems into functional digital products, from understanding user needs and defining system requirements to implementation, testing, and iterative improvement.",
     capabilities: [
       "Product Thinking",
+      "Requirement Analysis",
       "Problem Solving",
       "MVP Development",
       "Iterative Improvement",
@@ -118,37 +122,39 @@ const WORKING_PRINCIPLES = [
     number: "01",
     title: "Understand the Problem First",
     description:
-      "Good implementation starts with understanding the actual problem, the people involved, and the outcome a solution should deliver.",
+      "Every useful solution starts with understanding the actual problem, business requirements, user needs, and expected outcomes before choosing technologies or implementing features.",
   },
   {
     number: "02",
     title: "Build on Solid Fundamentals",
     description:
-      "Tools and frameworks change. Maintainable code, clear architecture, reliable data handling, and sound engineering fundamentals remain important.",
+      "Frameworks and tools continue to evolve, but clean code, maintainable architecture, reliable data management, security, and sound engineering principles remain essential.",
   },
   {
     number: "03",
     title: "Use AI with Purpose",
     description:
-      "AI is a tool to improve how work gets done, not a substitute for technical understanding, critical thinking, or responsibility for the final result.",
+      "AI can improve productivity, support technical exploration, and accelerate development workflows. However, every output still requires critical evaluation, technical understanding, and manual verification.",
   },
   {
     number: "04",
-    title: "Prefer Practical Progress",
+    title: "Learn Through Practical Execution",
     description:
-      "A useful working solution is more valuable than endless planning. Build incrementally, validate assumptions, learn from feedback, and improve.",
+      "Continuous learning becomes more meaningful when applied through real projects. I prefer building incrementally, testing ideas, evaluating results, and improving solutions through practical experience.",
   },
 ];
 
 const TECHNICAL_INTERESTS = [
   "React & Next.js",
   "TypeScript",
-  "Laravel",
+  "PHP & Laravel",
   "Node.js & Express",
-  "REST API",
-  "AI Integration",
-  "Generative AI",
+  "REST API & System Integration",
+  "Database Design",
+  "AI Integration & LLM APIs",
+  "Prompt & Context Engineering",
   "Workflow Automation",
+  "Generative AI",
 ];
 
 function PageEyebrow({ number, label }: { number: string; label: string }) {
@@ -283,10 +289,12 @@ export default function AboutPage() {
               </h1>
 
               <p className="mt-7 max-w-2xl text-base leading-8 text-fg-muted sm:text-lg">
-                I&apos;m Zaki Deza, a web developer and Information Systems
-                student interested in building practical digital products,
-                exploring AI capabilities, and creating more effective ways to
-                solve real-world problems through technology.
+                I&apos;m Zaki Deza, a Fullstack Web Developer with a background
+                in Software Engineering and professional experience across
+                corporate, agency, and freelance environments. I build web
+                applications and business systems while continuously exploring
+                AI integration, automation, and new approaches to developing
+                practical digital solutions.
               </p>
             </div>
 
@@ -338,30 +346,37 @@ export default function AboutPage() {
             number="01"
             eyebrow="Introduction"
             title="A developer with a broader perspective."
-            description="My background started in software development, and my interests have continued to expand alongside the possibilities of modern technology."
+            description="My journey combines a foundation in software engineering, hands-on experience developing web applications, and a growing interest in AI-driven technologies and digital innovation."
           >
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
               <div className="space-y-5 text-sm leading-8 text-fg-muted sm:text-base">
                 <p>
-                  I have a background in Software Engineering and experience
-                  building web applications across frontend and backend
-                  development. Working with different projects has helped me
-                  understand how interfaces, application logic, APIs, and data
-                  work together to deliver a complete product.
+                  My interest in technology began with a Software Engineering
+                  background during vocational high school. Since then, I have
+                  developed my skills through independent learning and practical
+                  experience, working across frontend and backend development.
+                  These experiences have helped me understand how application
+                  architecture, business logic, APIs, and databases work
+                  together to create functional software solutions.
                 </p>
 
                 <p>
-                  Over time, my interests have expanded beyond conventional web
-                  development. I&apos;m increasingly interested in Artificial
-                  Intelligence, application integration, automation, and the
-                  development of intelligent digital solutions.
+                  I have worked in different professional environments,
+                  including corporate operations, digital agency projects, and
+                  independent freelance engagements. Through these experiences,
+                  I have handled various development responsibilities, from
+                  understanding requirements and designing application
+                  structures to implementation, debugging, deployment, and
+                  maintenance.
                 </p>
 
                 <p>
-                  I see technology as a means to solve practical problems. What
-                  matters is not simply using the latest tools, but
-                  understanding how to combine them into something useful,
-                  reliable, and accessible.
+                  Beyond conventional web development, I&apos;m increasingly
+                  exploring Artificial Intelligence, application integration,
+                  prompt engineering, context engineering, and workflow
+                  automation. I&apos;m interested in using these technologies
+                  thoughtfully to improve development processes and create
+                  solutions that address practical needs.
                 </p>
               </div>
 
@@ -413,7 +428,7 @@ export default function AboutPage() {
             number="02"
             eyebrow="Background & Journey"
             title="Learning, building, and growing through experience."
-            description="My journey combines a foundation in software development, ongoing academic learning, and practical experience working on web projects."
+            description="From vocational software engineering education to professional web development, my journey has been shaped by continuous learning, practical projects, and experience across different working environments."
           >
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
               <div className="space-y-7">
@@ -435,9 +450,11 @@ export default function AboutPage() {
                   </p>
 
                   <p className="mt-4 text-sm leading-7 text-fg-muted">
-                    Continuing my undergraduate education while developing
-                    technical knowledge and a broader understanding of
-                    information systems, technology, and digital solutions.
+                    Continuing my undergraduate studies in Information Systems
+                    at Universitas Terbuka Bandung while strengthening my
+                    understanding of business processes, information systems,
+                    technology, and the development of practical digital
+                    solutions.
                   </p>
                 </div>
 
@@ -459,9 +476,10 @@ export default function AboutPage() {
                   </p>
 
                   <p className="mt-4 text-sm leading-7 text-fg-muted">
-                    My initial foundation in programming and software
-                    development provided a starting point for learning how to
-                    design, build, and maintain digital applications.
+                    My vocational education in Software Engineering introduced
+                    me to programming, application development, and software
+                    fundamentals. It provided the foundation for my continued
+                    learning and professional journey in web development.
                   </p>
                 </div>
               </div>
@@ -577,27 +595,34 @@ export default function AboutPage() {
             number="05"
             eyebrow="Current Direction"
             title="Building toward the next stage."
-            description="I'm continuing to strengthen my technical foundation while exploring new ways to build useful products with modern software and AI."
+            description="Continuing to grow as an adaptable technology professional by strengthening software engineering fundamentals and developing practical experience with AI integration, automation, and digital products."
           >
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_0.8fr] lg:gap-14">
               <div className="space-y-5 text-sm leading-8 text-fg-muted sm:text-base">
                 <p>
-                  My current direction is to grow as an adaptable technology
-                  professional who can work across software development, AI
-                  integration, automation, and digital product development.
+                  My current direction is to develop further as a technology
+                  professional who can work across fullstack development, system
+                  integration, AI-assisted development, and intelligent digital
+                  solutions. I&apos;m focused on combining practical engineering
+                  experience with a broader understanding of how technology
+                  supports business and everyday processes.
                 </p>
 
                 <p>
-                  I'm interested in understanding AI beyond simply using
-                  ready-made tools: how models can be integrated into
-                  applications, how intelligent workflows can be designed, and
-                  how these capabilities can solve meaningful problems.
+                  I&apos;m particularly interested in understanding how AI
+                  technologies can be integrated into real applications,
+                  including LLM API integration, information processing, context
+                  engineering, and automated workflows. My goal is to move
+                  beyond simply using AI tools and develop a deeper
+                  understanding of how to apply them effectively.
                 </p>
 
                 <p>
-                  The goal is to keep learning through practical projects,
-                  improve engineering judgment, and turn knowledge into
-                  solutions that create real value.
+                  Alongside my professional development, I continue to
+                  strengthen my technical foundations through academic learning,
+                  independent study, and practical projects. I want to turn what
+                  I learn into reliable applications and digital solutions that
+                  provide meaningful value.
                 </p>
               </div>
 
