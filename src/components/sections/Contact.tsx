@@ -7,15 +7,15 @@ import {
   Check,
   CheckCircle2,
   Copy,
-  Github,
   Linkedin,
   Loader2,
-  Mail,
   MapPin,
   Send,
   Terminal,
   XCircle,
 } from "lucide-react";
+
+import { Github, Mail, type LucideIcon } from "lucide-react";
 
 import Section from "@/components/ui/Section";
 
@@ -314,7 +314,7 @@ export default function Contact() {
 
             {/* SOCIAL LINKS */}
             <div className="mt-8">
-              <PanelLabel number="03" title="Elsewhere" icon={GitHubIcon} />
+              <PanelLabel number="03" title="Elsewhere" icon={Github} />
 
               <div className="mt-4 space-y-2">
                 <SocialLink
@@ -453,7 +453,7 @@ function PanelLabel({
 }: {
   number: string;
   title: string;
-  icon: typeof Mail;
+  icon: LucideIcon;
 }) {
   return (
     <div className="flex items-center gap-2.5 border-b border-border pb-3">
